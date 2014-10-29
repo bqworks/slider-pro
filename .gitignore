@@ -1,0 +1,18 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+*.sublime-project
+*.sublime-workspace
+
+node_modules
+test

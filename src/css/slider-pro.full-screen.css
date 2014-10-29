@@ -1,0 +1,32 @@
+/* Full Screen
+--------------------------------------------------*/
+.sp-full-screen {
+	margin: 0 !important;
+	background-color: #000;
+}
+
+.sp-full-screen-button {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	font-size: 30px;
+	line-height: 1;
+	cursor: pointer;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.sp-full-screen-button:before {
+	content: '\2195';
+}
+
+.sp-fade-full-screen {
+	opacity: 0;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+}
+
+.slider-pro:hover .sp-fade-full-screen {
+	opacity: 1;
+}

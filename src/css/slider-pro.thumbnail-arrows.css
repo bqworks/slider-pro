@@ -1,0 +1,98 @@
+/* Thumbnail Arrows
+--------------------------------------------------*/
+.sp-thumbnail-arrows {
+	position: absolute;
+}
+
+.sp-fade-thumbnail-arrows {
+	opacity: 0;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+}
+
+.sp-thumbnails-container:hover .sp-fade-thumbnail-arrows {
+	opacity: 1;
+}
+
+.sp-top-thumbnails .sp-thumbnail-arrows,
+.sp-bottom-thumbnails .sp-thumbnail-arrows {
+	width: 100%;
+	top: 50%;
+	left: 0;
+	margin-top: -10px;
+}
+
+.sp-left-thumbnails .sp-thumbnail-arrows,
+.sp-right-thumbnails .sp-thumbnail-arrows {
+	height: 100%;
+	top: 0;
+	left: 50%;
+	margin-left: -5px;
+}
+
+.sp-thumbnail-arrow {
+	position: absolute;
+	font-size: 20px;
+	color: #FFF;
+	text-shadow: 1px 1px 1px #666;
+	cursor: pointer;
+}
+
+.sp-left-thumbnails .sp-thumbnail-arrows .sp-thumbnail-arrow,
+.sp-right-thumbnails .sp-thumbnail-arrows .sp-thumbnail-arrow {
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.sp-previous-thumbnail-arrow:before {
+	content: '\276e';
+}
+
+.ios .sp-previous-thumbnail-arrow:before,
+.ie7 .sp-previous-thumbnail-arrow:before,
+.ie8 .sp-previous-thumbnail-arrow:before,
+.ie9 .sp-previous-thumbnail-arrow:before {
+	content: '\25c0';
+}
+
+.ie8.sp-vertical .sp-previous-thumbnail-arrow:before,
+.ie7.sp-vertical .sp-previous-thumbnail-arrow:before {
+	content: '\25b2';
+}
+
+.sp-next-thumbnail-arrow:before {
+	content: '\276f';
+}
+
+.ios .sp-next-thumbnail-arrow:before,
+.ie7 .sp-next-thumbnail-arrow:before,
+.ie8 .sp-next-thumbnail-arrow:before,
+.ie9 .sp-next-thumbnail-arrow:before {
+	content: '\25b6';
+}
+
+.ie8.sp-vertical .sp-next-thumbnail-arrow:before,
+.ie7.sp-vertical .sp-next-thumbnail-arrow:before {
+	content: '\25bc';
+}
+
+.sp-top-thumbnails .sp-previous-thumbnail-arrow,
+.sp-bottom-thumbnails .sp-previous-thumbnail-arrow {
+	left: 0px;
+}
+
+.sp-top-thumbnails .sp-next-thumbnail-arrow,
+.sp-bottom-thumbnails .sp-next-thumbnail-arrow {
+	right: 0px;
+}
+
+.sp-left-thumbnails .sp-previous-thumbnail-arrow,
+.sp-right-thumbnails .sp-previous-thumbnail-arrow {
+	top: 0px;
+}
+
+.sp-left-thumbnails .sp-next-thumbnail-arrow,
+.sp-right-thumbnails .sp-next-thumbnail-arrow {
+	bottom: 0px;
+}

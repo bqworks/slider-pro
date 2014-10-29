@@ -1,0 +1,35 @@
+{
+  "name": "slider-pro",
+  "description": "Responsive jQuery slider, featuring modular architecture, CSS3 animations, touch swipe, animated layers, retina, lazy loading and much more.",
+  "version": "1.0.0",
+  "homepage": "http://bqworks.com/slider-pro/",
+  "author": {
+    "name": "bqworks",
+    "url": "http://bqworks.com/"
+  },
+  "contributors": [{
+    "name": "David Ghiurau",
+    "email": "david.ghiurau@gmail.com"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bqworks/slider-pro"
+  },
+  "bugs": {
+    "url": "https://github.com/bqworks/slider-pro/issues"
+  },
+  "keywords": [
+    "jquery-plugin",
+    "slider-pro",
+    "responsive-slider"
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1"
+  },
+  "license": "MIT"
+}

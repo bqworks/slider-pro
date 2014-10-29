@@ -1,0 +1,83 @@
+/* Arrows
+--------------------------------------------------*/
+.sp-fade-arrows {
+	opacity: 0;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+}
+
+.sp-slides-container:hover .sp-fade-arrows {
+	opacity: 1;
+}
+
+.sp-arrow {
+	position: absolute;
+	font-size: 40px;
+	color: #FFF;
+	text-shadow: 1px 1px 1px #666;
+	cursor: pointer;
+}
+
+.sp-vertical .sp-arrow {
+	-webkit-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.sp-horizontal .sp-arrow {
+	top: 50%;
+	margin-top: -20px;
+}
+
+.sp-vertical .sp-arrow {
+	left: 50%;
+	margin-left: -10px;
+}
+
+.sp-previous-arrow:before {
+	content: '\276e';
+}
+
+.ios .sp-previous-arrow:before,
+.ie9 .sp-previous-arrow:before,
+.ie8 .sp-previous-arrow:before,
+.ie7 .sp-previous-arrow:before {
+	content: '\25c0';
+}
+
+.ie8.sp-vertical .sp-previous-arrow:before,
+.ie7.sp-vertical .sp-previous-arrow:before {
+	content: '\25b2';
+}
+
+.sp-next-arrow:before {
+	content: '\276f';
+}
+
+.ios .sp-next-arrow:before,
+.ie9 .sp-next-arrow:before,
+.ie8 .sp-next-arrow:before,
+.ie7 .sp-next-arrow:before {
+	content: '\25b6';
+}
+
+.ie8.sp-vertical .sp-next-arrow:before,
+.ie7.sp-vertical .sp-next-arrow:before {
+	content: '\25bc';
+}
+
+.sp-horizontal .sp-previous-arrow {
+	left: 20px;
+}
+
+.sp-horizontal .sp-next-arrow {
+	right: 20px;
+}
+
+.sp-vertical .sp-previous-arrow {
+	top: 20px;
+}
+
+.sp-vertical .sp-next-arrow {
+	bottom: 20px;
+}
