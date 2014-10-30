@@ -1,0 +1,25 @@
+{
+  "name": "slider-pro",
+  "version": "1.0.0",
+  "description": "Responsive jQuery slider, featuring modular architecture, CSS3 animations, touch swipe, animated layers, retina, lazy loading and much more.",
+  "keywords": [
+    "jquery-plugin",
+    "slider-pro",
+    "responsive-slider"
+  ],
+  "main": [
+    "dist/css/slider-pro.css",
+    "dist/js/jquery.sliderPro.js"
+  ],
+  "ignore": [
+    "docs",
+    "examples",
+    "libs",
+    ".gitignore",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json",
+    "README.md"
+  ],
+  "license": "MIT"
+}
