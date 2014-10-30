@@ -1,8 +1,10 @@
 ## Modules ##
 
+Modules are optional blocks of code that extend the plugin's core, adding more capabilities. This modular architecture makes the code more organized and also allows you to include only the features you will use, resulting in an optimized file size and performance.
+
 ### 1. Fade ###
 
-This module enables a fade transition between slides.
+This module replaces the default slide/swipe transition with a fade transition.
 
 Customizable properties: [fade](api.md#fade), [fadeOutPreviousSlide](api.md#fadeoutpreviousslide) and [fadeDuration](api.md#fadeduration).
 
@@ -27,7 +29,7 @@ Customizable properties: [fadeCaption](api.md#fadecaption) and [captionFadeDurat
 
 ### 3. Full Screen ###
 
-Allows you to view the slider in full-screen mode in browsers where the HTML5 Full Screen is supported. If full-screen is supported a button will be displayed in the top-right corner of the slider.
+Allows you to view the slider in full-screen mode, in browsers where the HTML5 Full Screen API is supported. If full-screen is supported a button will be displayed in the top-right corner of the slider.
 
 Customizable properties: [fullScreen](api.md#fullscreen) and [fadeFullScreen](api.md#fadefullscreen).
 
@@ -140,9 +142,11 @@ Adds support for layers, which are blocks of text or HTML content that can easil
 ```html
 <div class="sp-slide">
 	<img class="sp-image" src="path/to/image.jpg"/>
+
 	<h3 class="sp-layer">
 		Lorem ipsum dolor sit amet
 	</h3>
+
 	<p class="sp-layer">
 		consectetur adipisicing elit
 	</p>
@@ -156,16 +160,19 @@ Here is an example that adds some styling and animation parameters:
 ```html
 <div class="sp-slide">
 	<img class="sp-image" src="path/to/image.jpg"/>
+
 	<h3 class="sp-layer sp-black"
 		data-position="bottomLeft" data-horizontal="10%"
 		data-show-transition="left" data-show-delay="300" data-hide-transition="right">
 		Lorem ipsum dolor sit amet
 	</h3>
+
 	<p class="sp-layer sp-white sp-padding"
 		data-width="200" data-horizontal="center" data-vertical="40%"
 		data-show-transition="down" data-hide-transition="up">
 		consectetur adipisicing elit
 	</p>
+
 	<div class="sp-layer sp-static">Static content</div>
 </div>
 ```
@@ -252,6 +259,10 @@ Data attributes:
 
 >Sets a delay for the hide transition.
 
+##### data-stay-duration #####
+
+>Sets how much time a layer will stay visible before being hidden automatically.
+
 >The layers are animated using CSS3 transitions in most browsers. In IE9 and IE8 (where CSS3 transitions are not supported), the layers will only fade in/out, and in IE7 and older, the layers will appear without any animation.
 
 Customizable properties: [waitForLayers](api.md#waitforlayers), [autoScaleLayers](api.md#autoscalelayers) and [autoScaleReference](api.md#autoscalereference).
@@ -274,9 +285,11 @@ It's also possible to specify the 'id' attribute of the slide instead of its ind
 		<div class="sp-slide">
 			<img class="sp-image" src="path/to/image1.jpg"/>
 		</div>
+
 		<div id="my-slide" class="sp-slide">
 			<img class="sp-image" src="path/to/image2.jpg"/>
 		</div>
+
 		<div class="sp-slide">
 			<img class="sp-image" src="path/to/image3.jpg"/>
 		</div>
@@ -298,7 +311,7 @@ Customizable properties: [autoplay](api.md#autoplay), [autoplayDelay](api.md#aut
 
 ---
 
-### 10. TouchSwipe ###
+### 10. Touch Swipe ###
 
 Adds touch-swipe functionality for the slides. The module also adds mouse drag functionality on non-touch screen devices.
 
@@ -359,7 +372,7 @@ Customizable properties: [thumbnailWidth](api.md#thumbnailwidth), [thumbnailHeig
 
 ---
 
-### 15. ThumbnailTouchSwipe ###
+### 15. Thumbnail Touch Swipe ###
 
 Adds touch swipe functionality for the thumbnails.
 
@@ -367,7 +380,7 @@ Customizable properties: [thumbnailTouchSwipe](api.md#thumbnailtouchswipe).
 
 ---
 
-### 16. ThumbnailArrows ###
+### 16. Thumbnail Arrows ###
 
 Adds navigation arrows for the thumbnails.
 
