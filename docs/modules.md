@@ -368,6 +368,8 @@ This module adds support for thumbnails. Thumbnails can contain any HTML content
 </div>
 ```
 
+As can be seen in the example above, the thumbnails are added separately from the slides, in their own container (`sp-thumbnails`), and the order of the thumbnails should correspond to the order of the slides. For example, the third thumbnail corresponds to the third slide.
+
 Customizable properties: [thumbnailWidth](api.md#thumbnailwidth), [thumbnailHeight](api.md#thumbnailheight), [thumbnailsPosition](api.md#thumbnailsposition) and [thumbnailPointer](api.md#thumbnailpointer).
 
 ---
