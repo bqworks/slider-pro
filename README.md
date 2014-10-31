@@ -18,6 +18,7 @@ Main features:
 * retina-enabled
 * fade effect
 * full-screen support
+* CSS-only navigation controls (no graphics) for easy customization
 * video support
 * conditional images (different images for different screen sizes)
 * JavaScript breakpoints 
@@ -26,7 +27,19 @@ Check the plugin's [presentation page](http://bqworks.com/slider-pro/) for examp
 
 ## Getting started ##
 
-### 1. Load the required files ###
+### 1. Get a copy of the plugin ###
+
+You can fork or download the plugin from GitHub, or you can install it through `npm` or `bower`.
+
+```
+$ npm install slider-pro
+```
+
+```
+$ bower install slider-pro
+```
+
+### 2. Load the required files ###
 
 Inside the page's head tag include the slider's CSS file.
 
@@ -41,7 +54,7 @@ In the page's footer, just before <code>&lt;/body&gt;</code>, include the requir
 <script src="dist/js/jquery.sliderPro.min.js"></script>
 ```
 
-### 2. Create the HTML markup ###
+### 3. Create the HTML markup ###
 
 ```html
 <div class="slider-pro" id="my-slider">
@@ -71,7 +84,7 @@ If you add an image to the slide and you want it to behave like a background ima
 
 More about the supported content (i.e., layers, html, video) in the [Modules](docs/modules.md#modules) doc.
 
-### 3. Instantiate the slider ###
+### 4. Instantiate the slider ###
 
 ```html
 <script type="text/javascript">
