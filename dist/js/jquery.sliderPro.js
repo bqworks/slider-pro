@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.0
+*  - v1.0.1
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -5057,7 +5057,7 @@
 // Check if an iOS device is used.
 // This information is important because a video can not be
 // controlled programmatically unless the user has started the video manually.
-var	isIOS = window.navigator.userAgent.match( /(iPad|iPhone|iPos)/g ) ? true : false;
+var	isIOS = window.navigator.userAgent.match( /(iPad|iPhone|iPod)/g ) ? true : false;
 
 var VideoController = function( instance, options ) {
 	this.$video = $( instance );
