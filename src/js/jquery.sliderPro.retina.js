@@ -37,7 +37,7 @@
 				return true;
 			}
 
-			if ( window.matchMedia && ( window.matchMedia( "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dppx)" ).matches ) ) {
+			if ( window.matchMedia && ( window.matchMedia( "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 2dppx)" ).matches ) ) {
 				return true;
 			}
 
