@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.1
+*  - v1.0.2
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -2420,7 +2420,7 @@
 				return true;
 			}
 
-			if ( window.matchMedia && ( window.matchMedia( "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dppx)" ).matches ) ) {
+			if ( window.matchMedia && ( window.matchMedia( "(-webkit-min-device-pixel-ratio: 2),(min-resolution: 2dppx)" ).matches ) ) {
 				return true;
 			}
 
