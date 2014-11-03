@@ -103,6 +103,23 @@ Slider Pro has 50+ options which you can pass to the slider when you instantiate
 	* [2. Public Methods](docs/api.md#2-public-methods)
 	* [3. Callbacks](docs/api.md#3-callbacks)
 * [Modules](docs/modules.md#modules)
+	* [1. Fade](docs/modules.md#1-fade)
+	* [2. Caption](docs/modules.md#2-caption)
+	* [3. Full Screen](docs/modules.md#3-full-screen)
+	* [4. Lazy Loading](docs/modules.md#4-lazy-loading)
+	* [5. Retina](docs/modules.md#5-retina)
+	* [6. Conditional Images](docs/modules.md#6-conditional-images)
+	* [7. Layers](docs/modules.md#7-layers)
+	* [8. Deep Linking](docs/modules.md#8-deep-linking)
+	* [9. Autoplay](docs/modules.md#9-autoplay)
+	* [10. Touch Swipe](docs/modules.md#10-touch-swipe)
+	* [11. Buttons](docs/modules.md#11-buttons)
+	* [12. Arrows](docs/modules.md#12-arrows)
+	* [13. Keyboard](docs/modules.md#13-keyboard)
+	* [14. Thumbnails](docs/modules.md#14-thumbnails)
+	* [15. Thumbnail Touch Swipe](docs/modules.md#15-thumbnail-touch-swipe)
+	* [16. Thumbnail Arrows](docs/modules.md#16-thumbnail-arrows)
+	* [17. Video](docs/modules.md#17-video)
 
 ## Support ##
 
