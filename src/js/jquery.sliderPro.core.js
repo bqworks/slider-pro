@@ -132,9 +132,6 @@
 		_init: function() {
 			var that = this;
 
-			// Merge the specified setting with the default ones
-			this.settings = $.extend( {}, this.defaults, this.options );
-
 			this.supportedAnimation = SliderProUtils.getSupportedAnimation();
 			this.vendorPrefix = SliderProUtils.getVendorPrefix();
 			this.transitionEvent = SliderProUtils.getTransitionEvent();
@@ -171,13 +168,13 @@
 					var defaults = modules[ i ].substring( 0, 1 ).toLowerCase() + modules[ i ].substring( 1 ) + 'Defaults';
 
 					if ( typeof this[ defaults ] !== 'undefined' ) {
-						$.extend( this.settings, this[ defaults ] );
+						$.extend( this.defaults, this[ defaults ] );
 					}
 				}
 			}
 
-			// Merge the user defined settings with the default settings
-			$.extend( this.settings, this.options );
+			// Merge the specified setting with the default ones
+			this.settings = $.extend( {}, this.defaults, this.options );
 
 			// Initialize the modules
 			if ( typeof modules !== 'undefined' ) {
