@@ -129,6 +129,23 @@ The exact size represented by the `data-small`, `data-medium` and `data-large` a
 
 So, the image source specified in the `data-large` attribute will load when the slider's width is smaller than the value of the `largeSize` property (which is 1024, by default). The image source specified in the `data-medium` attribute will load when the slider's width is smaller than the value of the `mediumSize` property and the image source specified in the `data-small` attribute will load when the slider's width is smaller than the value of the `smallSize` property. If the slider's width is above any of these values, the default image source will be loaded.
 
+If you want to specify separate images for Retina (high PPI) displays, you can use the `data-retinasmall`, `data-retinamedium` and `data-retinalarge` attributes (no space between `retina` and the screen size).
+
+*Example:*
+
+```html
+<div class="sp-slide">
+	<img class="sp-image" src="path/to/blank.gif" 
+		data-src="path/to/image_default.jpg"
+		data-small="path/to/image_small.jpg"
+		data-medium="path/to/image_medium.jpg"
+		data-large="path/to/image_large.jpg"
+		data-retinasmall="path/to/image_retina_small.jpg"
+		data-retinamedium="path/to/image_retina_medium.jpg"
+		data-retinalarge="path/to/image_retina_large.jpg"/>
+</div>
+```
+
 Customizable properties: [smallSize](api.md#smallsize), [mediumSize](api.md#mediumsize) and [largeSize](api.md#largesize).
 
 ---
