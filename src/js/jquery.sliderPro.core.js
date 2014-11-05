@@ -162,31 +162,6 @@
 			this.$slidesMask = $( '<div class="sp-mask"></div>' ).appendTo( this.$slidesContainer );
 			this.$slides = this.$slider.find( '.sp-slides' ).appendTo( this.$slidesMask );
 			this.$slider.find( '.sp-slide' ).appendTo( this.$slides );
-
-			// Shuffle/randomize the slides
-			if ( this.settings.shuffle === true ) {
-				var slides = this.$slides.find( '.sp-slide' ),
-					shuffledSlides = [];
-
-				// Populate the 'shuffledIndexes' with index numbers
-				slides.each(function( index ) {
-					that.shuffledIndexes.push( index );
-				});
-
-				// Randomize the 'shuffledIndexes'
-				this.shuffledIndexes = this.shuffledIndexes.sort(function() {
-					return 0.5 - Math.random();
-				});
-
-				// Reposition the slides based on the order of the indexes in the
-				// 'shuffledIndexes' array
-				$.each( this.shuffledIndexes, function( index, element ) {
-					shuffledSlides.push( slides[ element ] );
-				});
-				
-				// Append the sorted slides to the slider
-				this.$slides.empty().append( shuffledSlides ) ;
-			}
 			
 			var modules = $.SliderPro.modules;
 
@@ -234,6 +209,34 @@
 
 			// Set which slide should be selected initially
 			this.selectedSlideIndex = this.settings.startSlide;
+
+			// Shuffle/randomize the slides
+			if ( this.settings.shuffle === true ) {
+				var slides = this.$slides.find( '.sp-slide' ),
+					shuffledSlides = [];
+
+				// Populate the 'shuffledIndexes' with index numbers
+				slides.each(function( index ) {
+					that.shuffledIndexes.push( index );
+				});
+
+				for ( var k = this.shuffledIndexes.length - 1; k > 0; k-- ) {
+					var l = Math.floor( Math.random() * ( k + 1 ) ),
+						temp = this.shuffledIndexes[ k ];
+
+					this.shuffledIndexes[ k ] = this.shuffledIndexes[ l ];
+					this.shuffledIndexes[ l ] = temp;
+				}
+
+				// Reposition the slides based on the order of the indexes in the
+				// 'shuffledIndexes' array
+				$.each( this.shuffledIndexes, function( index, element ) {
+					shuffledSlides.push( slides[ element ] );
+				});
+				
+				// Append the sorted slides to the slider
+				this.$slides.empty().append( shuffledSlides ) ;
+			}
 			
 			// Resize the slider when the browser window resizes.
 			// Also, deffer the resizing in order to not allow multiple
