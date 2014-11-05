@@ -109,6 +109,7 @@
 				this.settings.forceSize = 'fullWindow';
 				this.settings.autoHeight = false;
 			} else {
+				this.$slider.css( 'margin', '' );
 				this.$slider.removeClass( 'sp-full-screen' );
 				this.settings.forceSize = this.sizeBeforeFullScreen.forceSize;
 				this.settings.autoHeight = this.sizeBeforeFullScreen.autoHeight;
