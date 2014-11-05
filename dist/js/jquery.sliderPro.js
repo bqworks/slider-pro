@@ -138,9 +138,6 @@
 		_init: function() {
 			var that = this;
 
-			// Merge the specified setting with the default ones
-			this.settings = $.extend( {}, this.defaults, this.options );
-
 			this.supportedAnimation = SliderProUtils.getSupportedAnimation();
 			this.vendorPrefix = SliderProUtils.getVendorPrefix();
 			this.transitionEvent = SliderProUtils.getTransitionEvent();
@@ -168,31 +165,6 @@
 			this.$slidesMask = $( '<div class="sp-mask"></div>' ).appendTo( this.$slidesContainer );
 			this.$slides = this.$slider.find( '.sp-slides' ).appendTo( this.$slidesMask );
 			this.$slider.find( '.sp-slide' ).appendTo( this.$slides );
-
-			// Shuffle/randomize the slides
-			if ( this.settings.shuffle === true ) {
-				var slides = this.$slides.find( '.sp-slide' ),
-					shuffledSlides = [];
-
-				// Populate the 'shuffledIndexes' with index numbers
-				slides.each(function( index ) {
-					that.shuffledIndexes.push( index );
-				});
-
-				// Randomize the 'shuffledIndexes'
-				this.shuffledIndexes = this.shuffledIndexes.sort(function() {
-					return 0.5 - Math.random();
-				});
-
-				// Reposition the slides based on the order of the indexes in the
-				// 'shuffledIndexes' array
-				$.each( this.shuffledIndexes, function( index, element ) {
-					shuffledSlides.push( slides[ element ] );
-				});
-				
-				// Append the sorted slides to the slider
-				this.$slides.empty().append( shuffledSlides ) ;
-			}
 			
 			var modules = $.SliderPro.modules;
 
@@ -202,13 +174,13 @@
 					var defaults = modules[ i ].substring( 0, 1 ).toLowerCase() + modules[ i ].substring( 1 ) + 'Defaults';
 
 					if ( typeof this[ defaults ] !== 'undefined' ) {
-						$.extend( this.settings, this[ defaults ] );
+						$.extend( this.defaults, this[ defaults ] );
 					}
 				}
 			}
 
-			// Merge the user defined settings with the default settings
-			$.extend( this.settings, this.options );
+			// Merge the specified setting with the default ones
+			this.settings = $.extend( {}, this.defaults, this.options );
 
 			// Initialize the modules
 			if ( typeof modules !== 'undefined' ) {
@@ -240,6 +212,34 @@
 
 			// Set which slide should be selected initially
 			this.selectedSlideIndex = this.settings.startSlide;
+
+			// Shuffle/randomize the slides
+			if ( this.settings.shuffle === true ) {
+				var slides = this.$slides.find( '.sp-slide' ),
+					shuffledSlides = [];
+
+				// Populate the 'shuffledIndexes' with index numbers
+				slides.each(function( index ) {
+					that.shuffledIndexes.push( index );
+				});
+
+				for ( var k = this.shuffledIndexes.length - 1; k > 0; k-- ) {
+					var l = Math.floor( Math.random() * ( k + 1 ) ),
+						temp = this.shuffledIndexes[ k ];
+
+					this.shuffledIndexes[ k ] = this.shuffledIndexes[ l ];
+					this.shuffledIndexes[ l ] = temp;
+				}
+
+				// Reposition the slides based on the order of the indexes in the
+				// 'shuffledIndexes' array
+				$.each( this.shuffledIndexes, function( index, element ) {
+					shuffledSlides.push( slides[ element ] );
+				});
+				
+				// Append the sorted slides to the slider
+				this.$slides.empty().append( shuffledSlides ) ;
+			}
 			
 			// Resize the slider when the browser window resizes.
 			// Also, deffer the resizing in order to not allow multiple
@@ -2048,9 +2048,13 @@
 		// Reference to the current size
 		currentImageSize: null,
 
+		// Indicates if the current display supports high PPI
+		isRetinaScreen: false,
+
 		initConditionalImages: function() {
 			this.currentImageSize = this.previousImageSize = 'default';
-			
+			this.isRetinaScreen = ( typeof this._isRetina !== 'undefined' ) && ( this._isRetina() === true );
+
 			this.on( 'update.' + NS, $.proxy( this._conditionalImagesOnUpdate, this ) );
 			this.on( 'sliderResize.' + NS, $.proxy( this._conditionalImagesOnResize, this ) );
 		},
@@ -2094,15 +2098,33 @@
 
 					$slide.find( 'img' ).each(function() {
 						var $image = $( this ),
+							imageSource = '';
+
+						// Check if the current display supports high PPI and if a retina version of the current size was specified
+						if ( that.isRetinaScreen === true && typeof $image.attr( 'data-retina' + that.currentImageSize ) !== 'undefined' ) {
+							imageSource = $image.attr( 'data-retina' + that.currentImageSize );
+
+							// If the retina image was not loaded yet, replace the default image source with the one
+							// that corresponds to the current slider size
+							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' ) {
+								$image.attr( 'data-retina', imageSource );
+							}
+						} else if ( typeof $image.attr( 'data-' + that.currentImageSize ) !== 'undefined' ) {
 							imageSource = $image.attr( 'data-' + that.currentImageSize );
 
-						if ( typeof imageSource !== 'undefined' ) {
-
-							// The existence of the 'data-src' attribute indicates that the image
-							// will be lazy loaded, so only change the value of this attribute.
+							// If the image is set to lazy load, replace the image source with the one
+							// that corresponds to the current slider size
 							if ( typeof $image.attr( 'data-src' ) !== 'undefined' ) {
 								$image.attr( 'data-src', imageSource );
-							} else {
+							}
+						}
+
+						// If a new image was found
+						if ( imageSource !== '' ) {
+
+							// The existence of the 'data-src' attribute indicates that the image
+							// will be lazy loaded, so don't load the new image yet
+							if ( typeof $image.attr( 'data-src' ) === 'undefined' ) {
 								that._loadConditionalImage( $image, imageSource, function( newImage ) {
 									if ( newImage.hasClass( 'sp-image' ) ) {
 										element.$mainImage = newImage;
@@ -4173,6 +4195,7 @@
 				this.settings.forceSize = 'fullWindow';
 				this.settings.autoHeight = false;
 			} else {
+				this.$slider.css( 'margin', '' );
 				this.$slider.removeClass( 'sp-full-screen' );
 				this.settings.forceSize = this.sizeBeforeFullScreen.forceSize;
 				this.settings.autoHeight = this.sizeBeforeFullScreen.autoHeight;
