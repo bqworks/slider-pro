@@ -18,9 +18,13 @@
 		// Reference to the current size
 		currentImageSize: null,
 
+		// Indicates if the current display supports high PPI
+		isRetinaScreen: false,
+
 		initConditionalImages: function() {
 			this.currentImageSize = this.previousImageSize = 'default';
-			
+			this.isRetinaScreen = ( typeof this._isRetina !== 'undefined' ) && ( this._isRetina() === true );
+
 			this.on( 'update.' + NS, $.proxy( this._conditionalImagesOnUpdate, this ) );
 			this.on( 'sliderResize.' + NS, $.proxy( this._conditionalImagesOnResize, this ) );
 		},
@@ -64,15 +68,33 @@
 
 					$slide.find( 'img' ).each(function() {
 						var $image = $( this ),
+							imageSource = '';
+
+						// Check if the current display supports high PPI and if a retina version of the current size was specified
+						if ( that.isRetinaScreen === true && typeof $image.attr( 'data-retina' + that.currentImageSize ) !== 'undefined' ) {
+							imageSource = $image.attr( 'data-retina' + that.currentImageSize );
+
+							// If the retina image was not loaded yet, replace the default image source with the one
+							// that corresponds to the current slider size
+							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' ) {
+								$image.attr( 'data-retina', imageSource );
+							}
+						} else if ( typeof $image.attr( 'data-' + that.currentImageSize ) !== 'undefined' ) {
 							imageSource = $image.attr( 'data-' + that.currentImageSize );
 
-						if ( typeof imageSource !== 'undefined' ) {
-
-							// The existence of the 'data-src' attribute indicates that the image
-							// will be lazy loaded, so only change the value of this attribute.
+							// If the image is set to lazy load, replace the image source with the one
+							// that corresponds to the current slider size
 							if ( typeof $image.attr( 'data-src' ) !== 'undefined' ) {
 								$image.attr( 'data-src', imageSource );
-							} else {
+							}
+						}
+
+						// If a new image was found
+						if ( imageSource !== '' ) {
+
+							// The existence of the 'data-src' attribute indicates that the image
+							// will be lazy loaded, so don't load the new image yet
+							if ( typeof $image.attr( 'data-src' ) === 'undefined' ) {
 								that._loadConditionalImage( $image, imageSource, function( newImage ) {
 									if ( newImage.hasClass( 'sp-image' ) ) {
 										element.$mainImage = newImage;
