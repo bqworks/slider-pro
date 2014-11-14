@@ -64,29 +64,53 @@
 			// Create the container of the thumbnail scroller, if it wasn't created yet
 			if ( this.$thumbnailsContainer === null ) {
 				this.$thumbnailsContainer = $( '<div class="sp-thumbnails-container"></div>' ).insertAfter( this.$slidesContainer );
-				this.$thumbnails = this.$slider.find( '.sp-thumbnails' ).appendTo( this.$thumbnailsContainer );
+			}
 
-				// Shuffle/randomize the slides
-				if ( this.settings.shuffle === true ) {
-					var thumbnails = this.$thumbnails.find( '.sp-thumbnail' ),
-						shuffledThumbnails = [];
+			// If the thumbnails' main container doesn't exist, create it, and get a reference to it
+			if ( this.$thumbnails === null ) {
+				if ( this.$slider.find( '.sp-thumbnails' ).length !== 0 ) {
+					this.$thumbnails = this.$slider.find( '.sp-thumbnails' ).appendTo( this.$thumbnailsContainer );
 
-					// Reposition the slides based on the order of the indexes in the
-					// 'shuffledIndexes' array
-					$.each( this.shuffledIndexes, function( index, element ) {
-						var thumbnail = $( thumbnails[ element ] );
+					// Shuffle/randomize the slides
+					if ( this.settings.shuffle === true ) {
+						var thumbnails = this.$thumbnails.find( '.sp-thumbnail' ),
+							shuffledThumbnails = [];
 
-						if ( thumbnail.parent( 'a' ).length !== 0 ) {
-							thumbnail = thumbnail.parent( 'a' );
-						}
+						// Reposition the slides based on the order of the indexes in the
+						// 'shuffledIndexes' array
+						$.each( this.shuffledIndexes, function( index, element ) {
+							var thumbnail = $( thumbnails[ element ] );
 
-						shuffledThumbnails.push( thumbnail );
-					});
-					
-					// Append the sorted thumbnails to the thumbnail scroller
-					this.$thumbnails.empty().append( shuffledThumbnails ) ;
+							if ( thumbnail.parent( 'a' ).length !== 0 ) {
+								thumbnail = thumbnail.parent( 'a' );
+							}
+
+							shuffledThumbnails.push( thumbnail );
+						});
+						
+						// Append the sorted thumbnails to the thumbnail scroller
+						this.$thumbnails.empty().append( shuffledThumbnails ) ;
+					}
+				} else {
+					this.$thumbnails = $( '<div class="sp-thumbnails"></div>' ).appendTo( this.$thumbnailsContainer );
 				}
 			}
+
+			// Check if there are thumbnails inside the slides and move them in the thumbnails container
+			this.$slides.find( '.sp-thumbnail' ).each( function( index ) {
+				var $thumbnail = $( this ),
+					thumbnailIndex = $thumbnail.parents( '.sp-slide' ).index(),
+					lastThumbnailIndex = that.$thumbnails.find( '.sp-thumbnail' ).length - 1;
+
+				// If the index of the slide that contains the thumbnail is greater than the total number
+				// of thumbnails from the thumbnails container, position the thumbnail at the end.
+				// Otherwise, add the thumbnails at the corresponding position.
+				if ( thumbnailIndex > lastThumbnailIndex ) {
+					$thumbnail.appendTo( that.$thumbnails );
+				} else {
+					$thumbnail.insertBefore( that.$thumbnails.find( '.sp-thumbnail' ).eq( thumbnailIndex ) );
+				}
+			});
 
 			// Loop through the Thumbnail objects and it a corresponding element is not find in the DOM,
 			// it means that the thumbnail might have been removed. In this case, destroy that thumbnail.
