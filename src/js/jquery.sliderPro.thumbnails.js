@@ -71,12 +71,12 @@
 				if ( this.$slider.find( '.sp-thumbnails' ).length !== 0 ) {
 					this.$thumbnails = this.$slider.find( '.sp-thumbnails' ).appendTo( this.$thumbnailsContainer );
 
-					// Shuffle/randomize the slides
+					// Shuffle/randomize the thumbnails
 					if ( this.settings.shuffle === true ) {
 						var thumbnails = this.$thumbnails.find( '.sp-thumbnail' ),
 							shuffledThumbnails = [];
 
-						// Reposition the slides based on the order of the indexes in the
+						// Reposition the thumbnails based on the order of the indexes in the
 						// 'shuffledIndexes' array
 						$.each( this.shuffledIndexes, function( index, element ) {
 							var thumbnail = $( thumbnails[ element ] );
@@ -112,8 +112,8 @@
 				}
 			});
 
-			// Loop through the Thumbnail objects and it a corresponding element is not find in the DOM,
-			// it means that the thumbnail might have been removed. In this case, destroy that thumbnail.
+			// Loop through the Thumbnail objects and if a corresponding element is not found in the DOM,
+			// it means that the thumbnail might have been removed. In this case, destroy that Thumbnail instance.
 			for ( var i = this.thumbnails.length - 1; i >= 0; i-- ) {
 				if ( this.$thumbnails.find( '.sp-thumbnail[data-index="' + i + '"]' ).length === 0 ) {
 					var thumbnail = this.thumbnails[ i ];
@@ -195,7 +195,7 @@
 			var that = this,
 				thumbnail = new Thumbnail( element, this.$thumbnails, index );
 
-			// When the thumbnail is clicked navigate to the corresponding slide
+			// When the thumbnail is clicked, navigate to the corresponding slide
 			thumbnail.on( 'thumbnailClick.' + NS, function( event ) {
 				that.gotoSlide( event.index );
 			});
@@ -204,8 +204,8 @@
 			this.thumbnails.splice( index, 0, thumbnail );
 		},
 
-		// Called when the slider is resized and reset the size and position of the
-		// thumbnail scroller container
+		// Called when the slider is resized.
+		// Resets the size and position of the thumbnail scroller container.
 		_thumbnailsOnResize: function() {
 			if ( this.isThumbnailScroller === false ) {
 				return;
@@ -232,7 +232,7 @@
 			} else if ( this.thumbnailsOrientation === 'vertical' ) {
 
 				// Check if the width of the slide mask plus the width of the thumbnail scroller is greater than
-				// the width of the slider's container, and if that's the case, reduce the slides container width
+				// the width of the slider's container and if that's the case, reduce the slides container width
 				// in order to make the entire slider fit inside the slider's container.
 				if ( this.$slidesMask.width() + this.$thumbnailsContainer.outerWidth( true ) > this.$slider.parent().width() ) {
 					// Reduce the slider's width, to make room for the thumbnails
@@ -245,7 +245,7 @@
 					this.$slidesMask.css( 'width', this.$slider.width() );
 
 					// If the slides are horizontally oriented, update the visible size and the offset
-					// of the selected slide, since the slider's was reduced to make room for the thumbnails.
+					// of the selected slide, since the slider's size was reduced to make room for the thumbnails.
 					// 
 					// If the slides are vertically oriented, update the width and height (to maintain the aspect ratio)
 					// of the slides.
@@ -272,7 +272,7 @@
 			// the same size as the slides container), it means that all the thumbnails will be visible, so set
 			// the position of the thumbnail scroller to 0.
 			// 
-			// If that's not the case, the thumbnail scroller will be positioned based on what thumbnail is selected.
+			// If that's not the case, the thumbnail scroller will be positioned based on which thumbnail is selected.
 			if ( this.thumbnailsSize <= this.thumbnailsContainerSize || this.$thumbnails.find( '.sp-selected-thumbnail' ).length === 0 ) {
 				newThumbnailsPosition = 0;
 			} else {
