@@ -91,7 +91,7 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* 'none'
 
-*Available value:* 'fullWidth', 'fullHeight' and 'none'.
+*Available value:* 'fullWidth', 'fullWindow' and 'none'.
 
 #### loop ####
 
