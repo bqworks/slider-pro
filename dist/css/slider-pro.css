@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.2
+*  - v1.0.4
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -390,10 +390,6 @@
 		width: 14px;
 		height: 14px;
 	}
-
-	.sp-has-buttons {
-		margin-bottom: 36px;
-	}
 }
 
 @media only screen and (min-width: 568px) and (max-width: 768px) {
@@ -401,20 +397,12 @@
 		width: 16px;
 		height: 16px;
 	}
-
-	.sp-has-buttons {
-		margin-bottom: 38px;
-	}
 }
 
 @media only screen and (min-width: 320px) and (max-width: 568px) {
 	.sp-button {
 		width: 18px;
 		height: 18px;
-	}
-
-	.sp-has-buttons {
-		margin-bottom: 40px;
 	}
 }
 
