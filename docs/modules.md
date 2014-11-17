@@ -364,6 +364,10 @@ Customizable properties: [keyboard](api.md#keyboard) and [keyboardOnlyOnFocus](a
 
 This module adds support for thumbnails. Thumbnails can contain any HTML content, from simple images to more complex structures that include both text and images.
 
+There are two possible variations for adding thumbnails:
+
+- Add them separately from slides, in their own container, `sp-thumbnails`.
+
 *Example:*
 
 ```html
@@ -385,7 +389,38 @@ This module adds support for thumbnails. Thumbnails can contain any HTML content
 </div>
 ```
 
-As can be seen in the example above, the thumbnails are added separately from the slides, in their own container (`sp-thumbnails`), and the order of the thumbnails should correspond to the order of the slides. For example, the third thumbnail corresponds to the third slide.
+- Add each thumbnail in the `sp-slide` element to which it corresponds.
+
+*Example:*
+
+```html
+<div class="slider-pro">
+	<div class="sp-slides">
+		<div class="sp-slide">
+			<img class="sp-image" src="path/to/image1.jpg"/>
+
+			<img class="sp-thumbnail" src="path/to/thumbnail.jpg"/>
+		</div>
+
+		<div id="my-slide" class="sp-slide">
+			<img class="sp-image" src="path/to/image2.jpg"/>
+
+			<p class="sp-thumbnail">Thumbnail 2</p>
+		</div>
+
+		<div class="sp-slide">
+			<img class="sp-image" src="path/to/image3.jpg"/>
+
+			<div class="sp-thumbnail">
+				<img class="sp-thumbnail-image" src="path/to/thumbnail.jpg"/>
+				<p class="sp-thumbnail-text">Tempor incididunt ut labore et dolore magna</p>
+			</div>
+		</div>
+	</div>
+</div>
+```
+
+You can use which variations you think is more semantic for your implementation.
 
 Customizable properties: [thumbnailWidth](api.md#thumbnailwidth), [thumbnailHeight](api.md#thumbnailheight), [thumbnailsPosition](api.md#thumbnailsposition) and [thumbnailPointer](api.md#thumbnailpointer).
 
