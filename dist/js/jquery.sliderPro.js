@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.4
+*  - v1.0.5
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -1394,7 +1394,7 @@
 		$thumbnailsContainer: null,
 
 		// List of Thumbnail objects
-		thumbnails: [],
+		thumbnails: null,
 
 		// Index of the selected thumbnail
 		selectedThumbnailIndex: 0,
@@ -1419,6 +1419,8 @@
 
 		initThumbnails: function() {
 			var that = this;
+
+			this.thumbnails = [];
 
 			this.on( 'update.' + NS, $.proxy( this._thumbnailsOnUpdate, this ) );
 			this.on( 'sliderResize.' + NS, $.proxy( this._thumbnailsOnResize, this ) );

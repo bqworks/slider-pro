@@ -17,7 +17,7 @@
 		$thumbnailsContainer: null,
 
 		// List of Thumbnail objects
-		thumbnails: [],
+		thumbnails: null,
 
 		// Index of the selected thumbnail
 		selectedThumbnailIndex: 0,
@@ -42,6 +42,8 @@
 
 		initThumbnails: function() {
 			var that = this;
+
+			this.thumbnails = [];
 
 			this.on( 'update.' + NS, $.proxy( this._thumbnailsOnUpdate, this ) );
 			this.on( 'sliderResize.' + NS, $.proxy( this._thumbnailsOnResize, this ) );
