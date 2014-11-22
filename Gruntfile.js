@@ -49,7 +49,8 @@ module.exports = function(grunt) {
           'src/css/slider-pro.buttons.css',
           'src/css/slider-pro.arrows.css',
           'src/css/slider-pro.thumbnail-arrows.css',
-          'src/css/slider-pro.video.css'
+          'src/css/slider-pro.video.css',
+          'src/css/slider-pro.wp.css'
         ],
         dest: 'dist/css/<%= cssFileName %>.css'
       }
