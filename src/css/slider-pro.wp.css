@@ -1,0 +1,81 @@
+/* CSS for preventing styling issues in WordPress
+--------------------------------------------------*/
+.slider-pro img.sp-image,
+.slider-pro img.sp-thumbnail {
+	max-width: none !important;
+	max-height: none !important;
+	border: none !important;
+	border-radius: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	-webkit-box-shadow: none !important;
+	-mox-box-shadow: none !important;
+	box-shadow: none !important;
+	transition: none;
+	-moz-transition: none;
+	-webkit-transition: none;
+	-o-transition: none;
+}
+
+.slider-pro a {
+	position: static;
+	transition: none !important;
+	-moz-transition: none !important;
+	-webkit-transition: none !important;
+	-o-transition: none !important;
+}
+
+.slider-pro iframe,
+.slider-pro object,
+.slider-pro video,
+.slider-pro embed,
+.slider-pro canvas {
+	max-width: none;
+	max-height: none;
+}
+
+.slider-pro p.sp-layer {
+	font-size: 14px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro h1.sp-layer {
+	font-size: 32px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro h2.sp-layer {
+	font-size: 24px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro h3.sp-layer {
+	font-size: 19px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro h4.sp-layer {
+	font-size: 16px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro h5.sp-layer {
+	font-size: 13px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro h6.sp-layer {
+	font-size: 11px;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.slider-pro img.sp-layer {
+	border: none;
+}
