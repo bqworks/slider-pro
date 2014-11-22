@@ -12,8 +12,11 @@
 }
 
 .sp-top-thumbnails {
-	position: absolute;
-	top: 0;
+	margin-bottom: 4px;
+}
+
+.sp-bottom-thumbnails {
+	margin-top: 4px;
 }
 
 .sp-left-thumbnails,
@@ -24,10 +27,12 @@
 
 .sp-right-thumbnails {
 	right: 0;
+	margin-left: 4px;
 }
 
 .sp-left-thumbnails {
 	left: 0;
+	margin-right: 4px;
 }
 
 .sp-thumbnails {

@@ -56,10 +56,6 @@
 
 /* Example 3 */
 
-#example3 .sp-thumbnails-container {
-	margin-top: 4px;
-}
-
 #example3 .sp-selected-thumbnail {
 	border: 4px solid #000;
 }
