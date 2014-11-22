@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.5
+*  - v1.0.6
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
