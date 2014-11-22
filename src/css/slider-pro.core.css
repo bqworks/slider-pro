@@ -33,3 +33,8 @@
 	display: block;
 	border: none;
 }
+
+.sp-no-js {
+	overflow: hidden;
+	max-width: 100%;
+}
