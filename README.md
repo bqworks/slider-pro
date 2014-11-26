@@ -130,7 +130,3 @@ If you need help with implementing the slider in your project, I recommend using
 ## License ##
 
 The plugin is available under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
-
-## Notes ##
-
-A WordPress plugin based on this slider is in the works.
