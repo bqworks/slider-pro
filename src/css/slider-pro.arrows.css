@@ -1,5 +1,9 @@
 /* Arrows
 --------------------------------------------------*/
+.sp-arrows {
+	position: absolute;
+}
+
 .sp-fade-arrows {
 	opacity: 0;
 	-webkit-transition: opacity 0.5s;
@@ -8,6 +12,20 @@
 
 .sp-slides-container:hover .sp-fade-arrows {
 	opacity: 1;
+}
+
+.sp-horizontal .sp-arrows {
+	width: 100%;
+	left: 0;
+	top: 50%;
+	margin-top: -20px;
+}
+
+.sp-vertical .sp-arrows {
+	height: 100%;
+	left: 50%;
+	top: 0;
+	margin-left: -10px;
 }
 
 .sp-arrow {
@@ -22,16 +40,6 @@
 	-webkit-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	transform: rotate(90deg);
-}
-
-.sp-horizontal .sp-arrow {
-	top: 50%;
-	margin-top: -20px;
-}
-
-.sp-vertical .sp-arrow {
-	left: 50%;
-	margin-left: -10px;
 }
 
 .sp-previous-arrow:before {
