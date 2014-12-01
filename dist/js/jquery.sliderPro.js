@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.6
+*  - v1.0.7
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -84,6 +84,9 @@
 		// Indicates the 'left' or 'top' position
 		this.positionProperty = null;
 
+		// Indicates if the current browser is IE
+		this.isIE = null;
+
 		// The position of the slides container
 		this.slidesPosition = 0;
 
@@ -141,6 +144,7 @@
 			this.supportedAnimation = SliderProUtils.getSupportedAnimation();
 			this.vendorPrefix = SliderProUtils.getVendorPrefix();
 			this.transitionEvent = SliderProUtils.getTransitionEvent();
+			this.isIE = SliderProUtils.checkIE();
 
 			// Remove the 'sp-no-js' when the slider's JavaScript code starts running
 			this.$slider.removeClass( 'sp-no-js' );
@@ -150,13 +154,17 @@
 				this.$slider.addClass( 'ios' );
 			}
 
-			// Check if IE is used and add the version number as a class to the slider since
-			// older IE versions might need extra CSS code.
+			// Check if IE (older than 11) is used and add the version number as a class to the slider since
+			// older IE versions might need CSS tweaks.
 			var rmsie = /(msie) ([\w.]+)/,
 				ieVersion = rmsie.exec( window.navigator.userAgent.toLowerCase() );
 			
+			if ( this.isIE ) {
+				this.$slider.addClass( 'ie' );
+			}
+
 			if ( ieVersion !== null ) {
-				this.$slider.addClass( 'ie ie' + parseInt( ieVersion[2], 10 ) );
+				this.$slider.addClass( 'ie' + parseInt( ieVersion[2], 10 ) );
 			}
 
 			// Set up the slides containers
@@ -667,7 +675,7 @@
 			
 			this.slidesPosition = position;
 			
-			if ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) {
+			if ( ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) && this.isIE === false ) {
 				var transition,
 					left = this.settings.orientation === 'horizontal' ? position : 0,
 					top = this.settings.orientation === 'horizontal' ? 0 : position;
@@ -723,7 +731,7 @@
 		_stopMovement: function() {
 			var css = {};
 
-			if ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) {
+			if ( ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) && this.isIE === false) {
 
 				// Get the current position of the slides by parsing the 'transform' property
 				var	matrixString = this.$slides.css( this.vendorPrefix + 'transform' ),
@@ -1225,6 +1233,9 @@
 		// Indicates the name of the transition's complete event for the current browser
 		transitionEvent: null,
 
+		// Indicates if the current browser is Internet Explorer (any version)
+		isIE: null,
+
 		// Check whether CSS3 3D or 2D transforms are supported. If they aren't, use JavaScript animations
 		getSupportedAnimation: function() {
 			if ( this.supportedAnimation !== null ) {
@@ -1368,6 +1379,23 @@
 			}
 
 			return status;
+		},
+
+		checkIE: function() {
+			if ( this.isIE !== null ) {
+				return this.isIE;
+			}
+
+			var userAgent = window.navigator.userAgent,
+				msie = userAgent.indexOf( 'MSIE' );
+
+			if ( userAgent.indexOf( 'MSIE' ) !== -1 || userAgent.match( /Trident.*rv\:11\./ ) ) {
+				this.isIE = true;
+			} else {
+				this.isIE = false;
+			}
+
+			return this.isIE;
 		}
 	};
 
