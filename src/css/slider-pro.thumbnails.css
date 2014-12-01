@@ -113,7 +113,7 @@
 }
 
 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25c0';
+	content: '\25b2';
 	position: absolute;
 	font-family: Arial;
 	font-size: 16px;
@@ -121,15 +121,14 @@
 	color: #F00;
 	left: 0;
 	top: 50%;
-	margin-top: -6px;
+	margin-top: -8px;
+	-ms-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
 }
 
-.ie11 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after, 
-.ie10 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after, 
-.ie9 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25bc';
-	-ms-transform: rotate(90deg);
-	transform: rotate(90deg);
+.ie8 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
+	content: '\25c0';
 }
 
 /* Left thumbnails with pointer
@@ -154,7 +153,7 @@
 }
 
 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25ba';
+	content: '\25b2';
 	position: absolute;
 	font-family: Arial;
 	font-size: 16px;
@@ -162,15 +161,14 @@
 	color: #F00;
 	right: 0;
 	top: 50%;
-	margin-top: -6px;
+	margin-top: -8px;
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 
-.ie11 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after,
-.ie10 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after,
-.ie9 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25b2';
-	-ms-transform: rotate(90deg);
-	transform: rotate(90deg);
+.ie8 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
+	content: '\25ba';
 }
 
 /* Bottom thumbnails with pointer
@@ -227,7 +225,7 @@
 }
 
 .sp-top-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25bc';
+	content: '\25b2';
 	position: absolute;
 	font-family: Arial;
 	font-size: 16px;
@@ -236,4 +234,11 @@
 	left: 50%;
 	bottom: 0;
 	margin-left: -9px;
+	-ms-transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+.ie8 .sp-top-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
+	content: '\25bc';
 }
