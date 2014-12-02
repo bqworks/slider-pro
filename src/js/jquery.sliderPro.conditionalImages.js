@@ -76,7 +76,7 @@
 
 							// If the retina image was not loaded yet, replace the default image source with the one
 							// that corresponds to the current slider size
-							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' ) {
+							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' && $image.attr( 'data-retina' ) !== imageSource ) {
 								$image.attr( 'data-retina', imageSource );
 							}
 						} else if ( typeof $image.attr( 'data-' + that.currentImageSize ) !== 'undefined' ) {
@@ -84,7 +84,7 @@
 
 							// If the image is set to lazy load, replace the image source with the one
 							// that corresponds to the current slider size
-							if ( typeof $image.attr( 'data-src' ) !== 'undefined' ) {
+							if ( typeof $image.attr( 'data-src' ) !== 'undefined' && $image.attr( 'data-src' ) !== imageSource ) {
 								$image.attr( 'data-src', imageSource );
 							}
 						}
@@ -94,7 +94,7 @@
 
 							// The existence of the 'data-src' attribute indicates that the image
 							// will be lazy loaded, so don't load the new image yet
-							if ( typeof $image.attr( 'data-src' ) === 'undefined' ) {
+							if ( typeof $image.attr( 'data-src' ) === 'undefined' && $image.attr( 'src' ) !== imageSource  ) {
 								that._loadConditionalImage( $image, imageSource, function( newImage ) {
 									if ( newImage.hasClass( 'sp-image' ) ) {
 										element.$mainImage = newImage;
@@ -112,7 +112,7 @@
 
 		// Replace the target image with a new image
 		_loadConditionalImage: function( image, source, callback ) {
-			
+
 			// Create a new image element
 			var newImage = $( new Image() );
 
