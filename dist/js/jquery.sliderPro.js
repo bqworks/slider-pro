@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.7
+*  - v1.0.8
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -2160,7 +2160,7 @@
 
 							// If the retina image was not loaded yet, replace the default image source with the one
 							// that corresponds to the current slider size
-							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' ) {
+							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' && $image.attr( 'data-retina' ) !== imageSource ) {
 								$image.attr( 'data-retina', imageSource );
 							}
 						} else if ( typeof $image.attr( 'data-' + that.currentImageSize ) !== 'undefined' ) {
@@ -2168,7 +2168,7 @@
 
 							// If the image is set to lazy load, replace the image source with the one
 							// that corresponds to the current slider size
-							if ( typeof $image.attr( 'data-src' ) !== 'undefined' ) {
+							if ( typeof $image.attr( 'data-src' ) !== 'undefined' && $image.attr( 'data-src' ) !== imageSource ) {
 								$image.attr( 'data-src', imageSource );
 							}
 						}
@@ -2178,7 +2178,7 @@
 
 							// The existence of the 'data-src' attribute indicates that the image
 							// will be lazy loaded, so don't load the new image yet
-							if ( typeof $image.attr( 'data-src' ) === 'undefined' ) {
+							if ( typeof $image.attr( 'data-src' ) === 'undefined' && $image.attr( 'src' ) !== imageSource  ) {
 								that._loadConditionalImage( $image, imageSource, function( newImage ) {
 									if ( newImage.hasClass( 'sp-image' ) ) {
 										element.$mainImage = newImage;
@@ -2196,7 +2196,7 @@
 
 		// Replace the target image with a new image
 		_loadConditionalImage: function( image, source, callback ) {
-			
+
 			// Create a new image element
 			var newImage = $( new Image() );
 
@@ -2652,7 +2652,7 @@
 			$.each( this.slides, function( index, element ) {
 				var $slide = element.$slide;
 
-				// Initialize the layers and add them to the the layers container
+				// Initialize the layers
 				this.$slide.find( '.sp-layer:not([ data-init ])' ).each(function() {
 					var layer = new Layer( $( this ) );
 
@@ -2672,8 +2672,6 @@
 
 						element.animatedLayers.push( layer );
 					}
-
-					$( this ).appendTo( $slide );
 				});
 			});
 
