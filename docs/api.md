@@ -45,7 +45,7 @@ $( '#my-slider' ).sliderPro({
 
 #### imageScaleMode ####
 
->Sets the scale mode of the main slide images (images added as background).
+>Sets the scale mode of the main slide images (images added as background). 'cover' will scale and crop the image so that it fills the entire slide. 'contain' will keep the entire image visible inside the slide. 'exact' will match the size of the image to the size of the slide. 'none' will leave the image to its original size.
 
 >*Default value:* 'cover'
 
