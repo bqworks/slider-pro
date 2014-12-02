@@ -30,7 +30,7 @@
 			$.each( this.slides, function( index, element ) {
 				var $slide = element.$slide;
 
-				// Initialize the layers and add them to the the layers container
+				// Initialize the layers
 				this.$slide.find( '.sp-layer:not([ data-init ])' ).each(function() {
 					var layer = new Layer( $( this ) );
 
@@ -50,8 +50,6 @@
 
 						element.animatedLayers.push( layer );
 					}
-
-					$( this ).appendTo( $slide );
 				});
 			});
 
