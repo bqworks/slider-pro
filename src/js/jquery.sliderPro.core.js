@@ -1068,8 +1068,13 @@
 				height = this.$slide.height();
 
 			this.$slide.children().each(function( index, element ) {
-				var child = $( element ),
-					rect = element.getBoundingClientRect(),
+				var child = $( element );
+
+				if ( child.is( ':hidden' ) === true ) {
+					return;
+				}
+
+				var	rect = element.getBoundingClientRect(),
 					bottom = child.position().top + ( rect.bottom - rect.top ),
 					right = child.position().left + ( rect.right - rect.left );
 
