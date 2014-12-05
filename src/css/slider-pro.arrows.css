@@ -30,9 +30,9 @@
 
 .sp-arrow {
 	position: absolute;
-	font-size: 40px;
-	color: #FFF;
-	text-shadow: 1px 1px 1px #666;
+	display: block;
+	width: 20px;
+	height: 30px;
 	cursor: pointer;
 }
 
@@ -40,38 +40,6 @@
 	-webkit-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	transform: rotate(90deg);
-}
-
-.sp-previous-arrow:before {
-	content: '\276e';
-}
-
-.ios .sp-previous-arrow:before,
-.ie9 .sp-previous-arrow:before,
-.ie8 .sp-previous-arrow:before,
-.ie7 .sp-previous-arrow:before {
-	content: '\25c0';
-}
-
-.ie8.sp-vertical .sp-previous-arrow:before,
-.ie7.sp-vertical .sp-previous-arrow:before {
-	content: '\25b2';
-}
-
-.sp-next-arrow:before {
-	content: '\276f';
-}
-
-.ios .sp-next-arrow:before,
-.ie9 .sp-next-arrow:before,
-.ie8 .sp-next-arrow:before,
-.ie7 .sp-next-arrow:before {
-	content: '\25b6';
-}
-
-.ie8.sp-vertical .sp-next-arrow:before,
-.ie7.sp-vertical .sp-next-arrow:before {
-	content: '\25bc';
 }
 
 .sp-horizontal .sp-previous-arrow {
@@ -88,4 +56,96 @@
 
 .sp-vertical .sp-next-arrow {
 	bottom: 20px;
+}
+
+.sp-previous-arrow:before,
+.sp-previous-arrow:after,
+.sp-next-arrow:before,
+.sp-next-arrow:after {
+	content: '';
+	position: absolute;
+	width: 50%;
+	height: 50%;
+	background-color: #FFF;
+}
+
+.sp-previous-arrow:before {
+	left: 30%;
+	top: 0;
+	-webkit-transform: skew(145deg, 0deg);
+	-moz-transform: skew(145deg, 0deg);
+	-ms-transform: skew(145deg, 0deg);
+	-o-transform: skew(145deg, 0deg);
+	transform: skew(145deg, 0deg);
+}
+
+.sp-previous-arrow:after {
+	left: 30%;
+	top: 50%;
+	-webkit-transform: skew(-145deg, 0deg);
+	-moz-transform: skew(-145deg, 0deg);
+	-ms-transform: skew(-145deg, 0deg);
+	-o-transform: skew(-145deg, 0deg);
+	transform: skew(-145deg, 0deg);
+}
+
+.sp-next-arrow:before {
+	right: 30%;
+	top: 0;
+	-webkit-transform: skew(35deg, 0deg);
+	-moz-transform: skew(35deg, 0deg);
+	-ms-transform: skew(35deg, 0deg);
+	-o-transform: skew(35deg, 0deg);
+	transform: skew(35deg, 0deg);
+}
+
+.sp-next-arrow:after {
+	right: 30%;
+	top: 50%;
+	-webkit-transform: skew(-35deg, 0deg);
+	-moz-transform: skew(-35deg, 0deg);
+	-ms-transform: skew(-35deg, 0deg);
+	-o-transform: skew(-35deg, 0deg);
+	transform: skew(-35deg, 0deg);
+}
+
+.ie8 .sp-arrow,
+.ie7 .sp-arrow {
+	width: 0;
+	height: 0;
+}
+
+.ie8 .sp-arrow:before,
+.ie8 .sp-arrow:after,
+.ie7 .sp-arrow:before,
+.ie7 .sp-arrow:after {
+	content: none;
+}
+
+.ie8.sp-horizontal .sp-previous-arrow,
+.ie7.sp-horizontal .sp-previous-arrow {
+	border-right: 20px solid #FFF;
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent;
+}
+
+.ie8.sp-horizontal .sp-next-arrow,
+.ie7.sp-horizontal .sp-next-arrow {
+	border-left: 20px solid #FFF;
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent;
+}
+
+.ie8.sp-vertical .sp-previous-arrow,
+.ie7.sp-vertical .sp-previous-arrow {
+	border-bottom: 20px solid #FFF;
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+}
+
+.ie8.sp-vertical .sp-next-arrow,
+.ie7.sp-vertical .sp-next-arrow {
+	border-top: 20px solid #FFF;
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
 }
