@@ -80,9 +80,7 @@
 	left: 30%;
 	top: 0;
 	-webkit-transform: skew(145deg, 0deg);
-	-moz-transform: skew(145deg, 0deg);
 	-ms-transform: skew(145deg, 0deg);
-	-o-transform: skew(145deg, 0deg);
 	transform: skew(145deg, 0deg);
 }
 
@@ -90,9 +88,7 @@
 	left: 30%;
 	top: 50%;
 	-webkit-transform: skew(-145deg, 0deg);
-	-moz-transform: skew(-145deg, 0deg);
 	-ms-transform: skew(-145deg, 0deg);
-	-o-transform: skew(-145deg, 0deg);
 	transform: skew(-145deg, 0deg);
 }
 
@@ -100,9 +96,7 @@
 	right: 30%;
 	top: 0;
 	-webkit-transform: skew(35deg, 0deg);
-	-moz-transform: skew(35deg, 0deg);
 	-ms-transform: skew(35deg, 0deg);
-	-o-transform: skew(35deg, 0deg);
 	transform: skew(35deg, 0deg);
 }
 
@@ -110,9 +104,7 @@
 	right: 30%;
 	top: 50%;
 	-webkit-transform: skew(-35deg, 0deg);
-	-moz-transform: skew(-35deg, 0deg);
 	-ms-transform: skew(-35deg, 0deg);
-	-o-transform: skew(-35deg, 0deg);
 	transform: skew(-35deg, 0deg);
 }
 
