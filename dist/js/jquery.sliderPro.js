@@ -1,5 +1,5 @@
 /*!
-*  - v1.0.8
+*  - v1.0.9
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -1074,8 +1074,13 @@
 				height = this.$slide.height();
 
 			this.$slide.children().each(function( index, element ) {
-				var child = $( element ),
-					rect = element.getBoundingClientRect(),
+				var child = $( element );
+
+				if ( child.is( ':hidden' ) === true ) {
+					return;
+				}
+
+				var	rect = element.getBoundingClientRect(),
 					bottom = child.position().top + ( rect.bottom - rect.top ),
 					right = child.position().left + ( rect.right - rect.left );
 
