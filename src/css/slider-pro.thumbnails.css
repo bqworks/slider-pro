@@ -113,22 +113,16 @@
 }
 
 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25b2';
+	content: '';
 	position: absolute;
-	font-family: Arial;
-	font-size: 16px;
-	line-height: 1;
-	color: #F00;
+	width: 0;
+	height: 0;
 	left: 0;
 	top: 50%;
 	margin-top: -8px;
-	-ms-transform: rotate(-90deg);
-	-webkit-transform: rotate(-90deg);
-	transform: rotate(-90deg);
-}
-
-.ie8 .sp-right-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25c0';
+	border-right: 13px solid #F00;
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
 }
 
 /* Left thumbnails with pointer
@@ -153,22 +147,16 @@
 }
 
 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25b2';
+	content: '';
 	position: absolute;
-	font-family: Arial;
-	font-size: 16px;
-	line-height: 1;
-	color: #F00;
+	width: 0;
+	height: 0;
 	right: 0;
 	top: 50%;
 	margin-top: -8px;
-	-ms-transform: rotate(90deg);
-	-webkit-transform: rotate(90deg);
-	transform: rotate(90deg);
-}
-
-.ie8 .sp-left-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25ba';
+	border-left: 13px solid #F00;
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
 }
 
 /* Bottom thumbnails with pointer
@@ -193,15 +181,16 @@
 }
 
 .sp-bottom-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25b2';
+	content: '';
 	position: absolute;
-	font-family: Arial;
-	font-size: 16px;
-	line-height: 1;
-	color: #F00;
+	width: 0;
+	height: 0;
 	left: 50%;
 	top: 0;
-	margin-left: -9px;
+	margin-left: -8px;
+	border-bottom: 13px solid #F00;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
 }
 
 /* Top thumbnails with pointer
@@ -225,20 +214,14 @@
 }
 
 .sp-top-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25b2';
+	content: '';
 	position: absolute;
-	font-family: Arial;
-	font-size: 16px;
-	line-height: 1;
-	color: #F00;
+	width: 0;
+	height: 0;
 	left: 50%;
 	bottom: 0;
-	margin-left: -9px;
-	-ms-transform: rotate(180deg);
-	-webkit-transform: rotate(180deg);
-	transform: rotate(180deg);
-}
-
-.ie8 .sp-top-thumbnails.sp-has-pointer .sp-selected-thumbnail:after {
-	content: '\25bc';
+	margin-left: -8px;
+	border-top: 13px solid #F00;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
 }
