@@ -179,10 +179,12 @@
 			// Merge the modules' default settings with the core's default settings
 			if ( typeof modules !== 'undefined' ) {
 				for ( var i in modules ) {
-					var defaults = modules[ i ].substring( 0, 1 ).toLowerCase() + modules[ i ].substring( 1 ) + 'Defaults';
-
-					if ( typeof this[ defaults ] !== 'undefined' ) {
-						$.extend( this.defaults, this[ defaults ] );
+					if (typeof modules[ i ] !== 'function') {
+						var defaults = modules[ i ].substring( 0, 1 ).toLowerCase() + modules[ i ].substring( 1 ) + 'Defaults';
+	
+						if ( typeof this[ defaults ] !== 'undefined' ) {
+							$.extend( this.defaults, this[ defaults ] );
+						}
 					}
 				}
 			}
