@@ -172,7 +172,7 @@
 
 			// Merge the modules' default settings with the core's default settings
 			if ( typeof modules !== 'undefined' ) {
-				for ( var i in modules ) {
+				for ( var i = 0; i < modules.length; i++ ) {
 					var defaults = modules[ i ].substring( 0, 1 ).toLowerCase() + modules[ i ].substring( 1 ) + 'Defaults';
 
 					if ( typeof this[ defaults ] !== 'undefined' ) {
@@ -186,7 +186,7 @@
 
 			// Initialize the modules
 			if ( typeof modules !== 'undefined' ) {
-				for ( var j in modules ) {
+				for ( var j = 0; j < modules.length; j++ ) {
 					if ( typeof this[ 'init' + modules[ j ] ] !== 'undefined' ) {
 						this[ 'init' + modules[ j ] ]();
 					}
@@ -397,7 +397,7 @@
 		_updateSlidesPosition: function() {
 			var selectedSlidePixelPosition = parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 );
 
-			for ( var slideIndex in this.slidesOrder ) {
+			for ( var slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
 				var slide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
 				slide.css( this.positionProperty, selectedSlidePixelPosition + ( slideIndex - this.middleSlidePosition  ) * ( this.slideSize + this.settings.slideDistance ) );
 			}
@@ -406,7 +406,7 @@
 		// Set the left/top position of the slides based on their position in the 'slidesOrder' array,
 		// and also set the position of the slides container.
 		_resetSlidesPosition: function() {
-			for ( var slideIndex in this.slidesOrder ) {
+			for ( var slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
 				var slide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
 				slide.css( this.positionProperty, slideIndex * ( this.slideSize + this.settings.slideDistance ) );
 			}
@@ -783,7 +783,7 @@
 			var modules = $.SliderPro.modules;
 
 			if ( typeof modules !== 'undefined' ) {
-				for ( var i in modules ) {
+				for ( var i = 0; i < modules.length; i++ ) {
 					if ( typeof this[ 'destroy' + modules[ i ] ] !== 'undefined' ) {
 						this[ 'destroy' + modules[ i ] ]();
 					}
