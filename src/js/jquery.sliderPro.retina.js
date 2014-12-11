@@ -17,17 +17,11 @@
 			if ( this._isRetina() === false ) {
 				return;
 			}
+			
+			this.on( 'update.' + NS, $.proxy( this._checkRetinaImages, this ) );
 
-			// Check if the Lazy Loading module is enabled and overwrite its loading method.
-			// If not, replace all images with their retina version directly.
-			if ( typeof this._loadImage !== 'undefined' ) {
-				this._loadImage = this._loadRetinaImage;
-			} else {
-				this.on( 'update.' + NS, $.proxy( this._checkRetinaImages, this ) );
-
-				if ( this.$slider.find( '.sp-thumbnail' ).length !== 0 ) {
-					this.on( 'update.Thumbnails.' + NS, $.proxy( this._checkRetinaThumbnailImages, this ) );
-				}
+			if ( this.$slider.find( '.sp-thumbnail' ).length !== 0 ) {
+				this.on( 'update.Thumbnails.' + NS, $.proxy( this._checkRetinaThumbnailImages, this ) );
 			}
 		},
 
@@ -51,17 +45,22 @@
 			$.each( this.slides, function( index, element ) {
 				var $slide = element.$slide;
 
-				if ( typeof $slide.attr( 'data-loaded' ) === 'undefined' ) {
-					$slide.attr( 'data-loaded', true );
+				if ( typeof $slide.attr( 'data-retina-loaded' ) === 'undefined' ) {
+					$slide.attr( 'data-retina-loaded', true );
 
-					$slide.find( 'img' ).each(function() {
-						var image = $( this );
-						that._loadRetinaImage( image, function( newImage ) {
-							if ( newImage.hasClass( 'sp-image' ) ) {
-								element.$mainImage = newImage;
-								element.resizeMainImage( true );
-							}
-						});
+					$slide.find( 'img[data-retina]' ).each(function() {
+						var $image = $( this );
+
+						if ( typeof $image.attr( 'data-src' ) !== 'undefined' ) {
+							$image.attr( 'data-src', $image.attr( 'data-retina' ) );
+						} else {
+							that._loadRetinaImage( $image, function( newImage ) {
+								if ( newImage.hasClass( 'sp-image' ) ) {
+									element.$mainImage = newImage;
+									element.resizeMainImage( true );
+								}
+							});
+						}
 					});
 				}
 			});
@@ -71,12 +70,25 @@
 		_checkRetinaThumbnailImages: function() {
 			var that = this;
 
-			this.$thumbnails.find( '.sp-thumbnail-container' ).each(function() {
-				var $thumbnail = $( this );
+			$.each( this.thumbnails, function( index, element ) {
+				var $thumbnail = element.$thumbnailContainer;
 
-				if ( typeof $thumbnail.attr( 'data-loaded' ) === 'undefined' ) {
-					$thumbnail.attr( 'data-loaded', true );
-					that._loadRetinaImage( $thumbnail.find( 'img' ) );
+				if ( typeof $thumbnail.attr( 'data-retina-loaded' ) === 'undefined' ) {
+					$thumbnail.attr( 'data-retina-loaded', true );
+
+					$thumbnail.find( 'img[data-retina]' ).each(function() {
+						var $image = $( this );
+
+						if ( typeof $image.attr( 'data-src' ) !== 'undefined' ) {
+							$image.attr( 'data-src', $image.attr( 'data-retina' ) );
+						} else {
+							that._loadRetinaImage( $image, function( newImage ) {
+								if ( newImage.hasClass( 'sp-thumbnail' ) ) {
+									element.resizeImage();
+								}
+							});
+						}
+					});
 				}
 			});
 		},
@@ -91,7 +103,6 @@
 				retinaFound = true;
 
 				newImagePath = image.attr( 'data-retina' );
-				image.removeAttr( 'data-retina' );
 			}
 
 			// Check if there is a lazy loaded, non-retina, image specified

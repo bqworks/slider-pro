@@ -79,7 +79,7 @@
 							if ( typeof $image.attr( 'data-retina' ) !== 'undefined' && $image.attr( 'data-retina' ) !== imageSource ) {
 								$image.attr( 'data-retina', imageSource );
 							}
-						} else if ( typeof $image.attr( 'data-' + that.currentImageSize ) !== 'undefined' ) {
+						} else if ( ( that.isRetinaScreen === false || that.isRetinaScreen === true && typeof $image.attr( 'data-retina' ) === 'undefined' ) && typeof $image.attr( 'data-' + that.currentImageSize ) !== 'undefined' ) {
 							imageSource = $image.attr( 'data-' + that.currentImageSize );
 
 							// If the image is set to lazy load, replace the image source with the one
