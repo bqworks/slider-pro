@@ -83,6 +83,7 @@
 		// Stops the autoplay
 		stopAutoplay: function() {
 			this.isTimerRunning = false;
+			this.isTimerPaused = false;
 
 			clearTimeout( this.autoplayTimer );
 		},
