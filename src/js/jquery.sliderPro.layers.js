@@ -31,7 +31,7 @@
 				var $slide = element.$slide;
 
 				// Initialize the layers
-				this.$slide.find( '.sp-layer:not([ data-init ])' ).each(function() {
+				this.$slide.find( '.sp-layer:not([ data-layer-init ])' ).each(function() {
 					var layer = new Layer( $( this ) );
 
 					// Add the 'layers' array to the slide objects (instance of SliderProSlide)
@@ -328,7 +328,7 @@
 
 		// Initialize the layers
 		_init: function() {
-			this.$layer.attr( 'data-init', true );
+			this.$layer.attr( 'data-layer-init', true );
 
 			if ( this.$layer.hasClass( 'sp-static' ) ) {
 				this._setStyle();
@@ -649,7 +649,7 @@
 		// Destroy the layer
 		destroy: function() {
 			this.$layer.removeAttr( 'style' );
-			this.$layer.removeAttr( 'data-init' );
+			this.$layer.removeAttr( 'data-layer-init' );
 		}
 	};
 
