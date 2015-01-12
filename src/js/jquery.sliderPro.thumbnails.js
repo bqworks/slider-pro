@@ -81,13 +81,13 @@
 						// Reposition the thumbnails based on the order of the indexes in the
 						// 'shuffledIndexes' array
 						$.each( this.shuffledIndexes, function( index, element ) {
-							var thumbnail = $( thumbnails[ element ] );
+							var $thumbnail = $( thumbnails[ element ] );
 
-							if ( thumbnail.parent( 'a' ).length !== 0 ) {
-								thumbnail = thumbnail.parent( 'a' );
+							if ( $thumbnail.parent( 'a' ).length !== 0 ) {
+								$thumbnail = $thumbnail.parent( 'a' );
 							}
 
-							shuffledThumbnails.push( thumbnail );
+							shuffledThumbnails.push( $thumbnail );
 						});
 						
 						// Append the sorted thumbnails to the thumbnail scroller
@@ -103,6 +103,10 @@
 				var $thumbnail = $( this ),
 					thumbnailIndex = $thumbnail.parents( '.sp-slide' ).index(),
 					lastThumbnailIndex = that.$thumbnails.find( '.sp-thumbnail' ).length - 1;
+
+				if ( $thumbnail.parent( 'a' ).length !== 0 ) {
+					$thumbnail = $thumbnail.parent( 'a' );
+				}
 
 				// If the index of the slide that contains the thumbnail is greater than the total number
 				// of thumbnails from the thumbnails container, position the thumbnail at the end.
