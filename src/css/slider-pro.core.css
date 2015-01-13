@@ -3,6 +3,8 @@
 .slider-pro {
 	position: relative;
 	margin: 0 auto;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
 }
 
 .sp-slides-container {
