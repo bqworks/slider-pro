@@ -392,7 +392,7 @@
 			if ( this.horizontalProperty === 'center' ) {
 				
 				// prevent content wrapping while setting the width
-				if ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'width' ) === -1 ) ) {
+				if ( this.$layer.is( 'img' ) === false && ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'width' ) === -1 ) ) ) {
 					this.$layer.css( 'white-space', 'nowrap' );
 					this.$layer.css( 'width', this.$layer.outerWidth( true ) );
 				}
@@ -406,7 +406,7 @@
 			if ( this.verticalProperty === 'center' ) {
 
 				// prevent content wrapping while setting the height
-				if ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'height' ) === -1 ) ) {
+				if ( this.$layer.is( 'img' ) === false && ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'height' ) === -1 ) ) ) {
 					this.$layer.css( 'white-space', 'nowrap' );
 					this.$layer.css( 'height', this.$layer.outerHeight( true ) );
 				}
