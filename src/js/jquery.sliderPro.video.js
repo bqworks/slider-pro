@@ -18,14 +18,14 @@
 			var that = this;
 
 			// Find all the inline videos and initialize them
-			this.$slider.find( '.sp-video' ).not( 'a, [data-init]' ).each(function() {
+			this.$slider.find( '.sp-video' ).not( 'a, [data-video-init]' ).each(function() {
 				var video = $( this );
 				that._initVideo( video );
 			});
 
 			// Find all the lazy-loaded videos and preinitialize them. They will be initialized
 			// only when their play button is clicked.
-			this.$slider.find( 'a.sp-video' ).not( '[data-preinit]' ).each(function() {
+			this.$slider.find( 'a.sp-video' ).not( '[data-video-preinit]' ).each(function() {
 				var video = $( this );
 				that._preinitVideo( video );
 			});
@@ -35,7 +35,7 @@
 		_initVideo: function( video ) {
 			var that = this;
 
-			video.attr( 'data-init', true )
+			video.attr( 'data-video-init', true )
 				.videoController();
 
 			// When the video starts playing, pause the autoplay if it's running
@@ -93,7 +93,7 @@
 		_preinitVideo: function( video ) {
 			var that = this;
 
-			video.attr( 'data-preinit', true );
+			video.attr( 'data-video-preinit', true );
 
 			// When the video poster is clicked, remove the poster and create
 			// the inline video
@@ -168,7 +168,7 @@
 		_videoOnGotoSlideComplete: function( event ) {
 
 			// Get the video from the previous slide
-			var previousVideo = this.$slides.find( '.sp-slide' ).eq( event.previousIndex ).find( '.sp-video[data-init]' );
+			var previousVideo = this.$slides.find( '.sp-slide' ).eq( event.previousIndex ).find( '.sp-video[data-video-init]' );
 
 			// Handle the video from the previous slide by stopping it, or pausing it,
 			// or remove it, depending on the value of the 'leaveVideoAction' option.
@@ -192,8 +192,8 @@
 
 			// Handle the video from the selected slide
 			if ( this.settings.reachVideoAction === 'playVideo' ) {
-				var loadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-init]' ),
-					unloadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-preinit]' );
+				var loadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-init]' ),
+					unloadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-preinit]' );
 
 				// If the video was already initialized, play it. If it's not initialized (because
 				// it's lazy loaded) initialize it and play it.
@@ -207,16 +207,16 @@
 
 		// Destroy the module
 		destroyVideo: function() {
-			this.$slider.find( '.sp-video[ data-preinit ]' ).each(function() {
+			this.$slider.find( '.sp-video[ data-video-preinit ]' ).each(function() {
 				var video = $( this );
-				video.removeAttr( 'data-preinit' );
+				video.removeAttr( 'data-video-preinit' );
 				video.off( 'click.' + NS );
 			});
 
 			// Loop through the all the videos and destroy them
-			this.$slider.find( '.sp-video[ data-init ]' ).each(function() {
+			this.$slider.find( '.sp-video[ data-video-init ]' ).each(function() {
 				var video = $( this );
-				video.removeAttr( 'data-init' );
+				video.removeAttr( 'data-video-init' );
 				video.off( 'Video' );
 				video.videoController( 'destroy' );
 			});
