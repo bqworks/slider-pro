@@ -284,6 +284,9 @@
 
 			this.update();
 
+			// add the 'sp-selected' class to the initially selected slide
+			this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
+
 			// Fire the 'init' event
 			this.trigger({ type: 'init' });
 			if ( $.isFunction( this.settings.init ) ) {
