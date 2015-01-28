@@ -9,9 +9,6 @@
 
 	var TouchSwipe = {
 
-		// Indicates if touch is supported
-		isTouchSupport: false,
-
 		// The x and y coordinates of the pointer/finger's starting position
 		touchStartPoint: {x: 0, y: 0},
 
@@ -38,22 +35,12 @@
 				return;
 			}
 
-			// check if there is touch support
-			this.isTouchSupport = 'ontouchstart' in window;
-
-			// Get the names of the events
-			if ( this.isTouchSupport === true ) {
-				this.touchSwipeEvents.startEvent = 'touchstart';
-				this.touchSwipeEvents.moveEvent = 'touchmove';
-				this.touchSwipeEvents.endEvent = 'touchend';
-			} else {
-				this.touchSwipeEvents.startEvent = 'mousedown';
-				this.touchSwipeEvents.moveEvent = 'mousemove';
-				this.touchSwipeEvents.endEvent = 'mouseup';
-			}
+			this.touchSwipeEvents.startEvent = 'touchstart' + '.' + NS + ' mousedown' + '.' + NS;
+			this.touchSwipeEvents.moveEvent = 'touchmove' + '.' + NS + ' mousemove' + '.' + NS;
+			this.touchSwipeEvents.endEvent = 'touchend' + '.' + this.uniqueId + '.' + NS + ' mouseup' + '.' + this.uniqueId + '.' + NS;
 
 			// Listen for touch swipe/mouse move events
-			this.$slidesMask.on( this.touchSwipeEvents.startEvent + '.' + NS, $.proxy( this._onTouchStart, this ) );
+			this.$slidesMask.on( this.touchSwipeEvents.startEvent, $.proxy( this._onTouchStart, this ) );
 			this.$slidesMask.on( 'dragstart.' + NS, function( event ) {
 				event.preventDefault();
 			});
@@ -71,10 +58,10 @@
 			}
 
 			var that = this,
-				eventObject = this.isTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Prevent default behavior only for mouse events
-			if ( this.isTouchSupport === false ) {
+			if (  typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
 
@@ -101,8 +88,8 @@
 			}
 
 			// Listen for move and end events
-			this.$slidesMask.on( this.touchSwipeEvents.moveEvent + '.' + NS, $.proxy( this._onTouchMove, this ) );
-			$( document ).on( this.touchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS, $.proxy( this._onTouchEnd, this ) );
+			this.$slidesMask.on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
+			$( document ).on( this.touchSwipeEvents.endEvent, $.proxy( this._onTouchEnd, this ) );
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grab' ).addClass( 'sp-grabbing' );
@@ -112,8 +99,8 @@
 		},
 
 		// Called during the slides' dragging
-		_onTouchMove: function(event) {
-			var eventObject = this.isTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+		_onTouchMove: function( event ) {
+			var eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Indicate that the move event is being fired
 			this.isTouchMoving = true;
@@ -158,8 +145,8 @@
 				touchDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.x : this.touchDistance.y;
 
 			// Remove the move and end listeners
-			this.$slidesMask.off( this.touchSwipeEvents.moveEvent + '.' + NS );
-			$( document ).off( this.touchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
+			$( document ).off( this.touchSwipeEvents.endEvent );
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
@@ -177,7 +164,7 @@
 			// applied for those listeners, since there was a swipe event
 			setTimeout(function() {
 				that.$slider.removeClass( 'sp-swiping' );
-			}, 1);
+			}, 1 );
 
 			// Return if the slides didn't move
 			if ( this.isTouchMoving === false ) {
@@ -222,10 +209,10 @@
 
 		// Destroy the module
 		destroyTouchSwipe: function() {
-			this.$slidesMask.off( this.touchSwipeEvents.startEvent + '.' + NS );
-			this.$slidesMask.off( this.touchSwipeEvents.moveEvent + '.' + NS );
+			this.$slidesMask.off( this.touchSwipeEvents.startEvent );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			this.$slidesMask.off( 'dragstart.' + NS );
-			$( document ).off( this.touchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			$( document ).off( this.touchSwipeEvents.endEvent );
 			this.$slidesMask.removeClass( 'sp-grab' );
 		},
 

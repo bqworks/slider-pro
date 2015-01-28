@@ -9,9 +9,6 @@
 
 	var ThumbnailTouchSwipe = {
 
-		// Indicates if touch is supported
-		isThumbnailTouchSupport: false,
-
 		// The x and y coordinates of the pointer/finger's starting position
 		thumbnailTouchStartPoint: { x: 0, y: 0 },
 
@@ -48,22 +45,12 @@
 			if ( this.settings.thumbnailTouchSwipe === true && this.isThumbnailTouchSwipe === false ) {
 				this.isThumbnailTouchSwipe = true;
 
-				// Check if there is touch support
-				this.isThumbnailTouchSupport = 'ontouchstart' in window;
-
-				// Get the names of the events
-				if ( this.isThumbnailTouchSupport === true ) {
-					this.thumbnailTouchSwipeEvents.startEvent = 'touchstart';
-					this.thumbnailTouchSwipeEvents.moveEvent = 'touchmove';
-					this.thumbnailTouchSwipeEvents.endEvent = 'touchend';
-				} else {
-					this.thumbnailTouchSwipeEvents.startEvent = 'mousedown';
-					this.thumbnailTouchSwipeEvents.moveEvent = 'mousemove';
-					this.thumbnailTouchSwipeEvents.endEvent = 'mouseup';
-				}
+				this.thumbnailTouchSwipeEvents.startEvent = 'touchstart' + '.' + NS + ' mousedown' + '.' + NS;
+				this.thumbnailTouchSwipeEvents.moveEvent = 'touchmove' + '.' + NS + ' mousemove' + '.' + NS;
+				this.thumbnailTouchSwipeEvents.endEvent = 'touchend' + '.' + this.uniqueId + '.' + NS + ' mouseup' + '.' + this.uniqueId + '.' + NS;
 				
 				// Listen for touch swipe/mouse move events
-				this.$thumbnails.on( this.thumbnailTouchSwipeEvents.startEvent + '.' + NS, $.proxy( this._onThumbnailTouchStart, this ) );
+				this.$thumbnails.on( this.thumbnailTouchSwipeEvents.startEvent, $.proxy( this._onThumbnailTouchStart, this ) );
 				this.$thumbnails.on( 'dragstart.' + NS, function( event ) {
 					event.preventDefault();
 				});
@@ -86,10 +73,10 @@
 			}
 
 			var that = this,
-				eventObject = this.isThumbnailTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Prevent default behavior for mouse events
-			if ( this.isThumbnailTouchSupport === false ) {
+			if ( typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
 
@@ -116,8 +103,8 @@
 			}
 
 			// Listen for move and end events
-			this.$thumbnails.on( this.thumbnailTouchSwipeEvents.moveEvent + '.' + NS, $.proxy( this._onThumbnailTouchMove, this ) );
-			$( document ).on( this.thumbnailTouchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS, $.proxy( this._onThumbnailTouchEnd, this ) );
+			this.$thumbnails.on( this.thumbnailTouchSwipeEvents.moveEvent, $.proxy( this._onThumbnailTouchMove, this ) );
+			$( document ).on( this.thumbnailTouchSwipeEvents.endEvent, $.proxy( this._onThumbnailTouchEnd, this ) );
 
 			// Swap grabbing icons
 			this.$thumbnails.removeClass( 'sp-grab' ).addClass( 'sp-grabbing' );
@@ -127,8 +114,8 @@
 		},
 
 		// Called during the thumbnail scroller's dragging
-		_onThumbnailTouchMove: function(event) {
-			var eventObject = this.isThumbnailTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+		_onThumbnailTouchMove: function( event ) {
+			var eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Indicate that the move event is being fired
 			this.isThumbnailTouchMoving = true;
@@ -173,8 +160,8 @@
 				thumbnailTouchDistance = this.thumbnailsOrientation === 'horizontal' ? this.thumbnailTouchDistance.x : this.thumbnailTouchDistance.y;
 
 			// Remove the move and end listeners
-			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent + '.' + NS );
-			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent );
+			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent );
 
 			// Swap grabbing icons
 			this.$thumbnails.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
@@ -235,10 +222,10 @@
 				return;
 			}
 
-			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.startEvent + '.' + NS );
-			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent + '.' + NS );
+			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.startEvent );
+			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent );
 			this.$thumbnails.off( 'dragstart.' + NS );
-			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent );
 			this.$thumbnails.removeClass( 'sp-grab' );
 		},
 
