@@ -27,7 +27,16 @@
 				allowGotoHash = false;
 
 				if ( that.settings.updateHash === true ) {
-					window.location.hash = that.$slider.attr( 'id' ) + '/' + event.index;
+
+					// get the 'id' attribute of the slide
+					var slideId = that.$slider.find( '.sp-slide' ).eq( event.index ).attr( 'id' );
+
+					// if the slide doesn't have an 'id' attribute, use the slide index
+					if ( typeof slideId === 'undefined' ) {
+						slideId = event.index;
+					}
+
+					window.location.hash = that.$slider.attr( 'id' ) + '/' + slideId;
 				}
 			});
 
