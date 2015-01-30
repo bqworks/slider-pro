@@ -38,6 +38,8 @@
 
 					window.location.hash = that.$slider.attr( 'id' ) + '/' + slideId;
 				}
+
+				allowGotoHash = true;
 			});
 
 			// Check when the hash changes and navigate to the indicated slide
@@ -45,8 +47,6 @@
 				if ( allowGotoHash === true ) {
 					that._gotoHash( window.location.hash );
 				}
-				
-				allowGotoHash = true;
 			});
 		},
 
