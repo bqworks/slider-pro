@@ -1,5 +1,5 @@
 /*!
-*  - v1.1.0
+*  - v1.2.0
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -9,6 +9,8 @@
 .slider-pro {
 	position: relative;
 	margin: 0 auto;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
 }
 
 .sp-slides-container {

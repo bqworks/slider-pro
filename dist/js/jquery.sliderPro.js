@@ -1,5 +1,5 @@
 /*!
-*  - v1.1.0
+*  - v1.2.0
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -289,6 +289,9 @@
 			});
 
 			this.update();
+
+			// add the 'sp-selected' class to the initially selected slide
+			this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
 
 			// Fire the 'init' event
 			this.trigger({ type: 'init' });
@@ -1491,13 +1494,13 @@
 						// Reposition the thumbnails based on the order of the indexes in the
 						// 'shuffledIndexes' array
 						$.each( this.shuffledIndexes, function( index, element ) {
-							var thumbnail = $( thumbnails[ element ] );
+							var $thumbnail = $( thumbnails[ element ] );
 
-							if ( thumbnail.parent( 'a' ).length !== 0 ) {
-								thumbnail = thumbnail.parent( 'a' );
+							if ( $thumbnail.parent( 'a' ).length !== 0 ) {
+								$thumbnail = $thumbnail.parent( 'a' );
 							}
 
-							shuffledThumbnails.push( thumbnail );
+							shuffledThumbnails.push( $thumbnail );
 						});
 						
 						// Append the sorted thumbnails to the thumbnail scroller
@@ -1513,6 +1516,10 @@
 				var $thumbnail = $( this ),
 					thumbnailIndex = $thumbnail.parents( '.sp-slide' ).index(),
 					lastThumbnailIndex = that.$thumbnails.find( '.sp-thumbnail' ).length - 1;
+
+				if ( $thumbnail.parent( 'a' ).length !== 0 ) {
+					$thumbnail = $thumbnail.parent( 'a' );
+				}
 
 				// If the index of the slide that contains the thumbnail is greater than the total number
 				// of thumbnails from the thumbnails container, position the thumbnail at the end.
@@ -2669,7 +2676,7 @@
 				var $slide = element.$slide;
 
 				// Initialize the layers
-				this.$slide.find( '.sp-layer:not([ data-init ])' ).each(function() {
+				this.$slide.find( '.sp-layer:not([ data-layer-init ])' ).each(function() {
 					var layer = new Layer( $( this ) );
 
 					// Add the 'layers' array to the slide objects (instance of SliderProSlide)
@@ -2966,7 +2973,7 @@
 
 		// Initialize the layers
 		_init: function() {
-			this.$layer.attr( 'data-init', true );
+			this.$layer.attr( 'data-layer-init', true );
 
 			if ( this.$layer.hasClass( 'sp-static' ) ) {
 				this._setStyle();
@@ -3030,7 +3037,7 @@
 			if ( this.horizontalProperty === 'center' ) {
 				
 				// prevent content wrapping while setting the width
-				if ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'width' ) === -1 ) ) {
+				if ( this.$layer.is( 'img' ) === false && ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'width' ) === -1 ) ) ) {
 					this.$layer.css( 'white-space', 'nowrap' );
 					this.$layer.css( 'width', this.$layer.outerWidth( true ) );
 				}
@@ -3044,7 +3051,7 @@
 			if ( this.verticalProperty === 'center' ) {
 
 				// prevent content wrapping while setting the height
-				if ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'height' ) === -1 ) ) {
+				if ( this.$layer.is( 'img' ) === false && ( typeof inlineStyle === 'undefined' || ( typeof inlineStyle !== 'undefined' && inlineStyle.indexOf( 'height' ) === -1 ) ) ) {
 					this.$layer.css( 'white-space', 'nowrap' );
 					this.$layer.css( 'height', this.$layer.outerHeight( true ) );
 				}
@@ -3287,7 +3294,7 @@
 		// Destroy the layer
 		destroy: function() {
 			this.$layer.removeAttr( 'style' );
-			this.$layer.removeAttr( 'data-init' );
+			this.$layer.removeAttr( 'data-layer-init' );
 		}
 	};
 
@@ -3479,9 +3486,6 @@
 
 	var TouchSwipe = {
 
-		// Indicates if touch is supported
-		isTouchSupport: false,
-
 		// The x and y coordinates of the pointer/finger's starting position
 		touchStartPoint: {x: 0, y: 0},
 
@@ -3508,22 +3512,12 @@
 				return;
 			}
 
-			// check if there is touch support
-			this.isTouchSupport = 'ontouchstart' in window;
-
-			// Get the names of the events
-			if ( this.isTouchSupport === true ) {
-				this.touchSwipeEvents.startEvent = 'touchstart';
-				this.touchSwipeEvents.moveEvent = 'touchmove';
-				this.touchSwipeEvents.endEvent = 'touchend';
-			} else {
-				this.touchSwipeEvents.startEvent = 'mousedown';
-				this.touchSwipeEvents.moveEvent = 'mousemove';
-				this.touchSwipeEvents.endEvent = 'mouseup';
-			}
+			this.touchSwipeEvents.startEvent = 'touchstart' + '.' + NS + ' mousedown' + '.' + NS;
+			this.touchSwipeEvents.moveEvent = 'touchmove' + '.' + NS + ' mousemove' + '.' + NS;
+			this.touchSwipeEvents.endEvent = 'touchend' + '.' + this.uniqueId + '.' + NS + ' mouseup' + '.' + this.uniqueId + '.' + NS;
 
 			// Listen for touch swipe/mouse move events
-			this.$slidesMask.on( this.touchSwipeEvents.startEvent + '.' + NS, $.proxy( this._onTouchStart, this ) );
+			this.$slidesMask.on( this.touchSwipeEvents.startEvent, $.proxy( this._onTouchStart, this ) );
 			this.$slidesMask.on( 'dragstart.' + NS, function( event ) {
 				event.preventDefault();
 			});
@@ -3541,10 +3535,10 @@
 			}
 
 			var that = this,
-				eventObject = this.isTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Prevent default behavior only for mouse events
-			if ( this.isTouchSupport === false ) {
+			if (  typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
 
@@ -3571,8 +3565,8 @@
 			}
 
 			// Listen for move and end events
-			this.$slidesMask.on( this.touchSwipeEvents.moveEvent + '.' + NS, $.proxy( this._onTouchMove, this ) );
-			$( document ).on( this.touchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS, $.proxy( this._onTouchEnd, this ) );
+			this.$slidesMask.on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
+			$( document ).on( this.touchSwipeEvents.endEvent, $.proxy( this._onTouchEnd, this ) );
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grab' ).addClass( 'sp-grabbing' );
@@ -3582,8 +3576,8 @@
 		},
 
 		// Called during the slides' dragging
-		_onTouchMove: function(event) {
-			var eventObject = this.isTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+		_onTouchMove: function( event ) {
+			var eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Indicate that the move event is being fired
 			this.isTouchMoving = true;
@@ -3628,8 +3622,8 @@
 				touchDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.x : this.touchDistance.y;
 
 			// Remove the move and end listeners
-			this.$slidesMask.off( this.touchSwipeEvents.moveEvent + '.' + NS );
-			$( document ).off( this.touchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
+			$( document ).off( this.touchSwipeEvents.endEvent );
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
@@ -3647,7 +3641,7 @@
 			// applied for those listeners, since there was a swipe event
 			setTimeout(function() {
 				that.$slider.removeClass( 'sp-swiping' );
-			}, 1);
+			}, 1 );
 
 			// Return if the slides didn't move
 			if ( this.isTouchMoving === false ) {
@@ -3692,10 +3686,10 @@
 
 		// Destroy the module
 		destroyTouchSwipe: function() {
-			this.$slidesMask.off( this.touchSwipeEvents.startEvent + '.' + NS );
-			this.$slidesMask.off( this.touchSwipeEvents.moveEvent + '.' + NS );
+			this.$slidesMask.off( this.touchSwipeEvents.startEvent );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			this.$slidesMask.off( 'dragstart.' + NS );
-			$( document ).off( this.touchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			$( document ).off( this.touchSwipeEvents.endEvent );
 			this.$slidesMask.removeClass( 'sp-grab' );
 		},
 
@@ -3888,8 +3882,19 @@
 				allowGotoHash = false;
 
 				if ( that.settings.updateHash === true ) {
-					window.location.hash = that.$slider.attr( 'id' ) + '/' + event.index;
+
+					// get the 'id' attribute of the slide
+					var slideId = that.$slider.find( '.sp-slide' ).eq( event.index ).attr( 'id' );
+
+					// if the slide doesn't have an 'id' attribute, use the slide index
+					if ( typeof slideId === 'undefined' ) {
+						slideId = event.index;
+					}
+
+					window.location.hash = that.$slider.attr( 'id' ) + '/' + slideId;
 				}
+
+				allowGotoHash = true;
 			});
 
 			// Check when the hash changes and navigate to the indicated slide
@@ -3897,8 +3902,6 @@
 				if ( allowGotoHash === true ) {
 					that._gotoHash( window.location.hash );
 				}
-				
-				allowGotoHash = true;
 			});
 		},
 
@@ -4048,6 +4051,7 @@
 		// Stops the autoplay
 		stopAutoplay: function() {
 			this.isTimerRunning = false;
+			this.isTimerPaused = false;
 
 			clearTimeout( this.autoplayTimer );
 		},
@@ -4509,9 +4513,6 @@
 
 	var ThumbnailTouchSwipe = {
 
-		// Indicates if touch is supported
-		isThumbnailTouchSupport: false,
-
 		// The x and y coordinates of the pointer/finger's starting position
 		thumbnailTouchStartPoint: { x: 0, y: 0 },
 
@@ -4548,22 +4549,12 @@
 			if ( this.settings.thumbnailTouchSwipe === true && this.isThumbnailTouchSwipe === false ) {
 				this.isThumbnailTouchSwipe = true;
 
-				// Check if there is touch support
-				this.isThumbnailTouchSupport = 'ontouchstart' in window;
-
-				// Get the names of the events
-				if ( this.isThumbnailTouchSupport === true ) {
-					this.thumbnailTouchSwipeEvents.startEvent = 'touchstart';
-					this.thumbnailTouchSwipeEvents.moveEvent = 'touchmove';
-					this.thumbnailTouchSwipeEvents.endEvent = 'touchend';
-				} else {
-					this.thumbnailTouchSwipeEvents.startEvent = 'mousedown';
-					this.thumbnailTouchSwipeEvents.moveEvent = 'mousemove';
-					this.thumbnailTouchSwipeEvents.endEvent = 'mouseup';
-				}
+				this.thumbnailTouchSwipeEvents.startEvent = 'touchstart' + '.' + NS + ' mousedown' + '.' + NS;
+				this.thumbnailTouchSwipeEvents.moveEvent = 'touchmove' + '.' + NS + ' mousemove' + '.' + NS;
+				this.thumbnailTouchSwipeEvents.endEvent = 'touchend' + '.' + this.uniqueId + '.' + NS + ' mouseup' + '.' + this.uniqueId + '.' + NS;
 				
 				// Listen for touch swipe/mouse move events
-				this.$thumbnails.on( this.thumbnailTouchSwipeEvents.startEvent + '.' + NS, $.proxy( this._onThumbnailTouchStart, this ) );
+				this.$thumbnails.on( this.thumbnailTouchSwipeEvents.startEvent, $.proxy( this._onThumbnailTouchStart, this ) );
 				this.$thumbnails.on( 'dragstart.' + NS, function( event ) {
 					event.preventDefault();
 				});
@@ -4586,10 +4577,10 @@
 			}
 
 			var that = this,
-				eventObject = this.isThumbnailTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Prevent default behavior for mouse events
-			if ( this.isThumbnailTouchSupport === false ) {
+			if ( typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
 
@@ -4616,8 +4607,8 @@
 			}
 
 			// Listen for move and end events
-			this.$thumbnails.on( this.thumbnailTouchSwipeEvents.moveEvent + '.' + NS, $.proxy( this._onThumbnailTouchMove, this ) );
-			$( document ).on( this.thumbnailTouchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS, $.proxy( this._onThumbnailTouchEnd, this ) );
+			this.$thumbnails.on( this.thumbnailTouchSwipeEvents.moveEvent, $.proxy( this._onThumbnailTouchMove, this ) );
+			$( document ).on( this.thumbnailTouchSwipeEvents.endEvent, $.proxy( this._onThumbnailTouchEnd, this ) );
 
 			// Swap grabbing icons
 			this.$thumbnails.removeClass( 'sp-grab' ).addClass( 'sp-grabbing' );
@@ -4627,8 +4618,8 @@
 		},
 
 		// Called during the thumbnail scroller's dragging
-		_onThumbnailTouchMove: function(event) {
-			var eventObject = this.isThumbnailTouchSupport ? event.originalEvent.touches[0] : event.originalEvent;
+		_onThumbnailTouchMove: function( event ) {
+			var eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Indicate that the move event is being fired
 			this.isThumbnailTouchMoving = true;
@@ -4673,8 +4664,8 @@
 				thumbnailTouchDistance = this.thumbnailsOrientation === 'horizontal' ? this.thumbnailTouchDistance.x : this.thumbnailTouchDistance.y;
 
 			// Remove the move and end listeners
-			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent + '.' + NS );
-			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent );
+			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent );
 
 			// Swap grabbing icons
 			this.$thumbnails.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
@@ -4735,10 +4726,10 @@
 				return;
 			}
 
-			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.startEvent + '.' + NS );
-			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent + '.' + NS );
+			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.startEvent );
+			this.$thumbnails.off( this.thumbnailTouchSwipeEvents.moveEvent );
 			this.$thumbnails.off( 'dragstart.' + NS );
-			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent + '.' + this.uniqueId + '.' + NS );
+			$( document ).off( this.thumbnailTouchSwipeEvents.endEvent );
 			this.$thumbnails.removeClass( 'sp-grab' );
 		},
 
@@ -4895,14 +4886,14 @@
 			var that = this;
 
 			// Find all the inline videos and initialize them
-			this.$slider.find( '.sp-video' ).not( 'a, [data-init]' ).each(function() {
+			this.$slider.find( '.sp-video' ).not( 'a, [data-video-init]' ).each(function() {
 				var video = $( this );
 				that._initVideo( video );
 			});
 
 			// Find all the lazy-loaded videos and preinitialize them. They will be initialized
 			// only when their play button is clicked.
-			this.$slider.find( 'a.sp-video' ).not( '[data-preinit]' ).each(function() {
+			this.$slider.find( 'a.sp-video' ).not( '[data-video-preinit]' ).each(function() {
 				var video = $( this );
 				that._preinitVideo( video );
 			});
@@ -4912,7 +4903,7 @@
 		_initVideo: function( video ) {
 			var that = this;
 
-			video.attr( 'data-init', true )
+			video.attr( 'data-video-init', true )
 				.videoController();
 
 			// When the video starts playing, pause the autoplay if it's running
@@ -4970,7 +4961,7 @@
 		_preinitVideo: function( video ) {
 			var that = this;
 
-			video.attr( 'data-preinit', true );
+			video.attr( 'data-video-preinit', true );
 
 			// When the video poster is clicked, remove the poster and create
 			// the inline video
@@ -5045,7 +5036,7 @@
 		_videoOnGotoSlideComplete: function( event ) {
 
 			// Get the video from the previous slide
-			var previousVideo = this.$slides.find( '.sp-slide' ).eq( event.previousIndex ).find( '.sp-video[data-init]' );
+			var previousVideo = this.$slides.find( '.sp-slide' ).eq( event.previousIndex ).find( '.sp-video[data-video-init]' );
 
 			// Handle the video from the previous slide by stopping it, or pausing it,
 			// or remove it, depending on the value of the 'leaveVideoAction' option.
@@ -5069,8 +5060,8 @@
 
 			// Handle the video from the selected slide
 			if ( this.settings.reachVideoAction === 'playVideo' ) {
-				var loadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-init]' ),
-					unloadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-preinit]' );
+				var loadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-init]' ),
+					unloadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-preinit]' );
 
 				// If the video was already initialized, play it. If it's not initialized (because
 				// it's lazy loaded) initialize it and play it.
@@ -5084,16 +5075,16 @@
 
 		// Destroy the module
 		destroyVideo: function() {
-			this.$slider.find( '.sp-video[ data-preinit ]' ).each(function() {
+			this.$slider.find( '.sp-video[ data-video-preinit ]' ).each(function() {
 				var video = $( this );
-				video.removeAttr( 'data-preinit' );
+				video.removeAttr( 'data-video-preinit' );
 				video.off( 'click.' + NS );
 			});
 
 			// Loop through the all the videos and destroy them
-			this.$slider.find( '.sp-video[ data-init ]' ).each(function() {
+			this.$slider.find( '.sp-video[ data-video-init ]' ).each(function() {
 				var video = $( this );
-				video.removeAttr( 'data-init' );
+				video.removeAttr( 'data-video-init' );
 				video.off( 'Video' );
 				video.videoController( 'destroy' );
 			});
