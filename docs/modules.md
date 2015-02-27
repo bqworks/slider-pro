@@ -446,7 +446,7 @@ Customizable properties: [thumbnailArrows](api.md#thumbnailarrows) and [fadeThum
 
 Provides automatic control of the videos loaded inside the slider. For example, the video will pause automatically when another slide is selected, or, if the autoplay is running, it will be paused when a video starts playing.
 
-The video types or providers supported by this module are: YouTube, Vimeo, HTML5, Video.js and SublimeVideo.
+The video types or providers supported by this module are: YouTube, Vimeo, HTML5, Video.js, SublimeVideo, and JW Player.
 
 In order to have a video automatically controlled by the slider, the video must have the `sp-video` class. Also, there are some provider-specific requirements for the videos, as presented below.
 
@@ -544,3 +544,55 @@ Each SublimeVideo instance must have a unique 'id' attribute.
 ```
 
 Please note that, in order to use SublimeVideo, you will also need to load a script in your page which you need to download from the SublimeVideo page. More information about how to use SublimeVideo, in general, can be found on the [official SublimeVideo page](http://www.sublimevideo.net/).
+
+### JW Player ###
+
+Just like Video.js, JW Player videos modify the HTML markup and we need to use a container element to facilitate the integration with the Video Controller plugin. The container will have the `data-jwplayer-id` attribute which will indicate the `id` attribute of the video element.
+
+```html
+<div id="video-container" data-jwplayer-id="my-video">
+	<div id="my-video">Loading the video...</div>
+</div>
+```
+
+```javascript
+$(document).ready(function() {
+    jwplayer("my-video").setup({
+        file: "http://bqworks.com/products/assets/videos/bbb/bbb-trailer.mp4",
+        image: "http://bqworks.com/products/assets/videos/bbb/bbb-poster.jpg",
+        width: 500,
+        height: 350
+    });
+
+
+	$('#video-container').videoController();
+});
+```
+
+It's also possible to not use a container element, but in that case the plugin needs to be instantiated after the video was set up.
+
+```html
+<div id="my-video">Loading the video...</div>
+```
+
+```javascript
+var video;
+
+$(document).ready(function() {
+    jwplayer("my-video").setup({
+        file: "http://bqworks.com/products/assets/videos/bbb/bbb-trailer.mp4",
+        image: "http://bqworks.com/products/assets/videos/bbb/bbb-poster.jpg",
+        width: 500,
+        height: 350,
+        events: {
+        	onReady: function() {
+        		// if the flash player is used, the set ID will be attributed to an object element. 
+        		// However, we can't instantiate the plugin on an object element, 
+        		// so we instantiate it on the object's wrapper instead
+        		video = $('#my-video').is('object') ? $('#my-video').parent() : $('#my-video');
+        		video.videoController();
+        	}
+        }
+    });
+});
+```
