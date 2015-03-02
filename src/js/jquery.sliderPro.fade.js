@@ -122,7 +122,7 @@
 					var css = { 'opacity': opacity };
 					css[ that.vendorPrefix + 'transition' ] = 'opacity ' + that.settings.fadeDuration / 1000 + 's';
 					target.css( css );
-				}, 1 );
+				}, 100 );
 
 				target.on( this.transitionEvent, function( event ) {
 					if ( event.target !== event.currentTarget ) {
