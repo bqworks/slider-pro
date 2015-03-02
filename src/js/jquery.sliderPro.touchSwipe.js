@@ -61,7 +61,7 @@
 				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Prevent default behavior only for mouse events
-			if (  typeof event.originalEvent.touches === 'undefined' ) {
+			if ( typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
 
