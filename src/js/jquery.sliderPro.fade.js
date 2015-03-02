@@ -64,6 +64,10 @@
 				this.previousSlideIndex = this.selectedSlideIndex;
 				this.selectedSlideIndex = index;
 
+				// Re-assign the 'sp-selected' class to the currently selected slide
+				this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
+				this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
+			
 				// Rearrange the slides if the slider is loopable
 				if ( that.settings.loop === true ) {
 					that._updateSlidesOrder();
