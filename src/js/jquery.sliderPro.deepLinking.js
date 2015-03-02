@@ -11,11 +11,7 @@
 	var DeepLinking = {
 
 		initDeepLinking: function() {
-			var that = this,
-
-				// Use this variable as a flag to prevent the slider to call 'gotoSlide' after a hash update
-				// if that hash update was triggered by another 'gotoSlide' call.
-				allowGotoHash = true;
+			var that = this;
 
 			// Parse the initial hash
 			this.on( 'init.' + NS, function() {
@@ -24,8 +20,6 @@
 
 			// Update the hash when a new slide is selected
 			this.on( 'gotoSlide.' + NS, function( event ) {
-				allowGotoHash = false;
-
 				if ( that.settings.updateHash === true ) {
 
 					// get the 'id' attribute of the slide
@@ -38,15 +32,11 @@
 
 					window.location.hash = that.$slider.attr( 'id' ) + '/' + slideId;
 				}
-
-				allowGotoHash = true;
 			});
 
 			// Check when the hash changes and navigate to the indicated slide
 			$( window ).on( 'hashchange.' + this.uniqueId + '.' + NS, function() {
-				if ( allowGotoHash === true ) {
-					that._gotoHash( window.location.hash );
-				}
+				that._gotoHash( window.location.hash );
 			});
 		},
 
@@ -85,10 +75,10 @@
 				// get the index of the slide based on the specified id
 				var slideIndex = this.$slider.find( '.sp-slide#' + slideId ).index();
 
-				if ( slideIndex !== -1 ) {
+				if ( slideIndex !== -1 && slideIndex !== this.selectedSlideIndex ) {
 					this.gotoSlide( slideIndex );
 				}
-			} else {
+			} else if ( slideIdNumber !== this.selectedSlideIndex ) {
 				this.gotoSlide( slideIdNumber );
 			}
 		},
