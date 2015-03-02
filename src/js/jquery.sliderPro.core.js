@@ -759,13 +759,36 @@
 
 		// Resize the height of the slider to the specified value
 		_resizeHeightTo: function( height ) {
-			var css = { 'height': height };
+			var that = this,
+				css = { 'height': height };
 
 			if ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) {
 				css[ this.vendorPrefix + 'transition' ] = 'height ' + this.settings.heightAnimationDuration / 1000 + 's';
+
+				this.$slidesMask.off( this.transitionEvent );
+				this.$slidesMask.on( this.transitionEvent, function( event ) {
+					if ( event.target !== event.currentTarget ) {
+						return;
+					}
+
+					that.$slidesMask.off( that.transitionEvent );
+
+					// Fire the 'resizeHeightComplete' event
+					that.trigger({ type: 'resizeHeightComplete' });
+					if ( $.isFunction( that.settings.resizeHeightComplete ) ) {
+						that.settings.resizeHeightComplete.call( that, { type: 'resizeHeightComplete' } );
+					}
+				});
+
 				this.$slidesMask.css( css );
 			} else {
-				this.$slidesMask.animate( css, this.settings.heightAnimationDuration );
+				this.$slidesMask.stop().animate( css, this.settings.heightAnimationDuration, function( event ) {
+					// Fire the 'resizeHeightComplete' event
+					that.trigger({ type: 'resizeHeightComplete' });
+					if ( $.isFunction( that.settings.resizeHeightComplete ) ) {
+						that.settings.resizeHeightComplete.call( that, { type: 'resizeHeightComplete' } );
+					}
+				});
 			}
 		},
 
@@ -923,6 +946,9 @@
 
 			// Called when the navigation to the newly selected slide is complete
 			gotoSlideComplete: function() {},
+
+			// Called when the height animation of the slider is complete
+			resizeHeightComplete: function() {},
 
 			// Called when a breakpoint is reached
 			breakpointReach: function() {}
