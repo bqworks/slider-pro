@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.0
+*  - v1.2.1
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -615,7 +615,7 @@
 			this.previousSlideIndex = this.selectedSlideIndex;
 			this.selectedSlideIndex = index;
 
-			// Re-assign the 'as-selected' class to the currently selected slide
+			// Re-assign the 'sp-selected' class to the currently selected slide
 			this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
 			this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
 
@@ -765,13 +765,36 @@
 
 		// Resize the height of the slider to the specified value
 		_resizeHeightTo: function( height ) {
-			var css = { 'height': height };
+			var that = this,
+				css = { 'height': height };
 
 			if ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) {
 				css[ this.vendorPrefix + 'transition' ] = 'height ' + this.settings.heightAnimationDuration / 1000 + 's';
+
+				this.$slidesMask.off( this.transitionEvent );
+				this.$slidesMask.on( this.transitionEvent, function( event ) {
+					if ( event.target !== event.currentTarget ) {
+						return;
+					}
+
+					that.$slidesMask.off( that.transitionEvent );
+
+					// Fire the 'resizeHeightComplete' event
+					that.trigger({ type: 'resizeHeightComplete' });
+					if ( $.isFunction( that.settings.resizeHeightComplete ) ) {
+						that.settings.resizeHeightComplete.call( that, { type: 'resizeHeightComplete' } );
+					}
+				});
+
 				this.$slidesMask.css( css );
 			} else {
-				this.$slidesMask.animate( css, this.settings.heightAnimationDuration );
+				this.$slidesMask.stop().animate( css, this.settings.heightAnimationDuration, function( event ) {
+					// Fire the 'resizeHeightComplete' event
+					that.trigger({ type: 'resizeHeightComplete' });
+					if ( $.isFunction( that.settings.resizeHeightComplete ) ) {
+						that.settings.resizeHeightComplete.call( that, { type: 'resizeHeightComplete' } );
+					}
+				});
 			}
 		},
 
@@ -929,6 +952,9 @@
 
 			// Called when the navigation to the newly selected slide is complete
 			gotoSlideComplete: function() {},
+
+			// Called when the height animation of the slider is complete
+			resizeHeightComplete: function() {},
 
 			// Called when a breakpoint is reached
 			breakpointReach: function() {}
@@ -2786,7 +2812,7 @@
 		// When a new slide is selected, hide the layers from the previous slide
 		// and show the layers from the current slide.
 		_layersOnGotoSlide: function( event ) {
-			if ( this.previousSlideIndex !== this.selectedSlideIndex ) {
+			if ( this.previousSlideIndex !== this.selectedSlideIndex &&  this.settings.waitForLayers === false ) {
 				this.hideLayers( this.previousSlideIndex );
 			}
 
@@ -3368,6 +3394,10 @@
 				this.previousSlideIndex = this.selectedSlideIndex;
 				this.selectedSlideIndex = index;
 
+				// Re-assign the 'sp-selected' class to the currently selected slide
+				this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
+				this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
+			
 				// Rearrange the slides if the slider is loopable
 				if ( that.settings.loop === true ) {
 					that._updateSlidesOrder();
@@ -3426,7 +3456,7 @@
 					var css = { 'opacity': opacity };
 					css[ that.vendorPrefix + 'transition' ] = 'opacity ' + that.settings.fadeDuration / 1000 + 's';
 					target.css( css );
-				}, 1 );
+				}, 100 );
 
 				target.on( this.transitionEvent, function( event ) {
 					if ( event.target !== event.currentTarget ) {
@@ -3538,7 +3568,7 @@
 				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
 
 			// Prevent default behavior only for mouse events
-			if (  typeof event.originalEvent.touches === 'undefined' ) {
+			if ( typeof event.originalEvent.touches === 'undefined' ) {
 				event.preventDefault();
 			}
 
@@ -3866,11 +3896,7 @@
 	var DeepLinking = {
 
 		initDeepLinking: function() {
-			var that = this,
-
-				// Use this variable as a flag to prevent the slider to call 'gotoSlide' after a hash update
-				// if that hash update was triggered by another 'gotoSlide' call.
-				allowGotoHash = true;
+			var that = this;
 
 			// Parse the initial hash
 			this.on( 'init.' + NS, function() {
@@ -3879,8 +3905,6 @@
 
 			// Update the hash when a new slide is selected
 			this.on( 'gotoSlide.' + NS, function( event ) {
-				allowGotoHash = false;
-
 				if ( that.settings.updateHash === true ) {
 
 					// get the 'id' attribute of the slide
@@ -3893,15 +3917,11 @@
 
 					window.location.hash = that.$slider.attr( 'id' ) + '/' + slideId;
 				}
-
-				allowGotoHash = true;
 			});
 
 			// Check when the hash changes and navigate to the indicated slide
 			$( window ).on( 'hashchange.' + this.uniqueId + '.' + NS, function() {
-				if ( allowGotoHash === true ) {
-					that._gotoHash( window.location.hash );
-				}
+				that._gotoHash( window.location.hash );
 			});
 		},
 
@@ -3940,10 +3960,10 @@
 				// get the index of the slide based on the specified id
 				var slideIndex = this.$slider.find( '.sp-slide#' + slideId ).index();
 
-				if ( slideIndex !== -1 ) {
+				if ( slideIndex !== -1 && slideIndex !== this.selectedSlideIndex ) {
 					this.gotoSlide( slideIndex );
 				}
-			} else {
+			} else if ( slideIdNumber !== this.selectedSlideIndex ) {
 				this.gotoSlide( slideIdNumber );
 			}
 		},
