@@ -57,6 +57,12 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* true
 
+#### allowScaleUp ####
+
+>Indicates if the image can be scaled up more than its original size
+
+>*Default value:* true
+
 #### autoHeight ####
 
 >Indicates if height of the slider will be adjusted to the height of the selected slide.
