@@ -68,6 +68,9 @@
 					that.gotoSlide = that._layersGotoSlide;
 				}, 1 );
 			}
+
+			// Show the layers for the initial slide
+			this.showLayers( this.selectedSlideIndex );
 		},
 
 		// When the slider resizes, try to scale down the layers proportionally. The automatic scaling
@@ -81,9 +84,6 @@
 				scaleRatio;
 
 			if ( this.settings.autoScaleLayers === false ) {
-				// Show the layers for the initial slide
-				this.showLayers( this.selectedSlideIndex );
-				
 				return;
 			}
 
@@ -114,9 +114,6 @@
 					});
 				}
 			});
-
-			// Show the layers for the initial slide
-			this.showLayers( this.selectedSlideIndex );
 		},
 
 		// Replace the 'gotoSlide' method with this one, which makes it possible to 
