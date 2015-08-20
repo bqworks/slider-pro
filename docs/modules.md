@@ -125,7 +125,7 @@ For each image you can specify three different sources in addition to the defaul
 </div>
 ```
 
-The exact size represented by the `data-small`, `data-medium` and `data-large` attributes is given by the `smallSize`, `mediumSize` and `largeSize` properties. Dy default these are set to 480, 768 and 1024 pixels.
+The exact size represented by the `data-small`, `data-medium` and `data-large` attributes is given by the `smallSize`, `mediumSize` and `largeSize` properties. By default these are set to 480, 768 and 1024 pixels.
 
 So, the image source specified in the `data-large` attribute will load when the slider's width is smaller than the value of the `largeSize` property (which is 1024, by default). The image source specified in the `data-medium` attribute will load when the slider's width is smaller than the value of the `mediumSize` property and the image source specified in the `data-small` attribute will load when the slider's width is smaller than the value of the `smallSize` property. If the slider's width is above any of these values, the default image source will be loaded.
 
