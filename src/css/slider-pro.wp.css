@@ -2,8 +2,8 @@
 --------------------------------------------------*/
 .slider-pro img.sp-image,
 .slider-pro img.sp-thumbnail {
-	max-width: none !important;
-	max-height: none !important;
+	max-width: none;
+	max-height: none;
 	border: none !important;
 	border-radius: 0 !important;
 	padding: 0 !important;
