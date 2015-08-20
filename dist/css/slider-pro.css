@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.1
+*  - v1.2.2
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -746,8 +746,8 @@ a.sp-video:after {
 --------------------------------------------------*/
 .slider-pro img.sp-image,
 .slider-pro img.sp-thumbnail {
-	max-width: none !important;
-	max-height: none !important;
+	max-width: none;
+	max-height: none;
 	border: none !important;
 	border-radius: 0 !important;
 	padding: 0 !important;

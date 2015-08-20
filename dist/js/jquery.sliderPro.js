@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.1
+*  - v1.2.2
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -900,6 +900,9 @@
 			// Indicates if the image will be centered
 			centerImage: true,
 
+			// Indicates if the image can be scaled up more than its original size
+			allowScaleUp: true,
+
 			// Indicates if height of the slider will be adjusted to the
 			// height of the selected slide
 			autoHeight: false,
@@ -1151,9 +1154,18 @@
 				return;
 			}
 
+			if ( this.settings.allowScaleUp === false ) {
+				this.$mainImage.css({ 'width': '', 'height': '', 'maxWidth': '', 'maxHeight': '' });
+
+				var naturalWidth = this.$mainImage.width(),
+					naturalHeight = this.$mainImage.height();
+
+				this.$mainImage.css({ 'maxWidth': naturalWidth, 'maxHeight': naturalHeight });
+			}
+
 			// After the main image has loaded, resize it
 			if ( this.settings.autoHeight === true ) {
-				this.$mainImage.css({ width: '100%', height: 'auto', 'marginLeft': '', 'marginTop': '' });
+				this.$mainImage.css({ width: '100%', height: 'auto' });
 			} else {
 				if ( this.settings.imageScaleMode === 'cover' ) {
 					if ( this.$mainImage.width() / this.$mainImage.height() <= this.width / this.height ) {
@@ -1170,10 +1182,10 @@
 				} else if ( this.settings.imageScaleMode === 'exact' ) {
 					this.$mainImage.css({ width: '100%', height: '100%' });
 				}
+			}
 
-				if ( this.settings.centerImage === true ) {
-					this.$mainImage.css({ 'marginLeft': ( this.$imageContainer.width() - this.$mainImage.width() ) * 0.5, 'marginTop': ( this.$imageContainer.height() - this.$mainImage.height() ) * 0.5 });
-				}
+			if ( this.settings.centerImage === true ) {
+				this.$mainImage.css({ 'marginLeft': ( this.$imageContainer.width() - this.$mainImage.width() ) * 0.5, 'marginTop': ( this.$imageContainer.height() - this.$mainImage.height() ) * 0.5 });
 			}
 		},
 
@@ -2739,6 +2751,9 @@
 					that.gotoSlide = that._layersGotoSlide;
 				}, 1 );
 			}
+
+			// Show the layers for the initial slide
+			this.showLayers( this.selectedSlideIndex );
 		},
 
 		// When the slider resizes, try to scale down the layers proportionally. The automatic scaling
@@ -2752,9 +2767,6 @@
 				scaleRatio;
 
 			if ( this.settings.autoScaleLayers === false ) {
-				// Show the layers for the initial slide
-				this.showLayers( this.selectedSlideIndex );
-				
 				return;
 			}
 
@@ -2785,9 +2797,6 @@
 					});
 				}
 			});
-
-			// Show the layers for the initial slide
-			this.showLayers( this.selectedSlideIndex );
 		},
 
 		// Replace the 'gotoSlide' method with this one, which makes it possible to 
