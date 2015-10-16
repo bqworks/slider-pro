@@ -330,15 +330,13 @@
 			if ( this.$layer.hasClass( 'sp-static' ) ) {
 				this._setStyle();
 			} else {
-				this.$layer.css({ 'visibility': 'hidden', 'display': 'none' });
+				this.$layer.css({ 'visibility': 'hidden' });
 			}
 		},
 
 		// Set the size and position of the layer
 		_setStyle: function() {
 			this.styled = true;
-
-			this.$layer.css( 'display', '' );
 
 			// Get the data attributes specified in HTML
 			this.data = this.$layer.data();
