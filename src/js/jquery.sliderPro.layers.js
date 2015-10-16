@@ -70,7 +70,11 @@
 			}
 
 			// Show the layers for the initial slide
-			this.showLayers( this.selectedSlideIndex );
+			// Delay the call in order to make sure the layers
+			// are scaled properly before displaying them
+			setTimeout(function() {
+				that.showLayers( that.selectedSlideIndex );
+			}, 1);
 		},
 
 		// When the slider resizes, try to scale down the layers proportionally. The automatic scaling
