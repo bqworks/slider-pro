@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.2
+*  - v1.2.3
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -2753,7 +2753,11 @@
 			}
 
 			// Show the layers for the initial slide
-			this.showLayers( this.selectedSlideIndex );
+			// Delay the call in order to make sure the layers
+			// are scaled properly before displaying them
+			setTimeout(function() {
+				that.showLayers( that.selectedSlideIndex );
+			}, 1);
 		},
 
 		// When the slider resizes, try to scale down the layers proportionally. The automatic scaling
@@ -3013,15 +3017,13 @@
 			if ( this.$layer.hasClass( 'sp-static' ) ) {
 				this._setStyle();
 			} else {
-				this.$layer.css({ 'visibility': 'hidden', 'display': 'none' });
+				this.$layer.css({ 'visibility': 'hidden' });
 			}
 		},
 
 		// Set the size and position of the layer
 		_setStyle: function() {
 			this.styled = true;
-
-			this.$layer.css( 'display', '' );
 
 			// Get the data attributes specified in HTML
 			this.data = this.$layer.data();
