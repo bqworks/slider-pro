@@ -152,7 +152,8 @@
 						'width': videoWidth,
 						'height': videoHeight,
 						'class': video.attr( 'class' ),
-						'frameborder': 0
+						'frameborder': 0,
+						'allowfullscreen': 'allowfullscreen'
 					}).insertBefore( video );
 
 				// Initialize the video and play it
