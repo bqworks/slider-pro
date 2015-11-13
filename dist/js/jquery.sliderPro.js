@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.3
+*  - v1.2.4
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -5051,7 +5051,8 @@
 						'width': videoWidth,
 						'height': videoHeight,
 						'class': video.attr( 'class' ),
-						'frameborder': 0
+						'frameborder': 0,
+						'allowfullscreen': 'allowfullscreen'
 					}).insertBefore( video );
 
 				// Initialize the video and play it
