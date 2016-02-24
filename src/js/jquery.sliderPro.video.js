@@ -114,8 +114,8 @@
 					id,
 					src,
 					videoAttributes,
-					videoWidth = video.children( 'img' ).attr( 'width' ),
-					videoHeight = video.children( 'img' ).attr( 'height');
+					videoWidth = video.children( 'img' ).attr( 'width' ) || video.children( 'img' ).width(),
+					videoHeight = video.children( 'img' ).attr( 'height') || video.children( 'img' ).height();
 
 				// Check if it's a youtube or vimeo video
 				if ( href.indexOf( 'youtube' ) !== -1 || href.indexOf( 'youtu.be' ) !== -1 ) {
