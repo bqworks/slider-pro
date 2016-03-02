@@ -9,6 +9,8 @@
 	
 	var Video = {
 
+		firstInit: false,
+
 		initVideo: function() {
 			this.on( 'update.' + NS, $.proxy( this._videoOnUpdate, this ) );
 			this.on( 'gotoSlideComplete.' + NS, $.proxy( this._videoOnGotoSlideComplete, this ) );
@@ -29,6 +31,13 @@
 				var video = $( this );
 				that._preinitVideo( video );
 			});
+
+			// call the 'gotoSlideComplete' method in case the first slide contains a video that
+			// needs to play automatically
+			if ( this.firstInit === false ) {
+				this.firstInit = true;
+				this._videoOnGotoSlideComplete({ index: this.selectedSlideIndex, previousIndex: -1 });
+			}
 		},
 
 		// Initialize the target video
@@ -130,7 +139,7 @@
 				id = match[2];
 
 				// Get the source of the iframe that will be created
-				src = provider === 'youtube' ? 'http://www.youtube.com/embed/' + id + '?enablejsapi=1&wmode=opaque' : 'http://player.vimeo.com/video/'+ id +'?api=1';
+				src = provider === 'youtube' ? '//www.youtube.com/embed/' + id + '?enablejsapi=1&wmode=opaque' : '//player.vimeo.com/video/'+ id +'?api=1';
 				
 				// Get the attributes passed to the video link and then pass them to the iframe's src
 				videoAttributes = href.split( '?' )[ 1 ];
@@ -489,7 +498,7 @@ var YoutubeVideo = function( video ) {
 			YoutubeVideoHelper.youtubeAPIAdded = true;
 
 			var tag = document.createElement( 'script' );
-			tag.src = "http://www.youtube.com/player_api";
+			tag.src = "//www.youtube.com/player_api";
 			var firstScriptTag = document.getElementsByTagName( 'script' )[0];
 			firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 
@@ -630,7 +639,7 @@ var VimeoVideo = function( video ) {
 			VimeoVideoHelper.vimeoAPIAdded = true;
 
 			var tag = document.createElement('script');
-			tag.src = "http://a.vimeocdn.com/js/froogaloop2.min.js";
+			tag.src = "//a.vimeocdn.com/js/froogaloop2.min.js";
 			var firstScriptTag = document.getElementsByTagName( 'script' )[0];
 			firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 		
@@ -767,31 +776,50 @@ HTML5Video.prototype._init = function() {
 
 	// Get a reference to the player
 	this.player = this.$video[0];
-	this.ready = true;
+	
+	var checkVideoReady = setInterval(function() {
+		if ( that.player.readyState === 4 ) {
+			clearInterval( checkVideoReady );
 
-	this.player.addEventListener( 'play', function() {
-		if ( that.started === false ) {
-			that.started = true;
-			that.trigger({ type: 'start' });
+			that.ready = true;
+			that.trigger({ type: 'ready' });
+
+			that.player.addEventListener( 'play', function() {
+				if ( that.started === false ) {
+					that.started = true;
+					that.trigger({ type: 'start' });
+				}
+
+				that.state = 'playing';
+				that.trigger({ type: 'play' });
+			});
+			
+			that.player.addEventListener( 'pause', function() {
+				that.state = 'paused';
+				that.trigger({ type: 'pause' });
+			});
+			
+			that.player.addEventListener( 'ended', function() {
+				that.state = 'ended';
+				that.trigger({ type: 'ended' });
+			});
 		}
-
-		that.state = 'playing';
-		that.trigger({ type: 'play' });
-	});
-	
-	this.player.addEventListener( 'pause', function() {
-		that.state = 'paused';
-		that.trigger({ type: 'pause' });
-	});
-	
-	this.player.addEventListener( 'ended', function() {
-		that.state = 'ended';
-		that.trigger({ type: 'ended' });
-	});
+	}, 100 );
 };
 
 HTML5Video.prototype.play = function() {
-	this.player.play();
+	var that = this;
+
+	if ( this.ready === true ) {
+		this.player.play();
+	} else {
+		var timer = setInterval(function() {
+			if ( that.ready === true ) {
+				clearInterval( timer );
+				that.player.play();
+			}
+		}, 100 );
+	}
 };
 
 HTML5Video.prototype.pause = function() {
