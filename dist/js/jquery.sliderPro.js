@@ -317,6 +317,12 @@
 				this.$slides.find( '.sp-slide' ).css( 'left', '' );
 			}
 
+			if ( this.settings.rightToLeft === true ) {
+				this.$slider.addClass( 'sp-rtl' );
+			} else {
+				this.$slider.removeClass( 'sp-rtl' );
+			}
+
 			// Set the position that will be used to arrange elements, like the slides,
 			// based on the orientation.
 			this.positionProperty = this.settings.orientation === 'horizontal' ? 'left' : 'top';
@@ -404,20 +410,23 @@
 
 		// Set the left/top position of the slides based on their position in the 'slidesOrder' array
 		_updateSlidesPosition: function() {
-			var selectedSlidePixelPosition = parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 );
+			var selectedSlidePixelPosition = parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ),
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) ? -1 : 1;
 
 			for ( var slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
 				var slide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
-				slide.css( this.positionProperty, selectedSlidePixelPosition + ( slideIndex - this.middleSlidePosition  ) * ( this.slideSize + this.settings.slideDistance ) );
+				slide.css( this.positionProperty, selectedSlidePixelPosition + directionMultiplier * ( slideIndex - this.middleSlidePosition  ) * ( this.slideSize + this.settings.slideDistance ) );
 			}
 		},
 
 		// Set the left/top position of the slides based on their position in the 'slidesOrder' array,
 		// and also set the position of the slides container.
 		_resetSlidesPosition: function() {
+			var directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) === true ? -1 : 1;
+
 			for ( var slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
 				var slide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
-				slide.css( this.positionProperty, slideIndex * ( this.slideSize + this.settings.slideDistance ) );
+				slide.css( this.positionProperty, directionMultiplier * slideIndex * ( this.slideSize + this.settings.slideDistance ) );
 			}
 
 			var newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + this.visibleOffset;
@@ -936,6 +945,10 @@
 			// to make more slides visible.
 			// By default, only the selected slide will be visible. 
 			visibleSize: 'auto',
+
+			// Indicates if the direction of the slider will be from right to left,
+			// instead of the default left to right
+			rightToLeft: false,
 
 			// Breakpoints for allowing the slider's options to be changed
 			// based on the size of the window.
@@ -1776,22 +1789,41 @@
 			// If the selected thumbnail has a lower index than the previous one, make sure that the thumbnail
 			// that's before the selected thumbnail will be visible, if the selected thumbnail is not the
 			// first thumbnail in the list.
-			if ( this.selectedThumbnailIndex >= previousIndex ) {
-				var nextThumbnailIndex = this.selectedThumbnailIndex === this.thumbnails.length - 1 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex + 1,
-					nextThumbnail = this.thumbnails[ nextThumbnailIndex ],
-					nextThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? nextThumbnail.getPosition().right : nextThumbnail.getPosition().bottom,
-					thumbnailsRightPosition = - this.thumbnailsPosition + this.thumbnailsContainerSize;
+			if ( this.settings.rightToLeft === true && this.thumbnailsOrientation === 'horizontal' ) {
+				if ( this.selectedThumbnailIndex >= previousIndex ) {
+					var rtlNextThumbnailIndex = this.selectedThumbnailIndex === this.thumbnails.length - 1 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex + 1,
+						rtlNextThumbnail = this.thumbnails[ rtlNextThumbnailIndex ];
 
-				if ( nextThumbnailPosition > thumbnailsRightPosition ) {
-					newThumbnailsPosition = this.thumbnailsPosition - ( nextThumbnailPosition - thumbnailsRightPosition );
+					if ( rtlNextThumbnail.getPosition().left < - this.thumbnailsPosition ) {
+						newThumbnailsPosition = - rtlNextThumbnail.getPosition().left;
+					}
+				} else if ( this.selectedThumbnailIndex < previousIndex ) {
+					var rtlPreviousThumbnailIndex = this.selectedThumbnailIndex === 0 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex - 1,
+						rtlPreviousThumbnail = this.thumbnails[ rtlPreviousThumbnailIndex ],
+						rtlThumbnailsRightPosition = - this.thumbnailsPosition + this.thumbnailsContainerSize;
+
+					if ( rtlPreviousThumbnail.getPosition().right > rtlThumbnailsRightPosition ) {
+						newThumbnailsPosition = this.thumbnailsPosition - ( rtlPreviousThumbnail.getPosition().right - rtlThumbnailsRightPosition );
+					}
 				}
-			} else if ( this.selectedThumbnailIndex < previousIndex ) {
-				var previousThumbnailIndex = this.selectedThumbnailIndex === 0 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex - 1,
-					previousThumbnail = this.thumbnails[ previousThumbnailIndex ],
-					previousThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? previousThumbnail.getPosition().left : previousThumbnail.getPosition().top;
+			} else {
+				if ( this.selectedThumbnailIndex >= previousIndex ) {
+					var nextThumbnailIndex = this.selectedThumbnailIndex === this.thumbnails.length - 1 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex + 1,
+						nextThumbnail = this.thumbnails[ nextThumbnailIndex ],
+						nextThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? nextThumbnail.getPosition().right : nextThumbnail.getPosition().bottom,
+						thumbnailsRightPosition = - this.thumbnailsPosition + this.thumbnailsContainerSize;
 
-				if ( previousThumbnailPosition < - this.thumbnailsPosition ) {
-					newThumbnailsPosition = - previousThumbnailPosition;
+					if ( nextThumbnailPosition > thumbnailsRightPosition ) {
+						newThumbnailsPosition = this.thumbnailsPosition - ( nextThumbnailPosition - thumbnailsRightPosition );
+					}
+				} else if ( this.selectedThumbnailIndex < previousIndex ) {
+					var previousThumbnailIndex = this.selectedThumbnailIndex === 0 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex - 1,
+						previousThumbnail = this.thumbnails[ previousThumbnailIndex ],
+						previousThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? previousThumbnail.getPosition().left : previousThumbnail.getPosition().top;
+
+					if ( previousThumbnailPosition < - this.thumbnailsPosition ) {
+						newThumbnailsPosition = - previousThumbnailPosition;
+					}
 				}
 			}
 
@@ -3384,20 +3416,20 @@
 					$previousSlide,
 					newIndex = index;
 
-				// Loop through all the slides and overlap the the previous and next slide,
+				// Loop through all the slides and overlap the previous and next slide,
 				// and hide the other slides.
 				$.each( this.slides, function( index, element ) {
 					var slideIndex = element.getIndex(),
 						$slide = element.$slide;
 
 					if ( slideIndex === newIndex ) {
-						$slide.css({ 'opacity': 0, 'left': 0, 'top': 0, 'z-index': 20 });
+						$slide.css({ 'opacity': 0, 'left': 0, 'top': 0, 'z-index': 20, visibility: 'visible' });
 						$nextSlide = $slide;
 					} else if ( slideIndex === that.selectedSlideIndex ) {
-						$slide.css({ 'opacity': 1, 'left': 0, 'top': 0, 'z-index': 10 });
+						$slide.css({ 'opacity': 1, 'left': 0, 'top': 0, 'z-index': 10, visibility: 'visible' });
 						$previousSlide = $slide;
 					} else {
-						$slide.css( 'visibility', 'hidden' );
+						$slide.css({ 'opacity': 1, visibility: 'hidden', 'z-index': '' });
 					}
 				});
 
@@ -3426,14 +3458,26 @@
 				// Fade in the selected slide
 				this._fadeSlideTo( $nextSlide, 1, function() {
 
-					// After the animation is over, make all the slides visible again
+					var allTransitionsComplete = true;
+
 					$.each( that.slides, function( index, element ) {
-						var $slide = element.$slide;
-						$slide.css({ 'visibility': '', 'opacity': '', 'z-index': '' });
+						console.log( element.$slide.attr( 'data-transitioning' ) );
+						if ( element.$slide.attr( 'data-transitioning' ) === true ) {
+							allTransitionsComplete = false;
+							console.log('transition true');
+						}
 					});
-					
-					// Reset the position of the slides and slides container
-					that._resetSlidesPosition();
+
+					if ( allTransitionsComplete === true ) {
+						// After the animation is over, make all the slides visible again
+						$.each( that.slides, function( index, element ) {
+							var $slide = element.$slide;
+							$slide.css({ 'visibility': '', 'opacity': '', 'z-index': '' });
+						});
+						
+						// Reset the position of the slides and slides container
+						that._resetSlidesPosition();
+					}
 
 					// Fire the 'gotoSlideComplete' event
 					that.trigger({ type: 'gotoSlideComplete', index: index, previousIndex: that.previousSlideIndex });
@@ -3458,6 +3502,8 @@
 		_fadeSlideTo: function( target, opacity, callback ) {
 			var that = this;
 
+			target.attr( 'data-transitioning', true );
+
 			// Use CSS transitions if they are supported. If not, use JavaScript animation.
 			if ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) {
 
@@ -3476,6 +3522,7 @@
 					
 					target.off( that.transitionEvent );
 					target.css( that.vendorPrefix + 'transition', '' );
+					target.attr( 'data-transitioning', false );
 
 					if ( typeof callback === 'function' ) {
 						callback();
@@ -3483,6 +3530,8 @@
 				});
 			} else {
 				target.stop().animate({ 'opacity': opacity }, this.settings.fadeDuration, function() {
+					target.attr( 'data-transitioning', false );
+
 					if ( typeof callback === 'function' ) {
 						callback();
 					}
@@ -3697,14 +3746,15 @@
 
 			// Calculate the old position of the slides in order to return to it if the swipe
 			// is below the threshold
-			var oldSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + this.visibleOffset;
+			var oldSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + this.visibleOffset,
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) ? -1 : 1;
 
 			if ( Math.abs( touchDistance ) < this.settings.touchSwipeThreshold ) {
 				this._moveTo( oldSlidesPosition );
 			} else {
 
 				// Calculate by how many slides the slides container has moved
-				var slideArrayDistance = touchDistance / ( this.slideSize + this.settings.slideDistance );
+				var slideArrayDistance = directionMultiplier * touchDistance / ( this.slideSize + this.settings.slideDistance );
 
 				// Floor the obtained value and add or subtract 1, depending on the direction of the swipe
 				slideArrayDistance = parseInt( slideArrayDistance, 10 ) + ( slideArrayDistance > 0 ? 1 : - 1 );
