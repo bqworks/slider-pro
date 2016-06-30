@@ -325,22 +325,41 @@
 			// If the selected thumbnail has a lower index than the previous one, make sure that the thumbnail
 			// that's before the selected thumbnail will be visible, if the selected thumbnail is not the
 			// first thumbnail in the list.
-			if ( this.selectedThumbnailIndex >= previousIndex ) {
-				var nextThumbnailIndex = this.selectedThumbnailIndex === this.thumbnails.length - 1 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex + 1,
-					nextThumbnail = this.thumbnails[ nextThumbnailIndex ],
-					nextThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? nextThumbnail.getPosition().right : nextThumbnail.getPosition().bottom,
-					thumbnailsRightPosition = - this.thumbnailsPosition + this.thumbnailsContainerSize;
+			if ( this.settings.rightToLeft === true && this.thumbnailsOrientation === 'horizontal' ) {
+				if ( this.selectedThumbnailIndex >= previousIndex ) {
+					var rtlNextThumbnailIndex = this.selectedThumbnailIndex === this.thumbnails.length - 1 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex + 1,
+						rtlNextThumbnail = this.thumbnails[ rtlNextThumbnailIndex ];
 
-				if ( nextThumbnailPosition > thumbnailsRightPosition ) {
-					newThumbnailsPosition = this.thumbnailsPosition - ( nextThumbnailPosition - thumbnailsRightPosition );
+					if ( rtlNextThumbnail.getPosition().left < - this.thumbnailsPosition ) {
+						newThumbnailsPosition = - rtlNextThumbnail.getPosition().left;
+					}
+				} else if ( this.selectedThumbnailIndex < previousIndex ) {
+					var rtlPreviousThumbnailIndex = this.selectedThumbnailIndex === 0 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex - 1,
+						rtlPreviousThumbnail = this.thumbnails[ rtlPreviousThumbnailIndex ],
+						rtlThumbnailsRightPosition = - this.thumbnailsPosition + this.thumbnailsContainerSize;
+
+					if ( rtlPreviousThumbnail.getPosition().right > rtlThumbnailsRightPosition ) {
+						newThumbnailsPosition = this.thumbnailsPosition - ( rtlPreviousThumbnail.getPosition().right - rtlThumbnailsRightPosition );
+					}
 				}
-			} else if ( this.selectedThumbnailIndex < previousIndex ) {
-				var previousThumbnailIndex = this.selectedThumbnailIndex === 0 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex - 1,
-					previousThumbnail = this.thumbnails[ previousThumbnailIndex ],
-					previousThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? previousThumbnail.getPosition().left : previousThumbnail.getPosition().top;
+			} else {
+				if ( this.selectedThumbnailIndex >= previousIndex ) {
+					var nextThumbnailIndex = this.selectedThumbnailIndex === this.thumbnails.length - 1 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex + 1,
+						nextThumbnail = this.thumbnails[ nextThumbnailIndex ],
+						nextThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? nextThumbnail.getPosition().right : nextThumbnail.getPosition().bottom,
+						thumbnailsRightPosition = - this.thumbnailsPosition + this.thumbnailsContainerSize;
 
-				if ( previousThumbnailPosition < - this.thumbnailsPosition ) {
-					newThumbnailsPosition = - previousThumbnailPosition;
+					if ( nextThumbnailPosition > thumbnailsRightPosition ) {
+						newThumbnailsPosition = this.thumbnailsPosition - ( nextThumbnailPosition - thumbnailsRightPosition );
+					}
+				} else if ( this.selectedThumbnailIndex < previousIndex ) {
+					var previousThumbnailIndex = this.selectedThumbnailIndex === 0 ? this.selectedThumbnailIndex : this.selectedThumbnailIndex - 1,
+						previousThumbnail = this.thumbnails[ previousThumbnailIndex ],
+						previousThumbnailPosition = this.thumbnailsOrientation === 'horizontal' ? previousThumbnail.getPosition().left : previousThumbnail.getPosition().top;
+
+					if ( previousThumbnailPosition < - this.thumbnailsPosition ) {
+						newThumbnailsPosition = - previousThumbnailPosition;
+					}
 				}
 			}
 

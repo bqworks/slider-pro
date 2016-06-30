@@ -44,10 +44,22 @@
 
 .sp-horizontal .sp-previous-arrow {
 	left: 20px;
+	right: auto;
+}
+
+.sp-horizontal.sp-rtl .sp-previous-arrow {
+	right: 20px;
+	left: auto;
 }
 
 .sp-horizontal .sp-next-arrow {
 	right: 20px;
+	left: auto;
+}
+
+.sp-horizontal.sp-rtl .sp-next-arrow {
+	left: 20px;
+	right: auto;
 }
 
 .sp-vertical .sp-previous-arrow {
@@ -69,7 +81,7 @@
 	background-color: #FFF;
 }
 
-.sp-previous-arrow:before {
+.sp-arrow:before {
 	left: 30%;
 	top: 0;
 	-webkit-transform: skew(145deg, 0deg);
@@ -77,7 +89,7 @@
 	transform: skew(145deg, 0deg);
 }
 
-.sp-previous-arrow:after {
+.sp-arrow:after {
 	left: 30%;
 	top: 50%;
 	-webkit-transform: skew(-145deg, 0deg);
@@ -85,20 +97,22 @@
 	transform: skew(-145deg, 0deg);
 }
 
-.sp-next-arrow:before {
-	right: 30%;
-	top: 0;
-	-webkit-transform: skew(35deg, 0deg);
-	-ms-transform: skew(35deg, 0deg);
-	transform: skew(35deg, 0deg);
+.sp-next-arrow {
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	transform: rotate(180deg);
 }
 
-.sp-next-arrow:after {
-	right: 30%;
-	top: 50%;
-	-webkit-transform: skew(-35deg, 0deg);
-	-ms-transform: skew(-35deg, 0deg);
-	transform: skew(-35deg, 0deg);
+.sp-rtl .sp-previous-arrow {
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+.sp-rtl .sp-next-arrow {
+	-webkit-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	transform: rotate(0deg);
 }
 
 .ie8 .sp-arrow,

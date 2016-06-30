@@ -311,6 +311,12 @@
 				this.$slides.find( '.sp-slide' ).css( 'left', '' );
 			}
 
+			if ( this.settings.rightToLeft === true ) {
+				this.$slider.addClass( 'sp-rtl' );
+			} else {
+				this.$slider.removeClass( 'sp-rtl' );
+			}
+
 			// Set the position that will be used to arrange elements, like the slides,
 			// based on the orientation.
 			this.positionProperty = this.settings.orientation === 'horizontal' ? 'left' : 'top';
@@ -398,20 +404,23 @@
 
 		// Set the left/top position of the slides based on their position in the 'slidesOrder' array
 		_updateSlidesPosition: function() {
-			var selectedSlidePixelPosition = parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 );
+			var selectedSlidePixelPosition = parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ),
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) ? -1 : 1;
 
 			for ( var slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
 				var slide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
-				slide.css( this.positionProperty, selectedSlidePixelPosition + ( slideIndex - this.middleSlidePosition  ) * ( this.slideSize + this.settings.slideDistance ) );
+				slide.css( this.positionProperty, selectedSlidePixelPosition + directionMultiplier * ( slideIndex - this.middleSlidePosition  ) * ( this.slideSize + this.settings.slideDistance ) );
 			}
 		},
 
 		// Set the left/top position of the slides based on their position in the 'slidesOrder' array,
 		// and also set the position of the slides container.
 		_resetSlidesPosition: function() {
+			var directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) === true ? -1 : 1;
+
 			for ( var slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
 				var slide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
-				slide.css( this.positionProperty, slideIndex * ( this.slideSize + this.settings.slideDistance ) );
+				slide.css( this.positionProperty, directionMultiplier * slideIndex * ( this.slideSize + this.settings.slideDistance ) );
 			}
 
 			var newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + this.visibleOffset;
@@ -930,6 +939,10 @@
 			// to make more slides visible.
 			// By default, only the selected slide will be visible. 
 			visibleSize: 'auto',
+
+			// Indicates if the direction of the slider will be from right to left,
+			// instead of the default left to right
+			rightToLeft: false,
 
 			// Breakpoints for allowing the slider's options to be changed
 			// based on the size of the window.

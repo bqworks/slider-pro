@@ -3,6 +3,7 @@
 .sp-thumbnails-container {
 	position: relative;
 	overflow: hidden;
+	direction: ltr;
 }
 
 .sp-top-thumbnails,
@@ -52,6 +53,10 @@
 	float: left;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+.sp-rtl .sp-thumbnail-container {
+	float: right;
 }
 
 /* Horizontal thumbnails
