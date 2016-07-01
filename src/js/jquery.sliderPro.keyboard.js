@@ -41,7 +41,11 @@
 				} else if ( event.which === 39 ) {
 					that.nextSlide();
 				} else if ( event.which === 13 ) {
-					that.$slider.find( '.sp-slide' ).eq( that.selectedSlideIndex ).find( '.sp-image-container a' )[0].click();
+					var link = that.$slider.find( '.sp-slide' ).eq( that.selectedSlideIndex ).find( '.sp-image-container a' );
+					
+					if ( link.length !== 0 ) {
+						link[0].click();
+					}
 				}
 			});
 		},
