@@ -43,20 +43,20 @@
 					$previousSlide,
 					newIndex = index;
 
-				// Loop through all the slides and overlap the the previous and next slide,
+				// Loop through all the slides and overlap the previous and next slide,
 				// and hide the other slides.
 				$.each( this.slides, function( index, element ) {
 					var slideIndex = element.getIndex(),
 						$slide = element.$slide;
 
 					if ( slideIndex === newIndex ) {
-						$slide.css({ 'opacity': 0, 'left': 0, 'top': 0, 'z-index': 20 });
+						$slide.css({ 'opacity': 0, 'left': 0, 'top': 0, 'z-index': 20, visibility: 'visible' });
 						$nextSlide = $slide;
 					} else if ( slideIndex === that.selectedSlideIndex ) {
-						$slide.css({ 'opacity': 1, 'left': 0, 'top': 0, 'z-index': 10 });
+						$slide.css({ 'opacity': 1, 'left': 0, 'top': 0, 'z-index': 10, visibility: 'visible' });
 						$previousSlide = $slide;
 					} else {
-						$slide.css( 'visibility', 'hidden' );
+						$slide.css({ 'opacity': 1, visibility: 'hidden', 'z-index': '' });
 					}
 				});
 
@@ -68,31 +68,42 @@
 				this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
 				this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
 			
-				// Rearrange the slides if the slider is loopable
+				// Rearrange the slides if the slider is loop-able
 				if ( that.settings.loop === true ) {
 					that._updateSlidesOrder();
 				}
 
 				// Move the slides container so that the cross-fading slides (which now have the top and left
-				// position set to 0) become visible and in the center of the slider.
-				this._moveTo( this.visibleOffset, true );
-
-				// Fade out the previous slide, if indicated, in addition to fading in the next slide
-				if ( this.settings.fadeOutPreviousSlide === true ) {
-					this._fadeSlideTo( $previousSlide, 0 );
-				}
+				// position set to 0) become visible.
+				this._moveTo( 0, true );
 
 				// Fade in the selected slide
 				this._fadeSlideTo( $nextSlide, 1, function() {
 
-					// After the animation is over, make all the slides visible again
+					// This flag will indicate if all the fade transitions are complete,
+					// in case there are multiple running at the same time, which happens
+					// when the slides are navigated very quickly
+					var allTransitionsComplete = true;
+
+					// Go through all the slides and check if there is at least one slide 
+					// that is still transitioning.
 					$.each( that.slides, function( index, element ) {
-						var $slide = element.$slide;
-						$slide.css({ 'visibility': '', 'opacity': '', 'z-index': '' });
+						if ( typeof element.$slide.attr( 'data-transitioning' ) !== 'undefined' ) {
+							allTransitionsComplete = false;
+						}
 					});
-					
-					// Reset the position of the slides and slides container
-					that._resetSlidesPosition();
+
+					if ( allTransitionsComplete === true ) {
+
+						// After all the transitions are complete, make all the slides visible again
+						$.each( that.slides, function( index, element ) {
+							var $slide = element.$slide;
+							$slide.css({ 'visibility': '', 'opacity': '', 'z-index': '' });
+						});
+						
+						// Reset the position of the slides and slides container
+						that._resetSlidesPosition();
+					}
 
 					// Fire the 'gotoSlideComplete' event
 					that.trigger({ type: 'gotoSlideComplete', index: index, previousIndex: that.previousSlideIndex });
@@ -100,6 +111,11 @@
 						that.settings.gotoSlideComplete.call( that, { type: 'gotoSlideComplete', index: index, previousIndex: that.previousSlideIndex } );
 					}
 				});
+
+				// Fade out the previous slide, if indicated, in addition to fading in the next slide
+				if ( this.settings.fadeOutPreviousSlide === true ) {
+					this._fadeSlideTo( $previousSlide, 0 );
+				}
 
 				if ( this.settings.autoHeight === true ) {
 					this._resizeHeight();
@@ -116,6 +132,11 @@
 		// Fade the target slide to the specified opacity (0 or 1)
 		_fadeSlideTo: function( target, opacity, callback ) {
 			var that = this;
+
+			// apply the attribute only to slides that fade in
+			if ( opacity === 1 ) {
+				target.attr( 'data-transitioning', true );
+			}
 
 			// Use CSS transitions if they are supported. If not, use JavaScript animation.
 			if ( this.supportedAnimation === 'css-3d' || this.supportedAnimation === 'css-2d' ) {
@@ -135,6 +156,7 @@
 					
 					target.off( that.transitionEvent );
 					target.css( that.vendorPrefix + 'transition', '' );
+					target.removeAttr( 'data-transitioning');
 
 					if ( typeof callback === 'function' ) {
 						callback();
@@ -142,6 +164,8 @@
 				});
 			} else {
 				target.stop().animate({ 'opacity': opacity }, this.settings.fadeDuration, function() {
+					target.removeAttr( 'data-transitioning' );
+
 					if ( typeof callback === 'function' ) {
 						callback();
 					}
