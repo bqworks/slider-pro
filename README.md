@@ -11,6 +11,7 @@ Main features:
 * animated layers (and static)
 * infinite scrolling
 * carousel layout
+* different sized images
 * full width and full window support
 * thumbnails
 * deep linking
