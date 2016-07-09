@@ -11,6 +11,10 @@
 	direction: rtl;
 }
 
+.sp-full-screen .sp-buttons {
+	display: none;
+}
+
 .sp-button {
 	width: 10px;
 	height: 10px;
