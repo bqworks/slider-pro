@@ -972,7 +972,7 @@
 
 			// Will maintain all the slides at the same height, but will allow the width
 			// of the slides to be variable if the orientation of the slides is horizontal
-			// and vice-verse if the orientation is vertical
+			// and vice-versa if the orientation is vertical
 			autoSlideSize: false,
 
 			// Indicates the initially selected slide
