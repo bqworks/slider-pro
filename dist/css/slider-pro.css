@@ -1,5 +1,5 @@
 /*!
-*  - v1.2.5
+*  - v1.3
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -379,6 +379,10 @@
 	direction: rtl;
 }
 
+.sp-full-screen .sp-buttons {
+	display: none;
+}
+
 .sp-button {
 	width: 10px;
 	height: 10px;
@@ -487,6 +491,9 @@
 
 .sp-vertical .sp-next-arrow {
 	bottom: 20px;
+	-webkit-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	transform: rotate(270deg);
 }
 
 .sp-previous-arrow:before,
@@ -522,13 +529,13 @@
 	transform: rotate(180deg);
 }
 
-.sp-rtl .sp-previous-arrow {
+.sp-horizontal.sp-rtl .sp-previous-arrow {
 	-webkit-transform: rotate(180deg);
 	-ms-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
 
-.sp-rtl .sp-next-arrow {
+.sp-horizontal.sp-rtl .sp-next-arrow {
 	-webkit-transform: rotate(0deg);
 	-ms-transform: rotate(0deg);
 	transform: rotate(0deg);
