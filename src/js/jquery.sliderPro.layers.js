@@ -142,7 +142,7 @@
 		// When a new slide is selected, hide the layers from the previous slide
 		// and show the layers from the current slide.
 		_layersOnGotoSlide: function( event ) {
-			if ( this.previousSlideIndex !== this.selectedSlideIndex &&  this.settings.waitForLayers === false ) {
+			if ( this.previousSlideIndex !== this.selectedSlideIndex ) {
 				this.hideLayers( this.previousSlideIndex );
 			}
 
