@@ -375,13 +375,13 @@
 			this.slides.splice( index, 0, slide );
 
 			slide.on( 'imagesLoaded.' + NS, function( event ) {
-				if ( that.settings.autoSlideSize === true ) {
-					if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
-						that._resetSlidesPosition();
-					}
-					
-					that._calculateSlidesSize();
-				} else if ( that.settings.autoHeight === true && event.index === that.selectedSlideIndex ) {
+				if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
+					that._resetSlidesPosition();
+				}
+
+				that._calculateSlidesSize();
+				
+				if ( that.settings.autoHeight === true && event.index === that.selectedSlideIndex ) {
 					that._resizeHeightTo( slide.getSize().height);
 				}
 			});
