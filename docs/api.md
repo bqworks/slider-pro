@@ -69,6 +69,12 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* false
 
+#### autoSlideSize ####
+
+>Will maintain all the slides at the same height, but will allow the width of the slides to be variable if the orientation of the slides is horizontal and vice-versa if the orientation is vertical.
+
+>*Default value:* false
+
 #### startSlide ####
 
 >Sets the slide that will be selected when the slider loads.
@@ -128,6 +134,18 @@ $( '#my-slider' ).sliderPro({
 >Sets the size of the visible area, allowing for more slides to become visible near the selected slide.
 
 >*Default value:* 'auto'
+
+#### centerSelectedSlide ####
+
+>Indicates whether the selected slide will be in the center of the slider, when there are more slides visible at a time. If set to false, the selected slide will be in the left side of the slider.
+
+>*Default value:* true
+
+#### rightToLeft ####
+
+>Indicates if the direction of the slider will be from right to left, instead of the default left to right.
+
+>*Default value:* false
 
 #### breakpoints ####
 
