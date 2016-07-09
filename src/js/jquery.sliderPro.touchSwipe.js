@@ -179,15 +179,15 @@
 
 			// Calculate the old position of the slides in order to return to it if the swipe
 			// is below the threshold
-			var oldSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + this.visibleOffset,
-				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) ? -1 : 1;
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+				oldSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 
 			if ( Math.abs( touchDistance ) < this.settings.touchSwipeThreshold ) {
 				this._moveTo( oldSlidesPosition );
 			} else {
-
+				
 				// Calculate by how many slides the slides container has moved
-				var slideArrayDistance = directionMultiplier * touchDistance / ( this.slideSize + this.settings.slideDistance );
+				var	slideArrayDistance = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ? -1 : 1 ) * touchDistance / ( this.averageSlideSize + this.settings.slideDistance );
 
 				// Floor the obtained value and add or subtract 1, depending on the direction of the swipe
 				slideArrayDistance = parseInt( slideArrayDistance, 10 ) + ( slideArrayDistance > 0 ? 1 : - 1 );

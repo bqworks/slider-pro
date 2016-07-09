@@ -228,12 +228,12 @@
 				if ( this.settings.forceSize === 'fullWindow' ) {
 					this.$slidesMask.css( 'height', this.$slidesMask.height() - this.$thumbnailsContainer.outerHeight( true ) );
 
-					// Resize the slide
+					// Resize the slides
 					this.slideHeight = this.$slidesMask.height();
-						
-					$.each( this.slides, function( index, element ) {
-						element.setSize( that.slideWidth, that.slideHeight );
-					});
+					this._resizeSlides();
+
+					// Re-arrange the slides
+					this._resetSlidesPosition();
 				}
 			} else if ( this.thumbnailsOrientation === 'vertical' ) {
 
@@ -250,20 +250,12 @@
 					
 					this.$slidesMask.css( 'width', this.$slider.width() );
 
-					// If the slides are horizontally oriented, update the visible size and the offset
-					// of the selected slide, since the slider's size was reduced to make room for the thumbnails.
-					// 
 					// If the slides are vertically oriented, update the width and height (to maintain the aspect ratio)
 					// of the slides.
-					if ( this.settings.orientation === 'horizontal' ) {
-						this.visibleOffset = Math.round( ( this.$slider.width() - this.slideSize ) / 2 );
-						this.visibleSlidesSize = this.$slidesMask.width();
-					} else if ( this.settings.orientation === 'vertical' ) {
+					if ( this.settings.orientation === 'vertical' ) {
 						this.slideWidth = this.$slider.width();
 
-						$.each( this.slides, function( index, element ) {
-							element.setSize( that.slideWidth, that.slideHeight );
-						});
+						this._resizeSlides();
 					}
 
 					// Re-arrange the slides

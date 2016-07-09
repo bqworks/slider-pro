@@ -69,7 +69,7 @@
 				referencePosition = this.settings.loop === true ? this.middleSlidePosition : this.selectedSlideIndex,
 
 				// Calculate how many slides are visible at the sides of the selected slide
-				visibleOnSides = Math.ceil( ( this.visibleSlidesSize - this.slideSize ) / 2 / this.slideSize ),
+				visibleOnSides = Math.ceil( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10) - this.averageSlideSize ) / 2 / this.averageSlideSize ),
 
 				// Calculate the indexes of the first and last slide that will be checked
 				from = referencePosition - visibleOnSides - 1 > 0 ? referencePosition - visibleOnSides - 1 : 0,
