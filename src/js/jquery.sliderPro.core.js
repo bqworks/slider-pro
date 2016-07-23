@@ -1261,8 +1261,16 @@
 			if ( this.settings.autoSlideSize === true ) {
 				if ( this.settings.orientation === 'horizontal' ) {
 					this.$mainImage.css({ width: 'auto', height: '100%' });
+
+					// resize the slide's width to a fixed value instead of 'auto', to
+					// prevent incorrect sizing caused by links added to the main image
+					this.$slide.css( 'width', this.$mainImage.width() );
 				} else if ( this.settings.orientation === 'vertical' ) {
 					this.$mainImage.css({ width: '100%', height: 'auto' });
+
+					// resize the slide's height to a fixed value instead of 'auto', to
+					// prevent incorrect sizing caused by links added to the main image
+					this.$slide.css( 'height', this.$mainImage.height() );
 				}
 			} else if ( this.settings.autoHeight === true ) {
 				this.$mainImage.css({ width: '100%', height: 'auto' });
