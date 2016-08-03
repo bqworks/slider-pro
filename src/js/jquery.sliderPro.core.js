@@ -375,12 +375,14 @@
 			this.slides.splice( index, 0, slide );
 
 			slide.on( 'imagesLoaded.' + NS, function( event ) {
-				if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
-					that._resetSlidesPosition();
+				if ( that.settings.autoSlideSize === true ) {
+					if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
+						that._resetSlidesPosition();
+					}
+
+					that._calculateSlidesSize();
 				}
 
-				that._calculateSlidesSize();
-				
 				if ( that.settings.autoHeight === true && event.index === that.selectedSlideIndex ) {
 					that._resizeHeightTo( slide.getSize().height);
 				}
@@ -421,40 +423,51 @@
 				slide,
 				$slideElement,
 				slideIndex,
-				slideSize,
-				previousPosition = selectedSlidePixelPosition;
-				
-			if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
-				for ( slideIndex = this.middleSlidePosition; slideIndex >= 0; slideIndex-- ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
-				}
+				previousPosition = selectedSlidePixelPosition,
+				directionMultiplier,
+				slideSize;
+			
+			if ( this.settings.autoSlideSize === true ) {
+				if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
+					for ( slideIndex = this.middleSlidePosition; slideIndex >= 0; slideIndex-- ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					}
 
-				previousPosition = selectedSlidePixelPosition;
+					previousPosition = selectedSlidePixelPosition;
 
-				for ( slideIndex = this.middleSlidePosition + 1; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					for ( slideIndex = this.middleSlidePosition + 1; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					}
+				} else {
+					for ( slideIndex = this.middleSlidePosition - 1; slideIndex >= 0; slideIndex-- ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					}
+
+					previousPosition = selectedSlidePixelPosition;
+
+					for ( slideIndex = this.middleSlidePosition; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					}
 				}
 			} else {
-				for ( slideIndex = this.middleSlidePosition - 1; slideIndex >= 0; slideIndex-- ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
-				}
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) ? -1 : 1;
+				slideSize = ( this.settings.orientation === 'horizontal' ) ? this.slideWidth : this.slideHeight;
 
-				previousPosition = selectedSlidePixelPosition;
-
-				for ( slideIndex = this.middleSlidePosition; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+				for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+					$slideElement = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
+					$slideElement.css( this.positionProperty, selectedSlidePixelPosition + directionMultiplier * ( slideIndex - this.middleSlidePosition  ) * ( slideSize + this.settings.slideDistance ) );
 				}
 			}
 		},
@@ -465,25 +478,42 @@
 			var previousPosition = 0,
 				slide,
 				$slideElement,
-				slideIndex;
+				slideIndex,
+				selectedSlideSize,
+				directionMultiplier,
+				slideSize;
 
-			if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
-				for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+			if ( this.settings.autoSlideSize === true ) {
+				if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
+					for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					}
+				} else {
+					for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					}
 				}
+
+				selectedSlideSize = this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ];
 			} else {
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) === true ? -1 : 1;
+				slideSize = ( this.settings.orientation === 'horizontal' ) ? this.slideWidth : this.slideHeight;
+ 
 				for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					$slideElement = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
+					$slideElement.css( this.positionProperty, directionMultiplier * slideIndex * ( slideSize + this.settings.slideDistance ) );
 				}
+
+				selectedSlideSize = slideSize;
 			}
 
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - selectedSlideSize ) / 2 ) : 0,
 				newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 			
 			this._moveTo( newSlidesPosition, true );
@@ -491,13 +521,18 @@
 
 		// Calculate the total size of the slides and the average size of a single slide
 		_calculateSlidesSize: function() {
-			var firstSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ 0 ] ),
-				firstSlidePosition = parseInt( firstSlide.css( this.positionProperty ), 10 ),
-				lastSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ this.slidesOrder.length - 1 ] ),
-				lastSlidePosition = parseInt( lastSlide.css( this.positionProperty ), 10 ) + ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ? -1 : 1 ) * parseInt( lastSlide.css( this.sizeProperty ), 10 );
-			
-			this.slidesSize = Math.abs( lastSlidePosition - firstSlidePosition );
-			this.averageSlideSize = Math.round( this.slidesSize / this.slides.length );
+			if ( this.settings.autoSlideSize === true ) {
+				var firstSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ 0 ] ),
+					firstSlidePosition = parseInt( firstSlide.css( this.positionProperty ), 10 ),
+					lastSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ this.slidesOrder.length - 1 ] ),
+					lastSlidePosition = parseInt( lastSlide.css( this.positionProperty ), 10 ) + ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ? -1 : 1 ) * parseInt( lastSlide.css( this.sizeProperty ), 10 );
+				
+				this.slidesSize = Math.abs( lastSlidePosition - firstSlidePosition );
+				this.averageSlideSize = Math.round( this.slidesSize / this.slides.length );
+			} else {
+				this.slidesSize = ( ( this.settings.orientation === 'horizontal' ? this.slideWidth : this.slideHeight ) + this.settings.slideDistance ) * this.slides.length - this.settings.slideDistance;
+				this.averageSlideSize = this.settings.orientation === 'horizontal' ? this.slideWidth : this.slideHeight;
+			}
 		},
 
 		// Called when the slider needs to resize
