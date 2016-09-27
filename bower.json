@@ -8,6 +8,7 @@
     "responsive-slider"
   ],
   "main": [
+    "sass/slider-pro.scss",
     "dist/css/slider-pro.css",
     "dist/js/jquery.sliderPro.js"
   ],
