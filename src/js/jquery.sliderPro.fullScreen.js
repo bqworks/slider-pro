@@ -50,6 +50,9 @@
 		// Create the full-screen button
 		_addFullScreen: function() {
 			this.$fullScreenButton = $('<div class="sp-full-screen-button"></div>').appendTo( this.$slider );
+			if ( this.settings.thumbnailsPosition === 'right' ) {
+				this.$fullScreenButton.css('right', (this.settings.thumbnailWidth + 14) + 'px');
+			}
 			this.$fullScreenButton.on( 'click.' + NS, $.proxy( this._onFullScreenButtonClick, this ) );
 
 			document.addEventListener( 'fullscreenchange', $.proxy( this._onFullScreenChange, this ) );
