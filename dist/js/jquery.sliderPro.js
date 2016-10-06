@@ -564,7 +564,11 @@
 			
 			// Initially set the slide width to the size of the slider.
 			// Later, this will be set to less if there are multiple visible slides.
-			this.slideWidth = this.$slider.width();
+			if ( this.settings.thumbnailsPosition === 'left' || this.settings.thumbnailsPosition === 'right' ) {
+				this.slideWidth = this.$slider.width() - this.settings.thumbnailWidth - 4;
+			} else {
+				this.slideWidth = this.$slider.width();
+			}
 
 			// Set the height to the same size as the browser window if the slider is set to be 'fullWindow',
 			// or calculate the height based on the width and the aspect ratio.
@@ -4385,6 +4389,9 @@
 		// Create the full-screen button
 		_addFullScreen: function() {
 			this.$fullScreenButton = $('<div class="sp-full-screen-button"></div>').appendTo( this.$slider );
+			if ( this.settings.thumbnailsPosition === 'right' ) {
+				this.$fullScreenButton.css('right', (this.settings.thumbnailWidth + 14) + 'px');
+			}
 			this.$fullScreenButton.on( 'click.' + NS, $.proxy( this._onFullScreenButtonClick, this ) );
 
 			document.addEventListener( 'fullscreenchange', $.proxy( this._onFullScreenChange, this ) );
