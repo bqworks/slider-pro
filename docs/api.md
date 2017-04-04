@@ -153,7 +153,7 @@ $( '#my-slider' ).sliderPro({
 
 >*Example:*
 
->```
+```
 $( '#my-slider' ).sliderPro({
 	width: 960, 
 	height: 400,
