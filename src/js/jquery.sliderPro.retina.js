@@ -18,7 +18,7 @@
 				return;
 			}
 			
-			this.on( 'update.' + NS, $.proxy( this._checkRetinaImages, this ) );
+			this.on( 'sliderResize.' + NS, $.proxy( this._checkRetinaImages, this ) );
 
 			if ( this.$slider.find( '.sp-thumbnail' ).length !== 0 ) {
 				this.on( 'update.Thumbnails.' + NS, $.proxy( this._checkRetinaThumbnailImages, this ) );
