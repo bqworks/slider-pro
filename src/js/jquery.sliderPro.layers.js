@@ -230,7 +230,7 @@
 		// Destroy the module
 		destroyLayers: function() {
 			this.off( 'update.' + NS );
-			this.off( 'resize.' + NS );
+			this.off( 'sliderResize.' + NS );
 			this.off( 'gotoSlide.' + NS );
 			this.off( 'hideLayersComplete.' + NS );
 		},
@@ -318,6 +318,9 @@
 
 		// Indicates the name of the CSS transition's complete event (i.e., transitionend, webkitTransitionEnd, etc.)
 		this.transitionEvent = SliderProUtils.getTransitionEvent();
+
+		// Reference to the timer that will be used to hide/show the layers
+		this.delayTimer = null;
 
 		// Reference to the timer that will be used to hide the layers automatically after a given time interval
 		this.stayTimer = null;
@@ -553,7 +556,7 @@
 
 				this.$layer.css( start );
 
-				setTimeout( function() {
+				this.delayTimer = setTimeout( function() {
 					that.$layer.css( target );
 				}, delay );
 			}
@@ -631,7 +634,7 @@
 					}
 				});
 
-				setTimeout( function() {
+				this.delayTimer = setTimeout( function() {
 					that.$layer.css( target );
 				}, delay );
 			}
@@ -649,6 +652,10 @@
 		destroy: function() {
 			this.$layer.removeAttr( 'style' );
 			this.$layer.removeAttr( 'data-layer-init' );
+			clearTimeout( this.delayTimer );
+			clearTimeout( this.stayTimer );
+			this.delayTimer = null;
+			this.stayTimer = null;
 		}
 	};
 
