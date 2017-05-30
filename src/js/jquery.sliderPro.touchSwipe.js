@@ -121,11 +121,11 @@
 				oppositeDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.y : this.touchDistance.x;
 
 			// If the movement is in the same direction as the orientation of the slides, the swipe is valid
-			if ( Math.abs( distance ) > Math.abs( oppositeDistance ) ) {
-				event.preventDefault();
-			} else {
+			if ( Math.abs( distance ) < Math.abs( oppositeDistance ) ) {
 				return;
 			}
+			
+			event.preventDefault();
 
 			if ( this.settings.loop === false ) {
 				// Make the slides move slower if they're dragged outside its bounds
