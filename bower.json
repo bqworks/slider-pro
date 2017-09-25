@@ -1,6 +1,5 @@
 {
   "name": "slider-pro",
-  "version": "1.3",
   "description": "Responsive jQuery slider, featuring modular architecture, CSS3 animations, touch swipe, animated layers, retina, lazy loading and much more.",
   "keywords": [
     "jquery-plugin",
@@ -8,6 +7,7 @@
     "responsive-slider"
   ],
   "main": [
+    "sass/slider-pro.scss",
     "dist/css/slider-pro.css",
     "dist/js/jquery.sliderPro.js"
   ],

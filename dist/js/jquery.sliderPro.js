@@ -1,5 +1,5 @@
 /*!
-*  - v1.3
+*  - v1.3.1
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -5200,15 +5200,16 @@
 				}
 
 				// Create the iframe
+				var iframeAttr = {
+					'src': src,
+					'width': videoWidth,
+					'height': videoHeight,
+					'class': video.attr( 'class' ),
+					'frameborder': 0
+				}
+				if (that.options.allowfullscreen) iframeAttr.allowfullscreen = "allowfullscreen";
 				iframe = $( '<iframe></iframe>' )
-					.attr({
-						'src': src,
-						'width': videoWidth,
-						'height': videoHeight,
-						'class': video.attr( 'class' ),
-						'frameborder': 0,
-						'allowfullscreen': 'allowfullscreen'
-					}).insertBefore( video );
+					.attr(iframeAttr).insertBefore( video );
 
 				// Initialize the video and play it
 				that._initVideo( iframe );
