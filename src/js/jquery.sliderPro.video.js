@@ -162,7 +162,7 @@
 					'class': video.attr( 'class' ),
 					'frameborder': 0
 				}
-				if (this.options.allowfullscreen) iframeAttr.allowfullscreen = "allowfullscreen";
+				if (that.options.allowfullscreen) iframeAttr.allowfullscreen = "allowfullscreen";
 				iframe = $( '<iframe></iframe>' )
 					.attr(iframeAttr).insertBefore( video );
 
