@@ -27,6 +27,11 @@
 		// Stores the names of the events
 		touchSwipeEvents: { startEvent: '', moveEvent: '', endEvent: '' },
 
+		// Indicates if scrolling (the page) in the opposite direction of the
+		// slides' layout is allowed. This is used to block vertical (or horizontal)
+		// scrolling when the user is scrolling through the slides.
+		allowOppositeScrolling: true,
+
 		initTouchSwipe: function() {
 			var that = this;
 
@@ -121,7 +126,13 @@
 				oppositeDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.y : this.touchDistance.x;
 
 			// If the movement is in the same direction as the orientation of the slides, the swipe is valid
-			if ( Math.abs( distance ) < Math.abs( oppositeDistance ) ) {
+			// and opposite scrolling will not be allowed.
+			if ( Math.abs( distance ) > Math.abs( oppositeDistance ) ) {
+				this.allowOppositeScrolling = false;
+			}
+
+			// If opposite scrolling is still allowed, the swipe wasn't valid, so return.
+			if ( this.allowOppositeScrolling === true ) {
 				return;
 			}
 			
@@ -147,6 +158,7 @@
 			// Remove the move and end listeners
 			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
+			this.allowOppositeScrolling = true;
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
