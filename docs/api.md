@@ -93,7 +93,7 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* 'horizontal'
 
-*Available value:* 'horizontal' and 'vertical'
+>*Available value:* 'horizontal' and 'vertical'
 
 #### forceSize ####
 
@@ -103,7 +103,7 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* 'none'
 
-*Available value:* 'fullWidth', 'fullWindow' and 'none'.
+>*Available value:* 'fullWidth', 'fullWindow' and 'none'.
 
 #### loop ####
 
@@ -151,9 +151,13 @@ $( '#my-slider' ).sliderPro({
 
 >Sets specific breakpoints which allow changing the look and behavior of the slider when the page resizes. 
 
->*Example:*
+>The 'breakpoints' property is assigned an object which contains certain browser window widths and the slider properties that are applied to those specific widths. This is very similar to CSS media queries. However, please note that these custom properties will not be inherited between different breakpoints. The slider's properties will reset to the original values before applying a new set of properties, so if you want a certain property value to persist, you need to set it for each breakpoint.
 
->```
+>*Default value:* null
+
+*Example:*
+
+```
 $( '#my-slider' ).sliderPro({
 	width: 960, 
 	height: 400,
@@ -174,10 +178,6 @@ $( '#my-slider' ).sliderPro({
 	}
 });
 ```
-
->The 'breakpoints' property is assigned an object which contains certain browser window widths and the slider properties that are applied to those specific widths. This is very similar to CSS media queries. However, please note that these custom properties will not be inherited between different breakpoints. The slider's properties will reset to the original values before applying a new set of properties, so if you want a certain property value to persist, you need to set it for each breakpoint.
-
->*Default value:* null
 
 #### fade ####
 
@@ -531,7 +531,7 @@ The list of available events:
 >Triggered when a new slide is selected. Returned data:
 
 >* index: the index of the selected slide
-* previousIndex: the index of the previously selected slide
+>* previousIndex: the index of the previously selected slide
 
 #### gotoSlideComplete ####
 
@@ -544,7 +544,7 @@ The list of available events:
 >Triggered when a breakpoint is reached. Returned data:
 
 >* size: the specified size that was reached
-* settings: the settings specified for the current size
+>* settings: the settings specified for the current size
 
 #### videoPlay ####
 
