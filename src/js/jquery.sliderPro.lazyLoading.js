@@ -72,8 +72,8 @@
 				visibleOnSides = Math.ceil( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10) - this.averageSlideSize ) / 2 / this.averageSlideSize ),
 
 				// Calculate the indexes of the first and last slide that will be checked
-				from = referencePosition - visibleOnSides - 1 > 0 ? referencePosition - visibleOnSides - 1 : 0,
-				to = referencePosition + visibleOnSides + 1 < this.getTotalSlides() - 1 ? referencePosition + visibleOnSides + 1 : this.getTotalSlides() - 1,
+				from = this.settings.centerSelectedSlide === true ? Math.max( referencePosition - visibleOnSides - 1, 0 ) : Math.max( referencePosition - 1, 0 ),
+				to = this.settings.centerSelectedSlide === true ? Math.min( referencePosition + visibleOnSides + 1, this.getTotalSlides() - 1 ) : Math.min( referencePosition + visibleOnSides * 2 + 1, this.getTotalSlides() - 1  ),
 				
 				// Get all the slides that need to be checked
 				slidesToCheck = this.slidesOrder.slice( from, to + 1 );
