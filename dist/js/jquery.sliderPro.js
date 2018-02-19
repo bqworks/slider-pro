@@ -1,5 +1,5 @@
 /*!
-*  - v1.3
+*  - v1.4.0
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -381,12 +381,14 @@
 			this.slides.splice( index, 0, slide );
 
 			slide.on( 'imagesLoaded.' + NS, function( event ) {
-				if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
-					that._resetSlidesPosition();
+				if ( that.settings.autoSlideSize === true ) {
+					if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
+						that._resetSlidesPosition();
+					}
+
+					that._calculateSlidesSize();
 				}
 
-				that._calculateSlidesSize();
-				
 				if ( that.settings.autoHeight === true && event.index === that.selectedSlideIndex ) {
 					that._resizeHeightTo( slide.getSize().height);
 				}
@@ -427,40 +429,51 @@
 				slide,
 				$slideElement,
 				slideIndex,
-				slideSize,
-				previousPosition = selectedSlidePixelPosition;
-				
-			if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
-				for ( slideIndex = this.middleSlidePosition; slideIndex >= 0; slideIndex-- ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
-				}
+				previousPosition = selectedSlidePixelPosition,
+				directionMultiplier,
+				slideSize;
+			
+			if ( this.settings.autoSlideSize === true ) {
+				if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
+					for ( slideIndex = this.middleSlidePosition; slideIndex >= 0; slideIndex-- ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					}
 
-				previousPosition = selectedSlidePixelPosition;
+					previousPosition = selectedSlidePixelPosition;
 
-				for ( slideIndex = this.middleSlidePosition + 1; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					for ( slideIndex = this.middleSlidePosition + 1; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					}
+				} else {
+					for ( slideIndex = this.middleSlidePosition - 1; slideIndex >= 0; slideIndex-- ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					}
+
+					previousPosition = selectedSlidePixelPosition;
+
+					for ( slideIndex = this.middleSlidePosition; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					}
 				}
 			} else {
-				for ( slideIndex = this.middleSlidePosition - 1; slideIndex >= 0; slideIndex-- ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
-				}
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) ? -1 : 1;
+				slideSize = ( this.settings.orientation === 'horizontal' ) ? this.slideWidth : this.slideHeight;
 
-				previousPosition = selectedSlidePixelPosition;
-
-				for ( slideIndex = this.middleSlidePosition; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+				for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+					$slideElement = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
+					$slideElement.css( this.positionProperty, selectedSlidePixelPosition + directionMultiplier * ( slideIndex - this.middleSlidePosition  ) * ( slideSize + this.settings.slideDistance ) );
 				}
 			}
 		},
@@ -471,25 +484,42 @@
 			var previousPosition = 0,
 				slide,
 				$slideElement,
-				slideIndex;
+				slideIndex,
+				selectedSlideSize,
+				directionMultiplier,
+				slideSize;
 
-			if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
-				for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+			if ( this.settings.autoSlideSize === true ) {
+				if ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) {
+					for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition - ( slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance ) );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 );
+					}
+				} else {
+					for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
+						slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
+						$slideElement = slide.$slide;
+						$slideElement.css( this.positionProperty, previousPosition );
+						previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					}
 				}
+
+				selectedSlideSize = this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ];
 			} else {
+				directionMultiplier = ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ) === true ? -1 : 1;
+				slideSize = ( this.settings.orientation === 'horizontal' ) ? this.slideWidth : this.slideHeight;
+ 
 				for ( slideIndex = 0; slideIndex < this.slidesOrder.length; slideIndex++ ) {
-					slide = this.getSlideAt( this.slidesOrder[ slideIndex ] );
-					$slideElement = slide.$slide;
-					$slideElement.css( this.positionProperty, previousPosition );
-					previousPosition = parseInt( $slideElement.css( this.positionProperty ), 10 ) + slide.getSize()[ this.sizeProperty ] + this.settings.slideDistance;
+					$slideElement = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ slideIndex ] );
+					$slideElement.css( this.positionProperty, directionMultiplier * slideIndex * ( slideSize + this.settings.slideDistance ) );
 				}
+
+				selectedSlideSize = slideSize;
 			}
 
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - selectedSlideSize ) / 2 ) : 0,
 				newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 			
 			this._moveTo( newSlidesPosition, true );
@@ -497,13 +527,18 @@
 
 		// Calculate the total size of the slides and the average size of a single slide
 		_calculateSlidesSize: function() {
-			var firstSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ 0 ] ),
-				firstSlidePosition = parseInt( firstSlide.css( this.positionProperty ), 10 ),
-				lastSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ this.slidesOrder.length - 1 ] ),
-				lastSlidePosition = parseInt( lastSlide.css( this.positionProperty ), 10 ) + ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ? -1 : 1 ) * parseInt( lastSlide.css( this.sizeProperty ), 10 );
-			
-			this.slidesSize = Math.abs( lastSlidePosition - firstSlidePosition );
-			this.averageSlideSize = Math.round( this.slidesSize / this.slides.length );
+			if ( this.settings.autoSlideSize === true ) {
+				var firstSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ 0 ] ),
+					firstSlidePosition = parseInt( firstSlide.css( this.positionProperty ), 10 ),
+					lastSlide = this.$slides.find( '.sp-slide' ).eq( this.slidesOrder[ this.slidesOrder.length - 1 ] ),
+					lastSlidePosition = parseInt( lastSlide.css( this.positionProperty ), 10 ) + ( this.settings.rightToLeft === true && this.settings.orientation === 'horizontal' ? -1 : 1 ) * parseInt( lastSlide.css( this.sizeProperty ), 10 );
+				
+				this.slidesSize = Math.abs( lastSlidePosition - firstSlidePosition );
+				this.averageSlideSize = Math.round( this.slidesSize / this.slides.length );
+			} else {
+				this.slidesSize = ( ( this.settings.orientation === 'horizontal' ? this.slideWidth : this.slideHeight ) + this.settings.slideDistance ) * this.slides.length - this.settings.slideDistance;
+				this.averageSlideSize = this.settings.orientation === 'horizontal' ? this.slideWidth : this.slideHeight;
+			}
 		},
 
 		// Called when the slider needs to resize
@@ -1267,8 +1302,16 @@
 			if ( this.settings.autoSlideSize === true ) {
 				if ( this.settings.orientation === 'horizontal' ) {
 					this.$mainImage.css({ width: 'auto', height: '100%' });
+
+					// resize the slide's width to a fixed value instead of 'auto', to
+					// prevent incorrect sizing caused by links added to the main image
+					this.$slide.css( 'width', this.$mainImage.width() );
 				} else if ( this.settings.orientation === 'vertical' ) {
 					this.$mainImage.css({ width: '100%', height: 'auto' });
+
+					// resize the slide's height to a fixed value instead of 'auto', to
+					// prevent incorrect sizing caused by links added to the main image
+					this.$slide.css( 'height', this.$mainImage.height() );
 				}
 			} else if ( this.settings.autoHeight === true ) {
 				this.$mainImage.css({ width: '100%', height: 'auto' });
@@ -2448,7 +2491,7 @@
 				return;
 			}
 			
-			this.on( 'update.' + NS, $.proxy( this._checkRetinaImages, this ) );
+			this.on( 'sliderResize.' + NS, $.proxy( this._checkRetinaImages, this ) );
 
 			if ( this.$slider.find( '.sp-thumbnail' ).length !== 0 ) {
 				this.on( 'update.Thumbnails.' + NS, $.proxy( this._checkRetinaThumbnailImages, this ) );
@@ -2676,8 +2719,8 @@
 				visibleOnSides = Math.ceil( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10) - this.averageSlideSize ) / 2 / this.averageSlideSize ),
 
 				// Calculate the indexes of the first and last slide that will be checked
-				from = referencePosition - visibleOnSides - 1 > 0 ? referencePosition - visibleOnSides - 1 : 0,
-				to = referencePosition + visibleOnSides + 1 < this.getTotalSlides() - 1 ? referencePosition + visibleOnSides + 1 : this.getTotalSlides() - 1,
+				from = this.settings.centerSelectedSlide === true ? Math.max( referencePosition - visibleOnSides - 1, 0 ) : Math.max( referencePosition - 1, 0 ),
+				to = this.settings.centerSelectedSlide === true ? Math.min( referencePosition + visibleOnSides + 1, this.getTotalSlides() - 1 ) : Math.min( referencePosition + visibleOnSides * 2 + 1, this.getTotalSlides() - 1  ),
 				
 				// Get all the slides that need to be checked
 				slidesToCheck = this.slidesOrder.slice( from, to + 1 );
@@ -3030,7 +3073,7 @@
 		// Destroy the module
 		destroyLayers: function() {
 			this.off( 'update.' + NS );
-			this.off( 'resize.' + NS );
+			this.off( 'sliderResize.' + NS );
 			this.off( 'gotoSlide.' + NS );
 			this.off( 'hideLayersComplete.' + NS );
 		},
@@ -3118,6 +3161,9 @@
 
 		// Indicates the name of the CSS transition's complete event (i.e., transitionend, webkitTransitionEnd, etc.)
 		this.transitionEvent = SliderProUtils.getTransitionEvent();
+
+		// Reference to the timer that will be used to hide/show the layers
+		this.delayTimer = null;
 
 		// Reference to the timer that will be used to hide the layers automatically after a given time interval
 		this.stayTimer = null;
@@ -3353,7 +3399,7 @@
 
 				this.$layer.css( start );
 
-				setTimeout( function() {
+				this.delayTimer = setTimeout( function() {
 					that.$layer.css( target );
 				}, delay );
 			}
@@ -3431,7 +3477,7 @@
 					}
 				});
 
-				setTimeout( function() {
+				this.delayTimer = setTimeout( function() {
 					that.$layer.css( target );
 				}, delay );
 			}
@@ -3449,6 +3495,10 @@
 		destroy: function() {
 			this.$layer.removeAttr( 'style' );
 			this.$layer.removeAttr( 'data-layer-init' );
+			clearTimeout( this.delayTimer );
+			clearTimeout( this.stayTimer );
+			this.delayTimer = null;
+			this.stayTimer = null;
 		}
 	};
 
@@ -3686,6 +3736,11 @@
 		// Stores the names of the events
 		touchSwipeEvents: { startEvent: '', moveEvent: '', endEvent: '' },
 
+		// Indicates if scrolling (the page) in the opposite direction of the
+		// slides' layout is allowed. This is used to block vertical (or horizontal)
+		// scrolling when the user is scrolling through the slides.
+		allowOppositeScrolling: true,
+
 		initTouchSwipe: function() {
 			var that = this;
 
@@ -3704,13 +3759,20 @@
 				event.preventDefault();
 			});
 
+			// Prevent 'click' events unless there is intention for a 'click'
+			this.$slidesMask.find( 'a' ).on( 'click.' + NS, function( event ) {
+				if ( typeof event.originalEvent.touches === 'undefined' && that.$slider.hasClass( 'sp-swiping' ) ) {
+					event.preventDefault();
+				}
+			});
+
 			// Add the grabbing icon
 			this.$slidesMask.addClass( 'sp-grab' );
 		},
 
 		// Called when the slides starts being dragged
 		_onTouchStart: function( event ) {
-		
+
 			// Disable dragging if the element is set to allow selections
 			if ( $( event.target ).closest( '.sp-selectable' ).length >= 1 ) {
 				return;
@@ -3718,16 +3780,6 @@
 
 			var that = this,
 				eventObject = typeof event.originalEvent.touches !== 'undefined' ? event.originalEvent.touches[0] : event.originalEvent;
-
-			// Prevent default behavior only for mouse events
-			if ( typeof event.originalEvent.touches === 'undefined' ) {
-				event.preventDefault();
-			}
-
-			// Disable click events on links
-			$( event.target ).parents( '.sp-slide' ).find( 'a' ).one( 'click.' + NS, function( event ) {
-				event.preventDefault();
-			});
 
 			// Get the initial position of the mouse pointer and the initial position
 			// of the slides' container
@@ -3747,7 +3799,7 @@
 			}
 
 			// Listen for move and end events
-			this.$slidesMask.on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
+			$( document ).on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
 			$( document ).on( this.touchSwipeEvents.endEvent, $.proxy( this._onTouchEnd, this ) );
 
 			// Swap grabbing icons
@@ -3780,11 +3832,18 @@
 				oppositeDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.y : this.touchDistance.x;
 
 			// If the movement is in the same direction as the orientation of the slides, the swipe is valid
+			// and opposite scrolling will not be allowed.
 			if ( Math.abs( distance ) > Math.abs( oppositeDistance ) ) {
-				event.preventDefault();
-			} else {
+				this.allowOppositeScrolling = false;
+			}
+
+			// If opposite scrolling is still allowed, the swipe wasn't valid, so return.
+			if ( this.allowOppositeScrolling === true ) {
 				return;
 			}
+			
+			// Don't allow opposite scrolling
+			event.preventDefault();
 
 			if ( this.settings.loop === false ) {
 				// Make the slides move slower if they're dragged outside its bounds
@@ -3803,24 +3862,25 @@
 			var that = this,
 				touchDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.x : this.touchDistance.y;
 
-			// Remove the move and end listeners
-			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
+			// Remove the 'move' and 'end' listeners
+			$( document ).off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
+			
+			this.allowOppositeScrolling = true;
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
 
-			// Check if there is intention for a tap
+			// Check if there is intention for a tap and remove
+			// the 'sp-swiping' class if that's the case
 			if ( this.isTouchMoving === false || this.isTouchMoving === true && Math.abs( this.touchDistance.x ) < 10 && Math.abs( this.touchDistance.y ) < 10 ) {
-				// Re-enable click events on links
-				$( event.target ).parents( '.sp-slide' ).find( 'a' ).off( 'click.' + NS );
 				this.$slider.removeClass( 'sp-swiping' );
 			}
 
-			// Remove the 'sp-swiping' class but with a delay
-			// because there might be other event listeners that check
-			// the existence of this class, and this class should still be 
-			// applied for those listeners, since there was a swipe event
+			// Remove the 'sp-swiping' class anyway, even if there was a swipe,
+			// but in this case remove it with a delay, because there might be 
+			// other event listeners that check the existence of this class,
+			// and this class should still be applied for those listeners
 			setTimeout(function() {
 				that.$slider.removeClass( 'sp-swiping' );
 			}, 1 );
@@ -3831,10 +3891,6 @@
 			}
 
 			this.isTouchMoving = false;
-
-			$( event.target ).parents( '.sp-slide' ).one( 'click', function( event ) {
-				event.preventDefault();
-			});
 
 			// Calculate the old position of the slides in order to return to it if the swipe
 			// is below the threshold
@@ -3869,10 +3925,13 @@
 
 		// Destroy the module
 		destroyTouchSwipe: function() {
-			this.$slidesMask.off( this.touchSwipeEvents.startEvent );
-			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			this.$slidesMask.off( 'dragstart.' + NS );
+			this.$slidesMask.find( 'a' ).off( 'click.' + NS );
+
+			this.$slidesMask.off( this.touchSwipeEvents.startEvent );
+			$( document ).off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
+			
 			this.$slidesMask.removeClass( 'sp-grab' );
 		},
 
