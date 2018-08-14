@@ -185,7 +185,7 @@
 
 			// Calculate the old position of the slides in order to return to it if the swipe
 			// is below the threshold
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true && this.settings.visibleSize !== 'auto' ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
 				oldSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 
 			if ( Math.abs( touchDistance ) < this.settings.touchSwipeThreshold ) {

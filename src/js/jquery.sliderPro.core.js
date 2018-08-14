@@ -513,7 +513,7 @@
 				selectedSlideSize = slideSize;
 			}
 
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - selectedSlideSize ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true && this.settings.visibleSize !== 'auto' ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - selectedSlideSize ) / 2 ) : 0,
 				newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 			
 			this._moveTo( newSlidesPosition, true );
@@ -731,7 +731,7 @@
 				this._resizeHeight();
 			}
 
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true && this.settings.visibleSize !== 'auto' ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
 				newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 
 			// Move the slides container to the new position
