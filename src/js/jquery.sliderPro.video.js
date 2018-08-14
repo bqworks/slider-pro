@@ -13,6 +13,7 @@
 
 		initVideo: function() {
 			this.on( 'update.' + NS, $.proxy( this._videoOnUpdate, this ) );
+			this.on( 'gotoSlide.' + NS, $.proxy( this._videoOnGotoSlide, this ) );
 			this.on( 'gotoSlideComplete.' + NS, $.proxy( this._videoOnGotoSlideComplete, this ) );
 		},
 
@@ -65,6 +66,7 @@
 			// When the video is paused, restart the autoplay
 			video.on( 'videoPause.' + NS, function() {
 				if ( that.settings.pauseVideoAction === 'startAutoplay' && typeof that.startAutoplay !== 'undefined' ) {
+					that.stopAutoplay();
 					that.startAutoplay();
 					that.settings.autoplay = true;
 				}
@@ -81,6 +83,7 @@
 			// go to the next slide, or replay the video
 			video.on( 'videoEnded.' + NS, function() {
 				if ( that.settings.endVideoAction === 'startAutoplay' && typeof that.startAutoplay !== 'undefined' ) {
+					that.stopAutoplay();
 					that.startAutoplay();
 					that.settings.autoplay = true;
 				} else if ( that.settings.endVideoAction === 'nextSlide' ) {
@@ -175,7 +178,7 @@
 		},
 
 		// Called when a new slide is selected
-		_videoOnGotoSlideComplete: function( event ) {
+		_videoOnGotoSlide: function( event ) {
 
 			// Get the video from the previous slide
 			var previousVideo = this.$slides.find( '.sp-slide' ).eq( event.previousIndex ).find( '.sp-video[data-video-init]' );
@@ -199,9 +202,14 @@
 					}
 				}
 			}
+		},
+
+		// Called when a new slide is selected, 
+		// after the transition animation is complete.
+		_videoOnGotoSlideComplete: function( event ) {
 
 			// Handle the video from the selected slide
-			if ( this.settings.reachVideoAction === 'playVideo' ) {
+			if ( this.settings.reachVideoAction === 'playVideo' && event.index === this.selectedSlideIndex ) {
 				var loadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-init]' ),
 					unloadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-preinit]' );
 
@@ -211,6 +219,16 @@
 					loadedVideo.videoController( 'play' );
 				} else if ( unloadedVideo.length !== 0 ) {
 					unloadedVideo.trigger( 'click.' + NS );
+				}
+
+				// Autoplay is stopped when the video starts playing
+				// and the video's 'play' event is fired, but on slower connections,
+				// the video's playing will be delayed and the 'play' event
+				// will not fire in time to stop the autoplay, so we'll
+				// stop it here as well.
+				if ( ( loadedVideo.length !== 0 || unloadedVideo.length !== 0 ) && this.settings.playVideoAction === 'stopAutoplay' && typeof this.stopAutoplay !== 'undefined' ) {
+					this.stopAutoplay();
+					this.settings.autoplay = false;
 				}
 			}
 		},
@@ -232,6 +250,7 @@
 			});
 
 			this.off( 'update.' + NS );
+			this.off( 'gotoSlide.' + NS );
 			this.off( 'gotoSlideComplete.' + NS );
 		},
 
