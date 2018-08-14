@@ -30,6 +30,9 @@
 		// Stores the names of the events
 		thumbnailTouchSwipeEvents: { startEvent: '', moveEvent: '', endEvent: '' },
 
+		// Indicates whether the previous 'start' event was a 'touchstart' or 'mousedown'
+		previousStartEvent: '',
+
 		initThumbnailTouchSwipe: function() {
 			this.on( 'update.' + NS, $.proxy( this._thumbnailTouchSwipeOnUpdate, this ) );
 		},
@@ -67,6 +70,16 @@
 
 		// Called when the thumbnail scroller starts being dragged
 		_onThumbnailTouchStart: function( event ) {
+
+			// Return if a 'mousedown' event follows a 'touchstart' event
+			if ( event.type === 'mousedown' && this.previousStartEvent === 'touchstart' ) {
+				this.previousStartEvent = event.type;
+				return;
+			}
+
+			// Assign the new 'start' event
+			this.previousStartEvent = event.type;
+
 			// Disable dragging if the element is set to allow selections
 			if ( $( event.target ).closest( '.sp-selectable' ).length >= 1 ) {
 				return;
