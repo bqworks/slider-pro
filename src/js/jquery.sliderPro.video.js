@@ -142,7 +142,7 @@
 				id = match[2];
 
 				// Get the source of the iframe that will be created
-				src = provider === 'youtube' ? '//www.youtube.com/embed/' + id + '?enablejsapi=1&wmode=opaque' : '//player.vimeo.com/video/'+ id +'?api=1';
+				src = provider === 'youtube' ? '//www.youtube.com/embed/' + id + '?enablejsapi=1&wmode=opaque' : '//player.vimeo.com/video/'+ id;
 				
 				// Get the attributes passed to the video link and then pass them to the iframe's src
 				videoAttributes = href.split( '?' )[ 1 ];
@@ -649,7 +649,7 @@ var VimeoVideoHelper = {
 var VimeoVideo = function( video ) {
 	this.init = false;
 
-	if ( typeof window.Froogaloop !== 'undefined' ) {
+	if ( typeof window.Vimeo !== 'undefined' ) {
 		Video.call( this, video );
 	} else {
 		VimeoVideoHelper.vimeoVideos.push({ 'video': video, 'scope': this });
@@ -658,12 +658,12 @@ var VimeoVideo = function( video ) {
 			VimeoVideoHelper.vimeoAPIAdded = true;
 
 			var tag = document.createElement('script');
-			tag.src = "//a.vimeocdn.com/js/froogaloop2.min.js";
+			tag.src = "//player.vimeo.com/api/player.js";
 			var firstScriptTag = document.getElementsByTagName( 'script' )[0];
 			firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 		
 			var checkVimeoAPITimer = setInterval(function() {
-				if ( typeof window.Froogaloop !== 'undefined' ) {
+				if ( typeof window.Vimeo !== 'undefined' ) {
 					clearInterval( checkVimeoAPITimer );
 					
 					$.each( VimeoVideoHelper.vimeoVideos, function( index, element ) {
@@ -700,62 +700,66 @@ VimeoVideo.prototype._setup = function() {
 	var that = this;
 
 	// Get a reference to the player
-	this.player = $f( this.$video[0] );
+	this.player = new Vimeo.Player( this.$video[0] );
 	
-	this.player.addEvent( 'ready', function() {
-		that.ready = true;
-		that.trigger({ type: 'ready' });
+	that.ready = true;
+	that.trigger({ type: 'ready' });
 		
-		that.player.addEvent( 'play', function() {
-			if ( that.started === false ) {
-				that.started = true;
-				that.trigger({ type: 'start' });
-			}
+	that.player.on( 'play', function() {
+		if ( that.started === false ) {
+			that.started = true;
+			that.trigger({ type: 'start' });
+		}
 
-			that.state = 'playing';
-			that.trigger({ type: 'play' });
-		});
+		that.state = 'playing';
+		that.trigger({ type: 'play' });
+	});
 		
-		that.player.addEvent( 'pause', function() {
-			that.state = 'paused';
-			that.trigger({ type: 'pause' });
-		});
+	that.player.on( 'pause', function() {
+		that.state = 'paused';
+		that.trigger({ type: 'pause' });
+	});
 		
-		that.player.addEvent( 'finish', function() {
-			that.state = 'ended';
-			that.trigger({ type: 'ended' });
-		});
+	that.player.on( 'ended', function() {
+		that.state = 'ended';
+		that.trigger({ type: 'ended' });
 	});
 };
 
 VimeoVideo.prototype.play = function() {
 	var that = this;
-
-	if ( this.ready === true ) {
-		this.player.api( 'play' );
-	} else {
-		var timer = setInterval(function() {
-			if ( that.ready === true ) {
-				clearInterval( timer );
-				that.player.api( 'play' );
-			}
-		}, 100 );
-	}
+ 
+    if ( this.ready === true ) {
+        this.player.play();
+    } else {
+        var timer = setInterval(function() {
+            if ( that.ready === true ) {
+                clearInterval( timer );
+                that.player.play();
+            }
+        }, 100 );
+    }
 };
 
 VimeoVideo.prototype.pause = function() {
-	this.player.api( 'pause' );
+	this.player.pause();
 };
 
 VimeoVideo.prototype.stop = function() {
-	this.player.api( 'seekTo', 0 );
-	this.player.api( 'pause' );
-	this.state = 'stopped';
+	var that = this;
+
+	this.player.setCurrentTime( 0 ).then( function() {
+		that.player.pause();
+		that.state = 'stopped';
+	} );
 };
 
 VimeoVideo.prototype.replay = function() {
-	this.player.api( 'seekTo', 0 );
-	this.player.api( 'play' );
+	var that = this;
+
+	this.player.setCurrentTime( 0 ).then( function() {
+		that.player.play();
+	} );
 };
 
 VimeoVideo.prototype.on = function( type, callback ) {
