@@ -90,7 +90,7 @@
 			}
 
 			// Listen for move and end events
-			$( document ).on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
+			this.$slidesMask.on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
 			$( document ).on( this.touchSwipeEvents.endEvent, $.proxy( this._onTouchEnd, this ) );
 
 			// Swap grabbing icons
@@ -154,7 +154,7 @@
 				touchDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.x : this.touchDistance.y;
 
 			// Remove the 'move' and 'end' listeners
-			$( document ).off( this.touchSwipeEvents.moveEvent );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
 			
 			this.allowOppositeScrolling = true;
@@ -220,7 +220,7 @@
 			this.$slidesMask.find( 'a' ).off( 'click.' + NS );
 
 			this.$slidesMask.off( this.touchSwipeEvents.startEvent );
-			$( document ).off( this.touchSwipeEvents.moveEvent );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
 			
 			this.$slidesMask.removeClass( 'sp-grab' );
