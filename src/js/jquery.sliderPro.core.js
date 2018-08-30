@@ -1311,13 +1311,13 @@
 				this.$mainImage.css({ width: '100%', height: 'auto' });
 			} else {
 				if ( this.settings.imageScaleMode === 'cover' ) {
-					if ( this.$mainImage.width() / this.$mainImage.height() <= this.width / this.height ) {
+					if ( this.$mainImage.width() / this.$mainImage.height() <= this.$slide.width() / this.$slide.height() ) {
 						this.$mainImage.css({ width: '100%', height: 'auto' });
 					} else {
 						this.$mainImage.css({ width: 'auto', height: '100%' });
 					}
 				} else if ( this.settings.imageScaleMode === 'contain' ) {
-					if ( this.$mainImage.width() / this.$mainImage.height() >= this.width / this.height ) {
+					if ( this.$mainImage.width() / this.$mainImage.height() >= this.$slide.width() / this.$slide.height() ) {
 						this.$mainImage.css({ width: '100%', height: 'auto' });
 					} else {
 						this.$mainImage.css({ width: 'auto', height: '100%' });
