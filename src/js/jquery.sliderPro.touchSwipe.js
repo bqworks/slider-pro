@@ -52,7 +52,7 @@
 
 			// Prevent 'click' events unless there is intention for a 'click'
 			this.$slidesMask.find( 'a' ).on( 'click.' + NS, function( event ) {
-				if ( typeof event.originalEvent.touches === 'undefined' && that.$slider.hasClass( 'sp-swiping' ) ) {
+				if ( that.$slider.hasClass( 'sp-swiping' ) ) {
 					event.preventDefault();
 				}
 			});
@@ -95,9 +95,6 @@
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grab' ).addClass( 'sp-grabbing' );
-
-			// Add 'sp-swiping' class to indicate that the slides are being swiped
-			this.$slider.addClass( 'sp-swiping' );
 		},
 
 		// Called during the slides' dragging
@@ -106,6 +103,11 @@
 
 			// Indicate that the move event is being fired
 			this.isTouchMoving = true;
+
+			// Add 'sp-swiping' class to indicate that the slides are being swiped
+			if ( this.$slider.hasClass( 'sp-swiping' ) === false ) {
+				this.$slider.addClass( 'sp-swiping' );
+			}
 
 			// Get the current position of the mouse pointer
 			this.touchEndPoint.x = eventObject.pageX || eventObject.clientX;
@@ -156,25 +158,20 @@
 			// Remove the 'move' and 'end' listeners
 			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
-			
+
 			this.allowOppositeScrolling = true;
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
 
-			// Check if there is intention for a tap and remove
-			// the 'sp-swiping' class if that's the case
-			if ( this.isTouchMoving === false || this.isTouchMoving === true && Math.abs( this.touchDistance.x ) < 10 && Math.abs( this.touchDistance.y ) < 10 ) {
-				this.$slider.removeClass( 'sp-swiping' );
+			// Remove the 'sp-swiping' class with a delay, to allow
+			// other event listeners (i.e. click) to check the existance
+			// of the swipe event.
+			if ( this.$slider.hasClass( 'sp-swiping' ) ) {
+				setTimeout(function() {
+					that.$slider.removeClass( 'sp-swiping' );
+				}, 100 );
 			}
-
-			// Remove the 'sp-swiping' class anyway, even if there was a swipe,
-			// but in this case remove it with a delay, because there might be 
-			// other event listeners that check the existence of this class,
-			// and this class should still be applied for those listeners
-			setTimeout(function() {
-				that.$slider.removeClass( 'sp-swiping' );
-			}, 1 );
 
 			// Return if the slides didn't move
 			if ( this.isTouchMoving === false ) {
