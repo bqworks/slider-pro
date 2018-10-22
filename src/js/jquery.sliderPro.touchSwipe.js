@@ -32,6 +32,9 @@
 		// scrolling when the user is scrolling through the slides.
 		allowOppositeScrolling: true,
 
+		// Indicates whether the previous 'start' event was a 'touchstart' or 'mousedown'
+		previousStartEvent: '',
+
 		initTouchSwipe: function() {
 			var that = this;
 
@@ -63,6 +66,15 @@
 
 		// Called when the slides starts being dragged
 		_onTouchStart: function( event ) {
+
+			// Return if a 'mousedown' event follows a 'touchstart' event
+			if ( event.type === 'mousedown' && this.previousStartEvent === 'touchstart' ) {
+				this.previousStartEvent = event.type;
+				return;
+			}
+
+			// Assign the new 'start' event
+			this.previousStartEvent = event.type;
 
 			// Disable dragging if the element is set to allow selections
 			if ( $( event.target ).closest( '.sp-selectable' ).length >= 1 ) {
