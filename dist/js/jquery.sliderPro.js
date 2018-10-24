@@ -4394,7 +4394,7 @@
 
 // Full Screen module for Slider Pro.
 // 
-// Adds the possibility to open the slider full-screen, using the HMTL5 FullScreen API.
+// Adds the possibility to open the slider full-screen, using the HTML5 FullScreen API.
 ;(function( window, $ ) {
 
 	"use strict";
