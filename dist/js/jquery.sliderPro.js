@@ -1,5 +1,5 @@
 /*!
-*  - v1.4.0
+*  - v1.5.0
 * Homepage: http://bqworks.com/slider-pro/
 * Author: bqworks
 * Author URL: http://bqworks.com/
@@ -519,7 +519,7 @@
 				selectedSlideSize = slideSize;
 			}
 
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - selectedSlideSize ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true && this.settings.visibleSize !== 'auto' ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - selectedSlideSize ) / 2 ) : 0,
 				newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 			
 			this._moveTo( newSlidesPosition, true );
@@ -737,7 +737,7 @@
 				this._resizeHeight();
 			}
 
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true && this.settings.visibleSize !== 'auto' ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
 				newSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 
 			// Move the slides container to the new position
@@ -1317,13 +1317,13 @@
 				this.$mainImage.css({ width: '100%', height: 'auto' });
 			} else {
 				if ( this.settings.imageScaleMode === 'cover' ) {
-					if ( this.$mainImage.width() / this.$mainImage.height() <= this.width / this.height ) {
+					if ( this.$mainImage.width() / this.$mainImage.height() <= this.$slide.width() / this.$slide.height() ) {
 						this.$mainImage.css({ width: '100%', height: 'auto' });
 					} else {
 						this.$mainImage.css({ width: 'auto', height: '100%' });
 					}
 				} else if ( this.settings.imageScaleMode === 'contain' ) {
-					if ( this.$mainImage.width() / this.$mainImage.height() >= this.width / this.height ) {
+					if ( this.$mainImage.width() / this.$mainImage.height() >= this.$slide.width() / this.$slide.height() ) {
 						this.$mainImage.css({ width: '100%', height: 'auto' });
 					} else {
 						this.$mainImage.css({ width: 'auto', height: '100%' });
@@ -3741,6 +3741,9 @@
 		// scrolling when the user is scrolling through the slides.
 		allowOppositeScrolling: true,
 
+		// Indicates whether the previous 'start' event was a 'touchstart' or 'mousedown'
+		previousStartEvent: '',
+
 		initTouchSwipe: function() {
 			var that = this;
 
@@ -3761,7 +3764,7 @@
 
 			// Prevent 'click' events unless there is intention for a 'click'
 			this.$slidesMask.find( 'a' ).on( 'click.' + NS, function( event ) {
-				if ( typeof event.originalEvent.touches === 'undefined' && that.$slider.hasClass( 'sp-swiping' ) ) {
+				if ( that.$slider.hasClass( 'sp-swiping' ) ) {
 					event.preventDefault();
 				}
 			});
@@ -3772,6 +3775,15 @@
 
 		// Called when the slides starts being dragged
 		_onTouchStart: function( event ) {
+
+			// Return if a 'mousedown' event follows a 'touchstart' event
+			if ( event.type === 'mousedown' && this.previousStartEvent === 'touchstart' ) {
+				this.previousStartEvent = event.type;
+				return;
+			}
+
+			// Assign the new 'start' event
+			this.previousStartEvent = event.type;
 
 			// Disable dragging if the element is set to allow selections
 			if ( $( event.target ).closest( '.sp-selectable' ).length >= 1 ) {
@@ -3799,14 +3811,11 @@
 			}
 
 			// Listen for move and end events
-			$( document ).on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
+			this.$slidesMask.on( this.touchSwipeEvents.moveEvent, $.proxy( this._onTouchMove, this ) );
 			$( document ).on( this.touchSwipeEvents.endEvent, $.proxy( this._onTouchEnd, this ) );
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grab' ).addClass( 'sp-grabbing' );
-
-			// Add 'sp-swiping' class to indicate that the slides are being swiped
-			this.$slider.addClass( 'sp-swiping' );
 		},
 
 		// Called during the slides' dragging
@@ -3815,6 +3824,11 @@
 
 			// Indicate that the move event is being fired
 			this.isTouchMoving = true;
+
+			// Add 'sp-swiping' class to indicate that the slides are being swiped
+			if ( this.$slider.hasClass( 'sp-swiping' ) === false ) {
+				this.$slider.addClass( 'sp-swiping' );
+			}
 
 			// Get the current position of the mouse pointer
 			this.touchEndPoint.x = eventObject.pageX || eventObject.clientX;
@@ -3863,27 +3877,22 @@
 				touchDistance = this.settings.orientation === 'horizontal' ? this.touchDistance.x : this.touchDistance.y;
 
 			// Remove the 'move' and 'end' listeners
-			$( document ).off( this.touchSwipeEvents.moveEvent );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
-			
+
 			this.allowOppositeScrolling = true;
 
 			// Swap grabbing icons
 			this.$slidesMask.removeClass( 'sp-grabbing' ).addClass( 'sp-grab' );
 
-			// Check if there is intention for a tap and remove
-			// the 'sp-swiping' class if that's the case
-			if ( this.isTouchMoving === false || this.isTouchMoving === true && Math.abs( this.touchDistance.x ) < 10 && Math.abs( this.touchDistance.y ) < 10 ) {
-				this.$slider.removeClass( 'sp-swiping' );
+			// Remove the 'sp-swiping' class with a delay, to allow
+			// other event listeners (i.e. click) to check the existance
+			// of the swipe event.
+			if ( this.$slider.hasClass( 'sp-swiping' ) ) {
+				setTimeout(function() {
+					that.$slider.removeClass( 'sp-swiping' );
+				}, 100 );
 			}
-
-			// Remove the 'sp-swiping' class anyway, even if there was a swipe,
-			// but in this case remove it with a delay, because there might be 
-			// other event listeners that check the existence of this class,
-			// and this class should still be applied for those listeners
-			setTimeout(function() {
-				that.$slider.removeClass( 'sp-swiping' );
-			}, 1 );
 
 			// Return if the slides didn't move
 			if ( this.isTouchMoving === false ) {
@@ -3894,7 +3903,7 @@
 
 			// Calculate the old position of the slides in order to return to it if the swipe
 			// is below the threshold
-			var selectedSlideOffset = this.settings.centerSelectedSlide === true ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
+			var selectedSlideOffset = this.settings.centerSelectedSlide === true && this.settings.visibleSize !== 'auto' ? Math.round( ( parseInt( this.$slidesMask.css( this.sizeProperty ), 10 ) - this.getSlideAt( this.selectedSlideIndex ).getSize()[ this.sizeProperty ] ) / 2 ) : 0,
 				oldSlidesPosition = - parseInt( this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).css( this.positionProperty ), 10 ) + selectedSlideOffset;
 
 			if ( Math.abs( touchDistance ) < this.settings.touchSwipeThreshold ) {
@@ -3929,7 +3938,7 @@
 			this.$slidesMask.find( 'a' ).off( 'click.' + NS );
 
 			this.$slidesMask.off( this.touchSwipeEvents.startEvent );
-			$( document ).off( this.touchSwipeEvents.moveEvent );
+			this.$slidesMask.off( this.touchSwipeEvents.moveEvent );
 			$( document ).off( this.touchSwipeEvents.endEvent );
 			
 			this.$slidesMask.removeClass( 'sp-grab' );
@@ -4770,6 +4779,9 @@
 		// Stores the names of the events
 		thumbnailTouchSwipeEvents: { startEvent: '', moveEvent: '', endEvent: '' },
 
+		// Indicates whether the previous 'start' event was a 'touchstart' or 'mousedown'
+		thumbnailPreviousStartEvent: '',
+
 		initThumbnailTouchSwipe: function() {
 			this.on( 'update.' + NS, $.proxy( this._thumbnailTouchSwipeOnUpdate, this ) );
 		},
@@ -4807,6 +4819,16 @@
 
 		// Called when the thumbnail scroller starts being dragged
 		_onThumbnailTouchStart: function( event ) {
+
+			// Return if a 'mousedown' event follows a 'touchstart' event
+			if ( event.type === 'mousedown' && this.thumbnailPreviousStartEvent === 'touchstart' ) {
+				this.thumbnailPreviousStartEvent = event.type;
+				return;
+			}
+
+			// Assign the new 'start' event
+			this.thumbnailPreviousStartEvent = event.type;
+
 			// Disable dragging if the element is set to allow selections
 			if ( $( event.target ).closest( '.sp-selectable' ).length >= 1 ) {
 				return;
@@ -5117,6 +5139,7 @@
 
 		initVideo: function() {
 			this.on( 'update.' + NS, $.proxy( this._videoOnUpdate, this ) );
+			this.on( 'gotoSlide.' + NS, $.proxy( this._videoOnGotoSlide, this ) );
 			this.on( 'gotoSlideComplete.' + NS, $.proxy( this._videoOnGotoSlideComplete, this ) );
 		},
 
@@ -5169,6 +5192,7 @@
 			// When the video is paused, restart the autoplay
 			video.on( 'videoPause.' + NS, function() {
 				if ( that.settings.pauseVideoAction === 'startAutoplay' && typeof that.startAutoplay !== 'undefined' ) {
+					that.stopAutoplay();
 					that.startAutoplay();
 					that.settings.autoplay = true;
 				}
@@ -5185,6 +5209,7 @@
 			// go to the next slide, or replay the video
 			video.on( 'videoEnded.' + NS, function() {
 				if ( that.settings.endVideoAction === 'startAutoplay' && typeof that.startAutoplay !== 'undefined' ) {
+					that.stopAutoplay();
 					that.startAutoplay();
 					that.settings.autoplay = true;
 				} else if ( that.settings.endVideoAction === 'nextSlide' ) {
@@ -5243,7 +5268,7 @@
 				id = match[2];
 
 				// Get the source of the iframe that will be created
-				src = provider === 'youtube' ? '//www.youtube.com/embed/' + id + '?enablejsapi=1&wmode=opaque' : '//player.vimeo.com/video/'+ id +'?api=1';
+				src = provider === 'youtube' ? '//www.youtube.com/embed/' + id + '?enablejsapi=1&wmode=opaque' : '//player.vimeo.com/video/'+ id;
 				
 				// Get the attributes passed to the video link and then pass them to the iframe's src
 				videoAttributes = href.split( '?' )[ 1 ];
@@ -5279,7 +5304,7 @@
 		},
 
 		// Called when a new slide is selected
-		_videoOnGotoSlideComplete: function( event ) {
+		_videoOnGotoSlide: function( event ) {
 
 			// Get the video from the previous slide
 			var previousVideo = this.$slides.find( '.sp-slide' ).eq( event.previousIndex ).find( '.sp-video[data-video-init]' );
@@ -5303,9 +5328,14 @@
 					}
 				}
 			}
+		},
+
+		// Called when a new slide is selected, 
+		// after the transition animation is complete.
+		_videoOnGotoSlideComplete: function( event ) {
 
 			// Handle the video from the selected slide
-			if ( this.settings.reachVideoAction === 'playVideo' ) {
+			if ( this.settings.reachVideoAction === 'playVideo' && event.index === this.selectedSlideIndex ) {
 				var loadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-init]' ),
 					unloadedVideo = this.$slides.find( '.sp-slide' ).eq( event.index ).find( '.sp-video[data-video-preinit]' );
 
@@ -5315,6 +5345,16 @@
 					loadedVideo.videoController( 'play' );
 				} else if ( unloadedVideo.length !== 0 ) {
 					unloadedVideo.trigger( 'click.' + NS );
+				}
+
+				// Autoplay is stopped when the video starts playing
+				// and the video's 'play' event is fired, but on slower connections,
+				// the video's playing will be delayed and the 'play' event
+				// will not fire in time to stop the autoplay, so we'll
+				// stop it here as well.
+				if ( ( loadedVideo.length !== 0 || unloadedVideo.length !== 0 ) && this.settings.playVideoAction === 'stopAutoplay' && typeof this.stopAutoplay !== 'undefined' ) {
+					this.stopAutoplay();
+					this.settings.autoplay = false;
 				}
 			}
 		},
@@ -5336,6 +5376,7 @@
 			});
 
 			this.off( 'update.' + NS );
+			this.off( 'gotoSlide.' + NS );
 			this.off( 'gotoSlideComplete.' + NS );
 		},
 
@@ -5734,7 +5775,7 @@ var VimeoVideoHelper = {
 var VimeoVideo = function( video ) {
 	this.init = false;
 
-	if ( typeof window.Froogaloop !== 'undefined' ) {
+	if ( typeof window.Vimeo !== 'undefined' ) {
 		Video.call( this, video );
 	} else {
 		VimeoVideoHelper.vimeoVideos.push({ 'video': video, 'scope': this });
@@ -5743,12 +5784,12 @@ var VimeoVideo = function( video ) {
 			VimeoVideoHelper.vimeoAPIAdded = true;
 
 			var tag = document.createElement('script');
-			tag.src = "//a.vimeocdn.com/js/froogaloop2.min.js";
+			tag.src = "//player.vimeo.com/api/player.js";
 			var firstScriptTag = document.getElementsByTagName( 'script' )[0];
 			firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
 		
 			var checkVimeoAPITimer = setInterval(function() {
-				if ( typeof window.Froogaloop !== 'undefined' ) {
+				if ( typeof window.Vimeo !== 'undefined' ) {
 					clearInterval( checkVimeoAPITimer );
 					
 					$.each( VimeoVideoHelper.vimeoVideos, function( index, element ) {
@@ -5785,62 +5826,66 @@ VimeoVideo.prototype._setup = function() {
 	var that = this;
 
 	// Get a reference to the player
-	this.player = $f( this.$video[0] );
+	this.player = new Vimeo.Player( this.$video[0] );
 	
-	this.player.addEvent( 'ready', function() {
-		that.ready = true;
-		that.trigger({ type: 'ready' });
+	that.ready = true;
+	that.trigger({ type: 'ready' });
 		
-		that.player.addEvent( 'play', function() {
-			if ( that.started === false ) {
-				that.started = true;
-				that.trigger({ type: 'start' });
-			}
+	that.player.on( 'play', function() {
+		if ( that.started === false ) {
+			that.started = true;
+			that.trigger({ type: 'start' });
+		}
 
-			that.state = 'playing';
-			that.trigger({ type: 'play' });
-		});
+		that.state = 'playing';
+		that.trigger({ type: 'play' });
+	});
 		
-		that.player.addEvent( 'pause', function() {
-			that.state = 'paused';
-			that.trigger({ type: 'pause' });
-		});
+	that.player.on( 'pause', function() {
+		that.state = 'paused';
+		that.trigger({ type: 'pause' });
+	});
 		
-		that.player.addEvent( 'finish', function() {
-			that.state = 'ended';
-			that.trigger({ type: 'ended' });
-		});
+	that.player.on( 'ended', function() {
+		that.state = 'ended';
+		that.trigger({ type: 'ended' });
 	});
 };
 
 VimeoVideo.prototype.play = function() {
 	var that = this;
-
-	if ( this.ready === true ) {
-		this.player.api( 'play' );
-	} else {
-		var timer = setInterval(function() {
-			if ( that.ready === true ) {
-				clearInterval( timer );
-				that.player.api( 'play' );
-			}
-		}, 100 );
-	}
+ 
+    if ( this.ready === true ) {
+        this.player.play();
+    } else {
+        var timer = setInterval(function() {
+            if ( that.ready === true ) {
+                clearInterval( timer );
+                that.player.play();
+            }
+        }, 100 );
+    }
 };
 
 VimeoVideo.prototype.pause = function() {
-	this.player.api( 'pause' );
+	this.player.pause();
 };
 
 VimeoVideo.prototype.stop = function() {
-	this.player.api( 'seekTo', 0 );
-	this.player.api( 'pause' );
-	this.state = 'stopped';
+	var that = this;
+
+	this.player.setCurrentTime( 0 ).then( function() {
+		that.player.pause();
+		that.state = 'stopped';
+	} );
 };
 
 VimeoVideo.prototype.replay = function() {
-	this.player.api( 'seekTo', 0 );
-	this.player.api( 'play' );
+	var that = this;
+
+	this.player.setCurrentTime( 0 ).then( function() {
+		that.player.play();
+	} );
 };
 
 VimeoVideo.prototype.on = function( type, callback ) {
