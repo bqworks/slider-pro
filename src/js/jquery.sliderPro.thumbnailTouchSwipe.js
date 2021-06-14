@@ -60,12 +60,12 @@
 			
 				// Add the grabbing icon
 				this.$thumbnails.addClass( 'sp-grab' );
-			}
 
-			// Remove the default thumbnailClick
-			$.each( this.thumbnails, function( index, thumbnail ) {
-				thumbnail.off( 'thumbnailClick' );
-			});
+				// Remove the default thumbnailClick
+				$.each( this.thumbnails, function( index, thumbnail ) {
+					thumbnail.off( 'thumbnailClick' );
+				});
+			}
 		},
 
 		// Called when the thumbnail scroller starts being dragged
