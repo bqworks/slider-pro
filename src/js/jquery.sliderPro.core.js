@@ -1309,6 +1309,10 @@
 				}
 			} else if ( this.settings.autoHeight === true ) {
 				this.$mainImage.css({ width: '100%', height: 'auto' });
+
+				if ( this.settings.centerImage === true ) {
+					this.$mainImage.css({ 'marginLeft': ( this.$imageContainer.width() - this.$mainImage.width() ) * 0.5 });
+				}
 			} else {
 				if ( this.settings.imageScaleMode === 'cover' ) {
 					if ( this.$mainImage.width() / this.$mainImage.height() <= this.$slide.width() / this.$slide.height() ) {
