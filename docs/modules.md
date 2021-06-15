@@ -49,7 +49,7 @@ Enables the slider to load images (slide images and thumbnail images) only when 
 		</div>
 
 		<div class="sp-slide">
-			<a href="http://bqworks.com">
+			<a href="http://bqworks.net">
 				<img class="sp-image" src="path/to/blank.gif" data-src="path/to/image2.jpg"/>
 			</a>
 		</div>
@@ -86,7 +86,7 @@ The high resolution image needs to be specified in the `data-retina` attribute, 
 		</div>
 
 		<div class="sp-slide">
-			<a href="http://bqworks.com">
+			<a href="http://bqworks.net">
 				<img class="sp-image" src="path/to/blank.gif" data-src="path/to/image2.jpg" data-retina="path/to/image2@2x.jpg"/>
 			</a>
 		</div>
@@ -558,8 +558,8 @@ Just like Video.js, JW Player videos modify the HTML markup and we need to use a
 ```javascript
 $(document).ready(function() {
     jwplayer("my-video").setup({
-        file: "http://bqworks.com/products/assets/videos/bbb/bbb-trailer.mp4",
-        image: "http://bqworks.com/products/assets/videos/bbb/bbb-poster.jpg",
+        file: "http://bqworks.net/products/assets/videos/bbb/bbb-trailer.mp4",
+        image: "http://bqworks.net/products/assets/videos/bbb/bbb-poster.jpg",
         width: 500,
         height: 350
     });
@@ -580,8 +580,8 @@ var video;
 
 $(document).ready(function() {
     jwplayer("my-video").setup({
-        file: "http://bqworks.com/products/assets/videos/bbb/bbb-trailer.mp4",
-        image: "http://bqworks.com/products/assets/videos/bbb/bbb-poster.jpg",
+        file: "http://bqworks.net/products/assets/videos/bbb/bbb-trailer.mp4",
+        image: "http://bqworks.net/products/assets/videos/bbb/bbb-poster.jpg",
         width: 500,
         height: 350,
         events: {

@@ -2,11 +2,11 @@
   "name": "slider-pro",
   "description": "Responsive jQuery slider, featuring modular architecture, CSS3 animations, touch swipe, animated layers, retina, lazy loading and much more.",
   "version": "1.5.0",
-  "homepage": "http://bqworks.com/slider-pro/",
+  "homepage": "http://bqworks.net/slider-pro/",
   "main": "./dist/js/jquery.sliderPro.js",
   "author": {
     "name": "bqworks",
-    "url": "http://bqworks.com/"
+    "url": "http://bqworks.net/"
   },
   "contributors": [{
     "name": "David Ghiurau",
