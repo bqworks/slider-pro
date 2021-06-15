@@ -1,8 +1,8 @@
 /*!
-*  - v1.5.0
-* Homepage: http://bqworks.com/slider-pro/
+*  - v1.6.0
+* Homepage: http://bqworks.net/slider-pro/
 * Author: bqworks
-* Author URL: http://bqworks.com/
+* Author URL: http://bqworks.net/
 */
 ;(function( window, $ ) {
 
@@ -1315,6 +1315,10 @@
 				}
 			} else if ( this.settings.autoHeight === true ) {
 				this.$mainImage.css({ width: '100%', height: 'auto' });
+
+				if ( this.settings.centerImage === true ) {
+					this.$mainImage.css({ 'marginLeft': ( this.$imageContainer.width() - this.$mainImage.width() ) * 0.5 });
+				}
 			} else {
 				if ( this.settings.imageScaleMode === 'cover' ) {
 					if ( this.$mainImage.width() / this.$mainImage.height() <= this.$slide.width() / this.$slide.height() ) {
@@ -4541,6 +4545,7 @@
 
 })( window, jQuery );
 
+
 // Buttons module for Slider Pro.
 // 
 // Adds navigation buttons at the bottom of the slider.
@@ -4809,12 +4814,12 @@
 			
 				// Add the grabbing icon
 				this.$thumbnails.addClass( 'sp-grab' );
-			}
 
-			// Remove the default thumbnailClick
-			$.each( this.thumbnails, function( index, thumbnail ) {
-				thumbnail.off( 'thumbnailClick' );
-			});
+				// Remove the default thumbnailClick
+				$.each( this.thumbnails, function( index, thumbnail ) {
+					thumbnail.off( 'thumbnailClick' );
+				});
+			}
 		},
 
 		// Called when the thumbnail scroller starts being dragged
