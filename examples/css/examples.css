@@ -94,6 +94,10 @@
 
 /* Example 5 */
 
+#example5 .sp-right-thumbnails.sp-has-pointer {
+	right: 13px;
+}
+
 #example5 .sp-thumbnail-image-container {
 	width: 100px;
 	height: 80px;
@@ -107,6 +111,7 @@
 
 #example5 .sp-thumbnail-text {
 	width: 170px;
+	height: 80px;
     float: right;
     padding: 8px;
     background-color: #F0F0F0;
