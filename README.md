@@ -1,6 +1,8 @@
 # [Slider Pro - jQuery slider plugin](https://bqworks.net/slider-pro/) #
 
->A modular, responsive and touch-enabled jQuery slider plugin that enables you to create elegant and professionally looking sliders.
+A modular, responsive and touch-enabled jQuery slider plugin that enables you to create elegant and professionally looking sliders.
+
+>The slider is also available in [Vanilla JavaScript](https://github.com/bqworks/slider-pro-js) and as a [WordPress plugin](https://wordpress.org/plugins/sliderpro/).
 
 Main features: 
 
@@ -51,7 +53,7 @@ Inside the page's head tag include the slider's CSS file.
 In the page's footer, just before <code>&lt;/body&gt;</code>, include the required JavaScript files.
 
 ```html
-<script src="libs/js/jquery-1.11.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
 <script src="dist/js/jquery.sliderPro.min.js"></script>
 ```
 
