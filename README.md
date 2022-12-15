@@ -1,4 +1,4 @@
-# [Slider Pro - jQuery slider plugin](http://bqworks.net/slider-pro/) #
+# [Slider Pro - jQuery slider plugin](https://bqworks.net/slider-pro/) #
 
 >A modular, responsive and touch-enabled jQuery slider plugin that enables you to create elegant and professionally looking sliders.
 
@@ -24,7 +24,7 @@ Main features:
 * conditional images (different images for different screen sizes)
 * JavaScript breakpoints 
 
-Check the plugin's [presentation page](http://bqworks.net/slider-pro/) for examples and more details of the available features.
+Check the plugin's [presentation page](https://bqworks.net/slider-pro/) for examples and more details of the available features.
 
 ## Getting started ##
 
@@ -126,8 +126,8 @@ Slider Pro has 50+ options which you can pass to the slider when you instantiate
 
 If you found a bug or have a feature suggestion, please submit it in the [Issues tracker](https://github.com/bqworks/slider-pro/issues).
 
-If you need help with implementing the slider in your project, I recommend using [Stack Overflow](http://stackoverflow.com/questions/tagged/slider-pro) instead of the Issues tracker.
+If you need help with implementing the slider in your project, I recommend using [Stack Overflow](https://stackoverflow.com/questions/tagged/slider-pro) instead of the Issues tracker.
 
 ## License ##
 
-The plugin is available under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
+The plugin is available under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.
