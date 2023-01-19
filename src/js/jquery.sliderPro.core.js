@@ -39,7 +39,7 @@
 		this.slides = [];
 
 		// Array of SliderProSlide objects, ordered by their left/top position in the slider.
-		// This will be updated continuously if the slider is loopable.
+		// This will be updated continuously if the slider is loop-able.
 		this.slidesOrder = [];
 
 		// Holds the options passed to the slider when it was instantiated
@@ -719,7 +719,7 @@
 			this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
 			this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
 
-			// If the slider is loopable reorder the slides to have the selected slide in the middle
+			// If the slider is loop-able reorder the slides to have the selected slide in the middle
 			// and update the slides' position.
 			if ( this.settings.loop === true ) {
 				this._updateSlidesOrder();
@@ -1023,7 +1023,7 @@
 			// Indicates if the size of the slider will be forced to 'fullWidth' or 'fullWindow'
 			forceSize: 'none',
 
-			// Indicates if the slider will be loopable
+			// Indicates if the slider will be loop-able
 			loop: true,
 
 			// The distance between slides
