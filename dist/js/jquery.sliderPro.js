@@ -1,5 +1,5 @@
 /*!
-*  - v1.6.1
+*  - v1.6.2
 * Homepage: https://bqworks.net/slider-pro/
 * Author: bqworks
 * Author URL: https://bqworks.net/
@@ -45,7 +45,7 @@
 		this.slides = [];
 
 		// Array of SliderProSlide objects, ordered by their left/top position in the slider.
-		// This will be updated continuously if the slider is loopable.
+		// This will be updated continuously if the slider is loop-able.
 		this.slidesOrder = [];
 
 		// Holds the options passed to the slider when it was instantiated
@@ -131,6 +131,9 @@
 
 		// An array of shuffled indexes, based on which the slides will be shuffled
 		this.shuffledIndexes = [];
+
+		// Stores references to the created timers
+		this.timers = {};
 
 		// Initialize the slider
 		this._init();
@@ -273,7 +276,9 @@
 			
 				that.allowResize = false;
 
-				setTimeout(function() {
+				that.timers.allowResize = setTimeout(function() {
+					delete that.timers.allowResize;
+
 					that.resize();
 					that.allowResize = true;
 				}, 200 );
@@ -725,7 +730,7 @@
 			this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
 			this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
 
-			// If the slider is loopable reorder the slides to have the selected slide in the middle
+			// If the slider is loop-able reorder the slides to have the selected slide in the middle
 			// and update the slides' position.
 			if ( this.settings.loop === true ) {
 				this._updateSlidesOrder();
@@ -933,6 +938,11 @@
 
 			this.slides.length = 0;
 
+			for ( var timerName in this.timers ) {
+				clearTimeout( this.timers[ timerName ] );
+				delete this.timers[ timerName ];
+			}
+
 			// Move the slides to their initial position in the DOM and 
 			// remove the container elements created dynamically.
 			this.$slides.prependTo( this.$slider );
@@ -1029,7 +1039,7 @@
 			// Indicates if the size of the slider will be forced to 'fullWidth' or 'fullWindow'
 			forceSize: 'none',
 
-			// Indicates if the slider will be loopable
+			// Indicates if the slider will be loop-able
 			loop: true,
 
 			// The distance between slides
