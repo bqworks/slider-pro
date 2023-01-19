@@ -126,6 +126,9 @@
 		// An array of shuffled indexes, based on which the slides will be shuffled
 		this.shuffledIndexes = [];
 
+		// Stores references to the created timers
+		this.timers = {};
+
 		// Initialize the slider
 		this._init();
 	};
@@ -267,7 +270,9 @@
 			
 				that.allowResize = false;
 
-				setTimeout(function() {
+				that.timers.allowResize = setTimeout(function() {
+					delete that.timers.allowResize;
+
 					that.resize();
 					that.allowResize = true;
 				}, 200 );
@@ -926,6 +931,11 @@
 			});
 
 			this.slides.length = 0;
+
+			for ( var timerName in this.timers ) {
+				clearTimeout( this.timers[ timerName ] );
+				delete this.timers[ timerName ];
+			}
 
 			// Move the slides to their initial position in the DOM and 
 			// remove the container elements created dynamically.
