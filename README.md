@@ -57,6 +57,13 @@ In the page's footer, just before <code>&lt;/body&gt;</code>, include the requir
 <script src="dist/js/jquery.sliderPro.min.js"></script>
 ```
 
+From unpkg.com:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/slider-pro/dist/css/slider-pro.min.css"/>
+<script type="text/javascript" src="https://unpkg.com/slider-pro/dist/js/jquery.sliderPro.min.js"></script>
+```
+
 ### 3. Create the HTML markup ###
 
 ```html
