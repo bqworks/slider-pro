@@ -1,0 +1,20 @@
+name: Build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    name: Build files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add files
+        uses: actions/checkout@v3
+      - name: Cache npm files
+        id: npm-cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: npm-dependencies-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Build files
+        run: grunt
