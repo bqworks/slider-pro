@@ -1,3 +1,8 @@
+[![npm version](https://img.shields.io/npm/v/slider-pro)](https://www.npmjs.com/package/slider-pro)
+[![License](https://img.shields.io/github/license/bqworks/slider-pro)](https://github.com/bqworks/slider-pro/blob/master/LICENSE)
+[![Build](https://github.com/bqworks/slider-pro/actions/workflows/build.yml/badge.svg)](https://github.com/bqworks/slider-pro/actions/workflows/build.yml)
+[![Downloads](https://img.shields.io/npm/dt/slider-pro)](https://github.com/bqworks/slider-pro)
+
 # [Slider Pro - jQuery slider plugin](https://bqworks.net/slider-pro/) #
 
 A modular, responsive and touch-enabled jQuery slider plugin that enables you to create elegant and professionally looking sliders.
