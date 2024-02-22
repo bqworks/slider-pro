@@ -604,7 +604,11 @@
 			
 			// Initially set the slide width to the size of the slider.
 			// Later, this will be set to less if there are multiple visible slides.
-			this.slideWidth = this.$slider.width();
+			if ( this.settings.fade === true ) {
+				this.slideWidth = this.$slider.width();
+		        } else {
+		        	this.slideWidth = Math.round( this.$slider.width() );
+		        }
 
 			// Set the height to the same size as the browser window if the slider is set to be 'fullWindow',
 			// or calculate the height based on the width and the aspect ratio.
