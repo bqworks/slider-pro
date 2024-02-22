@@ -29,6 +29,7 @@ module.exports = function(grunt) {
           'src/js/jquery.sliderPro.deepLinking.js',
           'src/js/jquery.sliderPro.autoplay.js',
           'src/js/jquery.sliderPro.keyboard.js',
+          'src/js/jquery.sliderPro.mouseWheel.js',
           'src/js/jquery.sliderPro.fullScreen.js',
           'src/js/jquery.sliderPro.buttons.js',
           'src/js/jquery.sliderPro.arrows.js',

@@ -49,7 +49,7 @@ Enables the slider to load images (slide images and thumbnail images) only when 
 		</div>
 
 		<div class="sp-slide">
-			<a href="http://bqworks.net">
+			<a href="https://bqworks.net">
 				<img class="sp-image" src="path/to/blank.gif" data-src="path/to/image2.jpg"/>
 			</a>
 		</div>
@@ -86,7 +86,7 @@ The high resolution image needs to be specified in the `data-retina` attribute, 
 		</div>
 
 		<div class="sp-slide">
-			<a href="http://bqworks.net">
+			<a href="https://bqworks.net">
 				<img class="sp-image" src="path/to/blank.gif" data-src="path/to/image2.jpg" data-retina="path/to/image2@2x.jpg"/>
 			</a>
 		</div>
@@ -290,7 +290,7 @@ Customizable properties: [waitForLayers](api.md#waitforlayers), [autoScaleLayers
 
 Provides the possibility to link to a specific slide in the slider. You can use this to have the slider opened at a specific slide when the page loads or to navigate to a specific slide at a later time.
 
-The hash that needs to be appended to the URL consists of the 'id' attribute of the slider and the index of the slide separated by a slash character (/). For example, `http://domain.com/page#my-slider/0` will open the first slide (because slide indexes start with 0) in the slider that has the 'id' set to 'my-slider'.
+The hash that needs to be appended to the URL consists of the 'id' attribute of the slider and the index of the slide separated by a slash character (/). For example, `https://domain.com/page#my-slider/0` will open the first slide (because slide indexes start with 0) in the slider that has the 'id' set to 'my-slider'.
 
 It's also possible to specify the 'id' attribute of the slide instead of its index.
 
@@ -314,7 +314,7 @@ It's also possible to specify the 'id' attribute of the slide instead of its ind
 </div>
 ```
 
-In order to open the second slide, you can use either `http://domain.com/page#my-slider/1` or `http://domain.com/page#my-slider/my-slide`.
+In order to open the second slide, you can use either `https://domain.com/page#my-slider/1` or `https://domain.com/page#my-slider/my-slide`.
 
 Customizable properties: [updateHash](api.md#updatehash).
 
@@ -477,7 +477,7 @@ When using the second method, the videos will need to have the `enablejsapi=1` p
 *Example 2:*
 
 ```html
-<iframe class="sp-video" src="http://www.youtube.com/embed/msIjWthwWwI?enablejsapi=1&amp;wmode=opaque" width="500" height="350" frameborder="0" allowfullscreen></iframe>
+<iframe class="sp-video" src="https://www.youtube.com/embed/msIjWthwWwI?enablejsapi=1&amp;wmode=opaque" width="500" height="350" frameborder="0" allowfullscreen></iframe>
 ```
 
 ##### Vimeo #####
@@ -487,7 +487,7 @@ Just like YouTube videos, Vimeo videos can also be loaded by using a poster imag
 *Example 1:*
 
 ```html
-<a class="sp-video" href="http://vimeo.com/109354891">
+<a class="sp-video" href="https://vimeo.com/109354891">
     <img src="path/to/poster.jpg" width="500" height="300"/>
 </a>
 ```
@@ -497,7 +497,7 @@ When using the second method, the videos will need to have the `api=1` parameter
 *Example 2:*
 
 ```html
-<iframe class="sp-video" src="http://player.vimeo.com/video/109354891?api=1" width="500" height="300" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<iframe class="sp-video" src="https://player.vimeo.com/video/109354891?api=1" width="500" height="300" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 ```
 
 ##### HTML5 #####
@@ -528,7 +528,7 @@ Each Video.js video must have a unique 'id' attribute. Also, because the Video.j
 </div>
 ```
 
-Please note that, in order to use Video.js, you need to load the Video.js JavaScript and CSS files in your page. More information about how to use Video.js, in general, can be found on the [official Video.js page](http://www.videojs.com/). 
+Please note that, in order to use Video.js, you need to load the Video.js JavaScript and CSS files in your page. More information about how to use Video.js, in general, can be found on the [official Video.js page](https://www.videojs.com/). 
 
 ##### SublimeVideo #####
 
@@ -543,7 +543,7 @@ Each SublimeVideo instance must have a unique 'id' attribute.
 </video>
 ```
 
-Please note that, in order to use SublimeVideo, you will also need to load a script in your page which you need to download from the SublimeVideo page. More information about how to use SublimeVideo, in general, can be found on the [official SublimeVideo page](http://www.sublimevideo.net/).
+Please note that, in order to use SublimeVideo, you will also need to load a script in your page which you need to download from the SublimeVideo page. More information about how to use SublimeVideo, in general, can be found on the [official SublimeVideo page](https://www.sublimevideo.net/).
 
 ### JW Player ###
 
@@ -558,8 +558,8 @@ Just like Video.js, JW Player videos modify the HTML markup and we need to use a
 ```javascript
 $(document).ready(function() {
     jwplayer("my-video").setup({
-        file: "http://bqworks.net/products/assets/videos/bbb/bbb-trailer.mp4",
-        image: "http://bqworks.net/products/assets/videos/bbb/bbb-poster.jpg",
+        file: "https://bqworks.net/products/assets/videos/bbb/bbb-trailer.mp4",
+        image: "https://bqworks.net/products/assets/videos/bbb/bbb-poster.jpg",
         width: 500,
         height: 350
     });
@@ -580,8 +580,8 @@ var video;
 
 $(document).ready(function() {
     jwplayer("my-video").setup({
-        file: "http://bqworks.net/products/assets/videos/bbb/bbb-trailer.mp4",
-        image: "http://bqworks.net/products/assets/videos/bbb/bbb-poster.jpg",
+        file: "https://bqworks.net/products/assets/videos/bbb/bbb-trailer.mp4",
+        image: "https://bqworks.net/products/assets/videos/bbb/bbb-poster.jpg",
         width: 500,
         height: 350,
         events: {

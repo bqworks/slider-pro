@@ -1,8 +1,8 @@
 /*!
-*  - v1.6.0
-* Homepage: http://bqworks.net/slider-pro/
+*  - v1.6.2
+* Homepage: https://bqworks.net/slider-pro/
 * Author: bqworks
-* Author URL: http://bqworks.net/
+* Author URL: https://bqworks.net/
 */
 ;(function( window, $ ) {
 
@@ -45,7 +45,7 @@
 		this.slides = [];
 
 		// Array of SliderProSlide objects, ordered by their left/top position in the slider.
-		// This will be updated continuously if the slider is loopable.
+		// This will be updated continuously if the slider is loop-able.
 		this.slidesOrder = [];
 
 		// Holds the options passed to the slider when it was instantiated
@@ -131,6 +131,9 @@
 
 		// An array of shuffled indexes, based on which the slides will be shuffled
 		this.shuffledIndexes = [];
+
+		// Stores references to the created timers
+		this.timers = {};
 
 		// Initialize the slider
 		this._init();
@@ -273,7 +276,9 @@
 			
 				that.allowResize = false;
 
-				setTimeout(function() {
+				that.timers.allowResize = setTimeout(function() {
+					delete that.timers.allowResize;
+
 					that.resize();
 					that.allowResize = true;
 				}, 200 );
@@ -725,7 +730,7 @@
 			this.$slides.find( '.sp-selected' ).removeClass( 'sp-selected' );
 			this.$slides.find( '.sp-slide' ).eq( this.selectedSlideIndex ).addClass( 'sp-selected' );
 
-			// If the slider is loopable reorder the slides to have the selected slide in the middle
+			// If the slider is loop-able reorder the slides to have the selected slide in the middle
 			// and update the slides' position.
 			if ( this.settings.loop === true ) {
 				this._updateSlidesOrder();
@@ -933,6 +938,11 @@
 
 			this.slides.length = 0;
 
+			for ( var timerName in this.timers ) {
+				clearTimeout( this.timers[ timerName ] );
+				delete this.timers[ timerName ];
+			}
+
 			// Move the slides to their initial position in the DOM and 
 			// remove the container elements created dynamically.
 			this.$slides.prependTo( this.$slider );
@@ -1029,7 +1039,7 @@
 			// Indicates if the size of the slider will be forced to 'fullWidth' or 'fullWindow'
 			forceSize: 'none',
 
-			// Indicates if the slider will be loopable
+			// Indicates if the slider will be loop-able
 			loop: true,
 
 			// The distance between slides
@@ -4409,6 +4419,76 @@
 
 	$.SliderPro.addModule( 'Keyboard', Keyboard );
 	
+})( window, jQuery );
+
+;( function( window, $ ) {
+
+    "use strict";
+
+    var NS = 'MouseWheel.' + $.SliderPro.namespace;
+
+    var MouseWheel = {
+
+        mouseWheelEventType: '',
+
+        initMouseWheel: function() {
+            var that = this;
+
+            if ( this.settings.mouseWheel === false ) {
+                return;
+            }
+
+            // get the current mouse wheel event used in the browser
+            if ( 'onwheel' in document ) {
+                this.mouseWheelEventType = 'wheel';
+            } else if ( 'onmousewheel' in document ) {
+                this.mouseWheelEventType = 'mousewheel';
+            } else if ( 'onDomMouseScroll' in document ) {
+                this.mouseWheelEventType = 'DomMouseScroll';
+            } else if ( 'onMozMousePixelScroll' in document ) {
+                this.mouseWheelEventType = 'MozMousePixelScroll';
+            }
+
+            this.on( this.mouseWheelEventType + '.' + NS, function( event ) {
+                event.preventDefault();
+
+                var eventObject = event.originalEvent,
+                    delta;
+
+                // get the movement direction and speed indicated in the delta property
+                if ( typeof eventObject.detail !== 'undefined' ) {
+                    delta = eventObject.detail;
+                }
+
+                if ( typeof eventObject.wheelDelta !== 'undefined' ) {
+                    delta = eventObject.wheelDelta;
+                }
+
+                if ( typeof eventObject.deltaY !== 'undefined' ) {
+                    delta = eventObject.deltaY * -1;
+                }
+
+                if ( that.thumbnailsPosition + delta < 0 && that.thumbnailsPosition + delta > that.thumbnailsContainerSize - that.thumbnailsSize ) {
+                   that._moveThumbnailsTo( that.thumbnailsPosition + delta, true );
+                } else if ( that.thumbnailsPosition + delta >= 0 ) {
+                    that._moveThumbnailsTo( 0, true );
+                } else if ( that.thumbnailsPosition + delta < that.thumbnailsContainerSize - that.thumbnailsSize ) {
+                    that._moveThumbnailsTo( that.thumbnailsContainerSize - that.thumbnailsSize, true );
+                }
+            });
+        },
+
+        destroyMouseWheel: function() {
+            this.off( this.mouseWheelEventType + '.' + NS );
+        },
+
+        mouseWheelDefaults: {
+            mouseWheel: false
+        }
+    };
+
+    $.SliderPro.addModule( 'MouseWheel', MouseWheel );
+
 })( window, jQuery );
 
 // Full Screen module for Slider Pro.
