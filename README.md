@@ -1,6 +1,13 @@
-# [Slider Pro - jQuery slider plugin](http://bqworks.net/slider-pro/) #
+[![npm version](https://img.shields.io/npm/v/slider-pro)](https://www.npmjs.com/package/slider-pro)
+[![License](https://img.shields.io/github/license/bqworks/slider-pro)](https://github.com/bqworks/slider-pro/blob/master/LICENSE)
+[![Build](https://github.com/bqworks/slider-pro/actions/workflows/build.yml/badge.svg)](https://github.com/bqworks/slider-pro/actions/workflows/build.yml)
+[![Downloads](https://img.shields.io/npm/dt/slider-pro)](https://github.com/bqworks/slider-pro)
 
->A modular, responsive and touch-enabled jQuery slider plugin that enables you to create elegant and professionally looking sliders.
+# [Slider Pro - jQuery slider plugin](https://bqworks.net/slider-pro/) #
+
+A modular, responsive and touch-enabled jQuery slider plugin that enables you to create elegant and professionally looking sliders.
+
+>The slider is also available in [Vanilla JavaScript](https://github.com/bqworks/slider-pro-js) and as a [WordPress plugin](https://wordpress.org/plugins/sliderpro/).
 
 Main features: 
 
@@ -24,7 +31,7 @@ Main features:
 * conditional images (different images for different screen sizes)
 * JavaScript breakpoints 
 
-Check the plugin's [presentation page](http://bqworks.net/slider-pro/) for examples and more details of the available features.
+Check the plugin's [presentation page](https://bqworks.net/slider-pro/) for examples and more details of the available features.
 
 ## Getting started ##
 
@@ -51,8 +58,15 @@ Inside the page's head tag include the slider's CSS file.
 In the page's footer, just before <code>&lt;/body&gt;</code>, include the required JavaScript files.
 
 ```html
-<script src="libs/js/jquery-1.11.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
 <script src="dist/js/jquery.sliderPro.min.js"></script>
+```
+
+From unpkg.com:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/slider-pro/dist/css/slider-pro.min.css"/>
+<script type="text/javascript" src="https://unpkg.com/slider-pro/dist/js/jquery.sliderPro.min.js"></script>
 ```
 
 ### 3. Create the HTML markup ###
@@ -126,8 +140,8 @@ Slider Pro has 50+ options which you can pass to the slider when you instantiate
 
 If you found a bug or have a feature suggestion, please submit it in the [Issues tracker](https://github.com/bqworks/slider-pro/issues).
 
-If you need help with implementing the slider in your project, I recommend using [Stack Overflow](http://stackoverflow.com/questions/tagged/slider-pro) instead of the Issues tracker.
+If you need help with implementing the slider in your project, I recommend using [Stack Overflow](https://stackoverflow.com/questions/tagged/slider-pro) instead of the Issues tracker.
 
 ## License ##
 
-The plugin is available under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.
+The plugin is available under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.
