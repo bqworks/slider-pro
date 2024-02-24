@@ -604,7 +604,11 @@
 			
 			// Initially set the slide width to the size of the slider.
 			// Later, this will be set to less if there are multiple visible slides.
-			this.slideWidth = this.$slider.width();
+			if ( this.settings.fade === true ) {
+				this.slideWidth = this.$slider.width();
+		        } else {
+		        	this.slideWidth = Math.round( this.$slider.width() );
+		        }
 
 			// Set the height to the same size as the browser window if the slider is set to be 'fullWindow',
 			// or calculate the height based on the width and the aspect ratio.
@@ -1068,6 +1072,12 @@
 			// Breakpoints for allowing the slider's options to be changed
 			// based on the size of the window.
 			breakpoints: null,
+			
+			// Previous arrow html.
+			previousArrow: '<div class="sp-arrow sp-previous-arrow"></div>',
+
+			// Next arrow html.
+			nextArrow: '<div class="sp-arrow sp-next-arrow"></div>',
 
 			// Called when the slider is initialized
 			init: function() {},
@@ -4759,8 +4769,8 @@
 			if ( this.settings.arrows === true && this.$arrows === null ) {
 				this.$arrows = $( '<div class="sp-arrows"></div>' ).appendTo( this.$slidesContainer );
 				
-				this.$previousArrow = $( '<div class="sp-arrow sp-previous-arrow"></div>' ).appendTo( this.$arrows );
-				this.$nextArrow = $( '<div class="sp-arrow sp-next-arrow"></div>' ).appendTo( this.$arrows );
+				this.$previousArrow = $( this.settings.previousArrow ).appendTo( this.$arrows );
+				this.$nextArrow = $( this.settings.nextArrow ).appendTo( this.$arrows );
 
 				this.$previousArrow.on( 'click.' + NS, function() {
 					that.previousSlide();
