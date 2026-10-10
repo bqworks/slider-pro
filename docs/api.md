@@ -237,6 +237,18 @@ $( '#my-slider' ).sliderPro({
 
 >*Default value:* true
 
+#### previousArrow ####
+
+>Sets the HTML markup of the previous arrow. Keep the 'sp-arrow' and 'sp-previous-arrow' classes in order to preserve the default positioning and styling of the arrow.
+
+>*Default value:* '&lt;div class="sp-arrow sp-previous-arrow"&gt;&lt;/div&gt;'
+
+#### nextArrow ####
+
+>Sets the HTML markup of the next arrow. Keep the 'sp-arrow' and 'sp-next-arrow' classes in order to preserve the default positioning and styling of the arrow.
+
+>*Default value:* '&lt;div class="sp-arrow sp-next-arrow"&gt;&lt;/div&gt;'
+
 #### buttons ####
 
 >Indicates whether the buttons will be created.

@@ -348,7 +348,7 @@ Customizable properties: [buttons](api.md#buttons).
 
 Adds navigation arrows for the slides.
 
-Customizable properties: [arrows](api.md#arrows) and [fadeArrows](api.md#fadearrows).
+Customizable properties: [arrows](api.md#arrows), [fadeArrows](api.md#fadearrows), [previousArrow](api.md#previousarrow) and [nextArrow](api.md#nextarrow).
 
 ---
 
