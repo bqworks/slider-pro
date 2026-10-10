@@ -1,5 +1,5 @@
 /*!
-*  - v1.6.2
+*  - v1.6.3
 * Homepage: https://bqworks.net/slider-pro/
 * Author: bqworks
 * Author URL: https://bqworks.net/
@@ -119,6 +119,11 @@
 
 		// Property used for deferring the resizing of the slider
 		this.allowResize = true;
+
+		// Indicates if the slides are being resized and if the images loaded in the meantime
+		// require the slides to be repositioned once the resizing is complete
+		this._isResizingSlides = false;
+		this._imageLayoutPending = false;
 
 		// Unique ID to be used for event listening
 		this.uniqueId = new Date().valueOf();
@@ -387,11 +392,18 @@
 
 			slide.on( 'imagesLoaded.' + NS, function( event ) {
 				if ( that.settings.autoSlideSize === true ) {
-					if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
-						that._resetSlidesPosition();
-					}
 
-					that._calculateSlidesSize();
+					// If the slides are being resized, reposition them only once, after all
+					// the slides were resized, instead of after each loaded image
+					if ( that._isResizingSlides === true ) {
+						that._imageLayoutPending = true;
+					} else {
+						if ( that.$slides.hasClass( 'sp-animated' ) === false ) {
+							that._resetSlidesPosition();
+						}
+
+						that._calculateSlidesSize();
+					}
 				}
 
 				if ( that.settings.autoHeight === true && event.index === that.selectedSlideIndex ) {
@@ -606,9 +618,9 @@
 			// Later, this will be set to less if there are multiple visible slides.
 			if ( this.settings.fade === true ) {
 				this.slideWidth = this.$slider.width();
-		        } else {
-		        	this.slideWidth = Math.round( this.$slider.width() );
-		        }
+			} else {
+				this.slideWidth = Math.round( this.$slider.width() );
+			}
 
 			// Set the height to the same size as the browser window if the slider is set to be 'fullWindow',
 			// or calculate the height based on the width and the aspect ratio.
@@ -705,9 +717,28 @@
 			}
 
 			// Loop through the existing slides and reset their size.
+			// Images that are already loaded will notify immediately, while the slides
+			// are being resized, so their repositioning is deferred until the loop ends.
+			this._isResizingSlides = true;
+
 			$.each( this.slides, function( index, element ) {
 				element.setSize( slideWidth, slideHeight );
 			});
+
+			this._isResizingSlides = false;
+
+			// Reposition the slides once, if any image loaded while the slides were resized.
+			// This is done here, and not only in 'resize', because the thumbnails module
+			// calls '_resizeSlides' directly.
+			if ( this._imageLayoutPending === true ) {
+				this._imageLayoutPending = false;
+
+				if ( this.$slides.hasClass( 'sp-animated' ) === false ) {
+					this._resetSlidesPosition();
+				}
+
+				this._calculateSlidesSize();
+			}
 		},
 
 		// Resize the height of the slider to the height of the selected slide.
@@ -1072,12 +1103,6 @@
 			// Breakpoints for allowing the slider's options to be changed
 			// based on the size of the window.
 			breakpoints: null,
-			
-			// Previous arrow html.
-			previousArrow: '<div class="sp-arrow sp-previous-arrow"></div>',
-
-			// Next arrow html.
-			nextArrow: '<div class="sp-arrow sp-next-arrow"></div>',
 
 			// Called when the slider is initialized
 			init: function() {},
@@ -4834,7 +4859,13 @@
 			arrows: false,
 
 			// Indicates whether the arrows will fade in only on hover
-			fadeArrows: true
+			fadeArrows: true,
+
+			// Previous arrow html.
+			previousArrow: '<div class="sp-arrow sp-previous-arrow"></div>',
+
+			// Next arrow html.
+			nextArrow: '<div class="sp-arrow sp-next-arrow"></div>'
 		}
 	};
 
